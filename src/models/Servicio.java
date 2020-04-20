@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 //Servicio no es una persona literalmente, pero contiene los mismos campos.
-public class Servicio extends Persona implements Registro {
+public class Servicio<S> extends Persona<S> implements Registro {
 
     private int idServicio;//primarykey
     private String clienteTelefono;//foreign key

@@ -2,7 +2,7 @@ package models;
 
 import java.time.LocalDateTime;
 
-public class ServiciosProgramado extends Servicio {
+public class ServiciosProgramado extends Servicio<ServiciosProgramado> {
 
     private LocalDateTime fechaUltimaAplicacion;
     private boolean isLunes;

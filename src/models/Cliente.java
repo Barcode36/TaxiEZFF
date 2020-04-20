@@ -2,7 +2,7 @@ package models;
 
 import models.interfaces.Registro;
 
-public class Cliente extends Persona implements Registro {
+public class Cliente extends Persona<Cliente> implements Registro {
 
     private String numero;//primaryKey
     private boolean visible;

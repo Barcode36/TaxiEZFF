@@ -51,6 +51,7 @@ public class EmpleadosCrudController extends SetAddRegistroListener {
 
     @FXML
     void btn_Agregar_Click(ActionEvent event) {
+        enviarRegistro(null);
 
     }
 

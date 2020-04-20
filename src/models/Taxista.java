@@ -4,11 +4,11 @@ import models.interfaces.Registro;
 
 import java.time.LocalDate;
 
-public class Taxista extends Persona implements Registro {
+public class Taxista extends Persona<Taxista> implements Registro {
 
-    int idTaxista;
-    LocalDate fechaNac;
-    String telefono;
+    private int idTaxista;
+    private LocalDate fechaNac;
+    private String telefono;
 
     public Taxista(int idTaxista, LocalDate fechaNac, String telefono,String nombre, String observaciones, Direccion direccion) {
         super(nombre, observaciones, direccion);

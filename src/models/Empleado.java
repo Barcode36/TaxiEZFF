@@ -2,7 +2,7 @@ package models;
 
 import models.interfaces.Registro;
 
-public class Empleado extends Persona implements Registro {
+public class Empleado extends Persona<Empleado> implements Registro {
 
     int idEmpleado;//primarykey
 

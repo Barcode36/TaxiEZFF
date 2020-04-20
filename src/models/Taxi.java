@@ -1,8 +1,9 @@
 package models;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import models.interfaces.Registro;
 
-public class Taxi implements Registro {
+public class Taxi extends RecursiveTreeObject<Taxi> implements Registro {
 
     private int idUnidad;//primaryKey
     private String marca;
