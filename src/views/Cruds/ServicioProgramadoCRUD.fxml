@@ -25,7 +25,7 @@
       <Label fx:id="lbl_tittle" layoutX="25.0" layoutY="27.0" styleClass="titulo-CRUD-windows" text="Servicio programado" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0" />
       <Label layoutX="28.0" layoutY="85.0" styleClass="tittle-seccion-CRUD" text="Datos personales" AnchorPane.leftAnchor="28.0" AnchorPane.topAnchor="85.0" />
       <Separator layoutX="234.0" layoutY="105.0" prefHeight="3.0" prefWidth="274.0" />
-      <JFXTextField fx:id="textField_telefono" focusColor="#5ab444" labelFloat="true" layoutX="44.0" layoutY="142.0" onMouseClicked="#DetectFocusable_OnMouse" prefHeight="25.0" prefWidth="182.0" promptText="Teléfono">
+      <JFXTextField fx:id="textField_telefono" focusColor="#5ab444" labelFloat="true" layoutX="44.0" layoutY="142.0" prefHeight="25.0" prefWidth="182.0" promptText="Teléfono">
          <font>
             <Font name="Gadugi" size="13.0" />
          </font>
@@ -33,14 +33,14 @@
       <JFXTextField fx:id="textField_nombre" focusColor="#5ab444" labelFloat="true" layoutX="264.0" layoutY="142.0" onMouseClicked="#DetectFocusable_OnMouse" prefHeight="25.0" prefWidth="182.0" promptText="Nombre" />
       <Label layoutX="28.0" layoutY="198.0" styleClass="tittle-seccion-CRUD" text="Dirección" AnchorPane.leftAnchor="28.0" />
       <Separator layoutX="154.0" layoutY="218.0" prefHeight="3.0" prefWidth="353.0" />
-      <JFXTextField fx:id="textField_calle" focusColor="#5ab444" labelFloat="true" layoutX="44.0" layoutY="249.0" onMouseClicked="#DetectFocusable_OnMouse" prefHeight="25.0" prefWidth="182.0" promptText="Calle" />
-      <JFXTextField fx:id="textField_colonia" focusColor="#5ab444" labelFloat="true" layoutX="264.0" layoutY="249.0" onMouseClicked="#DetectFocusable_OnMouse" prefHeight="25.0" prefWidth="182.0" promptText="Colonia" />
-      <JFXTextField fx:id="textField_num_ext" focusColor="#5ab444" labelFloat="true" layoutX="44.0" layoutY="313.0" onMouseClicked="#DetectFocusable_OnMouse" prefHeight="25.0" prefWidth="182.0" promptText="Numero Exterior" />
-      <JFXTextField fx:id="textField_numInt" focusColor="#5ab444" labelFloat="true" layoutX="264.0" layoutY="313.0" onMouseClicked="#DetectFocusable_OnMouse" prefHeight="25.0" prefWidth="182.0" promptText="Numero Interior" />
+      <JFXTextField fx:id="textField_calle" focusColor="#5ab444" labelFloat="true" layoutX="44.0" layoutY="249.0"  prefHeight="25.0" prefWidth="182.0" promptText="Calle" />
+      <JFXTextField fx:id="textField_colonia" focusColor="#5ab444" labelFloat="true" layoutX="264.0" layoutY="249.0"  prefHeight="25.0" prefWidth="182.0" promptText="Colonia" />
+      <JFXTextField fx:id="textField_num_ext" focusColor="#5ab444" labelFloat="true" layoutX="44.0" layoutY="313.0"  prefHeight="25.0" prefWidth="182.0" promptText="Numero Exterior" />
+      <JFXTextField fx:id="textField_numInt" focusColor="#5ab444" labelFloat="true" layoutX="264.0" layoutY="313.0" prefHeight="25.0" prefWidth="182.0" promptText="Numero Interior" />
       <Label layoutX="28.0" layoutY="375.0" styleClass="tittle-seccion-CRUD" text="Servicio" AnchorPane.leftAnchor="28.0" />
       <Separator layoutX="131.0" layoutY="394.0" prefHeight="3.0" prefWidth="371.0" />
-      <JFXTextField fx:id="textField_notas" focusColor="#5ab444" labelFloat="true" layoutX="44.0" layoutY="457.0" onMouseClicked="#DetectFocusable_OnMouse" prefHeight="31.0" prefWidth="404.0" promptText="Notas" />
-      <JFXTextField fx:id="textField_observaciones" focusColor="#5ab444" labelFloat="true" layoutX="44.0" layoutY="542.0" onMouseClicked="#DetectFocusable_OnMouse" prefHeight="31.0" prefWidth="404.0" promptText="Observaciones" />
+      <JFXTextField fx:id="textField_notas" focusColor="#5ab444" labelFloat="true" layoutX="44.0" layoutY="457.0" prefHeight="31.0" prefWidth="404.0" promptText="Notas" />
+      <JFXTextField fx:id="textField_observaciones" focusColor="#5ab444" labelFloat="true" layoutX="44.0" layoutY="542.0" prefHeight="31.0" prefWidth="404.0" promptText="Observaciones" />
       <Separator layoutX="550.0" layoutY="85.0" orientation="VERTICAL" prefHeight="447.0" prefWidth="1.0" />
       <Label layoutX="566.0" layoutY="91.0" styleClass="tittle-seccion-CRUD" text="Hora y días de servicio" />
       <Separator layoutX="816.0" layoutY="109.0" prefHeight="3.0" prefWidth="190.0" />

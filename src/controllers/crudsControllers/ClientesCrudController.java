@@ -7,8 +7,9 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import models.interfaces.SetAddRegistroListener;
 
-public class ClientesCrudController {
+public class ClientesCrudController extends SetAddRegistroListener {
     @FXML
     private AnchorPane root;
 
@@ -36,14 +37,10 @@ public class ClientesCrudController {
     @FXML
     private JFXTextField textField_observ;
 
-    @FXML
-    void DetectFocusable_OnMouse(MouseEvent event) {
-
-    }
 
     @FXML
     void btn_Agregar_Click(ActionEvent event) {
-
+        enviarRegistro(null);
     }
 
     @FXML
@@ -51,8 +48,5 @@ public class ClientesCrudController {
 
     }
 
-    @FXML
-    void focusable_OnKey(KeyEvent event) {
 
-    }
 }

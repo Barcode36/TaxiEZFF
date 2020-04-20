@@ -34,7 +34,7 @@
       </Label>
       <HBox layoutX="682.0" layoutY="62.0" prefHeight="45.0" prefWidth="180.0" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="62.0">
          <children>
-            <JFXButton fx:id="button_agregarEmpleado" ellipsisString="">
+            <JFXButton fx:id="button_agregarEmpleado" ellipsisString="" onAction="#btnAddEmpleado_OnAction">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -43,7 +43,7 @@
                   </ImageView>
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="button_eliminarEmpleado" ellipsisString="">
+            <JFXButton fx:id="button_eliminarEmpleado" ellipsisString="" onAction="#btnEliminarEmpleado_OnAction">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -52,7 +52,7 @@
                   </ImageView>
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="button_actualizarEmpleado" ellipsisString="" prefHeight="41.0" prefWidth="44.0">
+            <JFXButton fx:id="button_actualizarEmpleado" ellipsisString="" onAction="#btnActualizarEmpleado_OnAction" prefHeight="41.0" prefWidth="44.0">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>

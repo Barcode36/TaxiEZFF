@@ -18,6 +18,6 @@
       <JFXTextField fx:id="textField_modelo" focusColor="#5ab444" labelFloat="true" layoutX="273.0" layoutY="213.0" prefHeight="31.0" prefWidth="182.0" promptText="Modelo" />
       <JFXComboBox fx:id="comboBox_taxista" focusColor="#5ab444" labelFloat="true" layoutX="35.0" layoutY="311.0" prefHeight="31.0" prefWidth="419.0" promptText="Taxista" />
       <Button fx:id="btn_Agregar" layoutX="347.0" layoutY="375.0" mnemonicParsing="false" onAction="#btn_Agregar_Click" prefHeight="25.0" prefWidth="113.0" styleClass="boton-aceptar" text="Aceptar" />
-      <Button layoutX="224.0" layoutY="374.0" mnemonicParsing="false" onAction="#btn_Cancelar_Click" prefHeight="25.0" prefWidth="113.0" styleClass="boton-cancelar" text="Cancelar" />
+      <Button fx:id="btn_Cancelar" layoutX="224.0" layoutY="374.0" mnemonicParsing="false" onAction="#btn_Cancelar_Click" prefHeight="25.0" prefWidth="113.0" styleClass="boton-cancelar" text="Cancelar" />
    </children>
 </AnchorPane>

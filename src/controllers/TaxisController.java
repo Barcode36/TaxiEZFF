@@ -62,7 +62,7 @@ public class TaxisController implements IAccion {
             AnchorPane contenedorServicios = controladorLoader.load();
             TaxisCrudController taxisCrudController = controladorLoader.getController();
 
-            taxisCrudController.setAddListener(new AddRegistro() {
+            taxisCrudController.setAddRegistroListener(new AddRegistro() {
                 @Override
                 public void addRegistro(Registro registro) {
                     System.out.println("LLegó registro");
@@ -84,6 +84,15 @@ public class TaxisController implements IAccion {
 
 
     }
+    @FXML
+    void btnActualizarTaxi_OnAction(ActionEvent event) {
+
+    }
+
+    @FXML
+    void btnEliminarTaxi_OnAction(ActionEvent event) {
+
+    }
 
     @Override
     public void accionPrimaria() {
@@ -97,6 +106,6 @@ public class TaxisController implements IAccion {
 
     @Override
     public void accionTerciaria() {
-
+        this.button_actualizarTaxi.fire();
     }
 }

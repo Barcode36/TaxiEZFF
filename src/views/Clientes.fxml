@@ -33,7 +33,7 @@
       </Label>
       <HBox layoutX="682.0" layoutY="62.0" prefHeight="48.0" prefWidth="169.0" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="62.0">
          <children>
-            <JFXButton fx:id="button_agregarCliente" ellipsisString="" prefHeight="58.0" prefWidth="32.0">
+            <JFXButton fx:id="button_agregarCliente" ellipsisString="" onAction="#btnAddCliente_OnAction" prefHeight="58.0" prefWidth="32.0">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -42,7 +42,7 @@
                   </ImageView>
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="button_eliminarCliente" ellipsisString="" prefHeight="58.0" prefWidth="0.0">
+            <JFXButton fx:id="button_eliminarCliente" ellipsisString="" onAction="#btnDeleteCliente_OnAction" prefHeight="58.0" prefWidth="0.0">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -51,7 +51,7 @@
                   </ImageView>
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="button_actualizarCliente" ellipsisString="" prefHeight="58.0" prefWidth="49.0">
+            <JFXButton fx:id="button_actualizarCliente" ellipsisString="" onAction="#btnActualizarCliente_OnAction" prefHeight="58.0" prefWidth="49.0">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>

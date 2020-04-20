@@ -34,7 +34,7 @@
       </JFXTreeTableView>
       <HBox layoutX="374.0" layoutY="38.0" prefHeight="45.0" prefWidth="180.0" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="62.0">
          <children>
-            <JFXButton fx:id="button_agregarTaxista" ellipsisString="">
+            <JFXButton fx:id="button_agregarTaxista" ellipsisString="" onAction="#btnAgregarTaxista_OnAction">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -43,7 +43,7 @@
                   </ImageView>
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="button_eliminarTaxista" ellipsisString="">
+            <JFXButton fx:id="button_eliminarTaxista" ellipsisString="" onAction="#btnEliminarTaxista_OnAction">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -52,7 +52,7 @@
                   </ImageView>
                </graphic>
             </JFXButton>
-            <JFXButton fx:id="button_actualizarTaxista" ellipsisString="">
+            <JFXButton fx:id="button_actualizarTaxista" ellipsisString="" onAction="#btnActualizarTaxista_OnAction">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>

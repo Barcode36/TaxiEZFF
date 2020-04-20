@@ -10,8 +10,9 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import models.interfaces.SetAddRegistroListener;
 
-public class ServicioRegularCrudController {
+public class ServicioRegularCrudController extends SetAddRegistroListener {
 
     @FXML
     private AnchorPane root;

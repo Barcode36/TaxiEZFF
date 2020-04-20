@@ -13,7 +13,9 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-public class ServiciosProgramadosCrudController {
+import models.interfaces.SetAddRegistroListener;
+
+public class ServiciosProgramadosCrudController extends SetAddRegistroListener {
 
     @FXML
     private AnchorPane root;

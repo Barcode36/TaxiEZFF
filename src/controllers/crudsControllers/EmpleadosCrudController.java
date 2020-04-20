@@ -7,8 +7,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import models.interfaces.SetAddRegistroListener;
 
-public class EmpleadosCrudController {
+public class EmpleadosCrudController extends SetAddRegistroListener {
     @FXML
     private AnchorPane root;
 
