@@ -1,6 +1,8 @@
 package controllers;
 
 import com.jfoenix.controls.*;
+import com.sun.javafx.robot.FXRobot;
+import com.sun.javafx.robot.FXRobotFactory;
 import controllers.crudsControllers.ClientesCrudController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,13 +11,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableCell;
-import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -76,27 +78,31 @@ public class ClientesController implements Initializable,IAccion {
         listaServicios.add(new Cliente("a452123456", true, "Vic as kasdkjl", "observando", new Direccion(1, "calle1", "col1", "1", "2")));
         listaServicios.add(new Cliente("4s52123456", true, "Vic as kasdkjl", "observando", new Direccion(1, "calle1", "col1", "1", "2")));
         TreeItem<Cliente> clienteRecursiveTreeItem = new RecursiveTreeItem<>(listaServicios, (recursiveTreeObject) -> recursiveTreeObject.getChildren());
-
+//label_clientes.wr
         this.table_view_clientes.setRoot(clienteRecursiveTreeItem);
         this.table_view_clientes.setShowRoot(false);
         this.column_direccion.setCellFactory(new Callback<TreeTableColumn<Cliente, Direccion>, TreeTableCell<Cliente, Direccion>>() {
             public TreeTableCell<Cliente, Direccion> call(TreeTableColumn<Cliente, Direccion> param) {
+
                 TreeTableCell<Cliente, Direccion> cell = new TreeTableCell<Cliente, Direccion>() {
                     protected void updateItem(Direccion item, boolean empty) {
                         super.updateItem(item, empty);
                         if (item != null) {
-                            this.setText("Calle: " + item.getCalle() + " \nNum ext: " + item.getNumExt() + (item.getNumInt() == null ? "" : " Num int: " + item.getNumInt()) + "\nColonia: " + item.getColonia());
+                            this.setText("Calle: " + item.getCalle() + " Colonia: " + item.getColonia()+ " \nNum ext: " + item.getNumExt() + (item.getNumInt() == null ? "" : " Num int: " + item.getNumInt()) );
+                            //this.setPrefHeight(35);
+
                         } else {
                             this.setText((String)null);
                         }
 
                     }
+
                 };
-                return cell;
+
+                  return cell;
             }
         });
-
-   /*     table_view_clientes.setOnKeyReleased(new EventHandler<KeyEvent>() {
+    /*     table_view_clientes.setOnKeyReleased(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 if(event.getCode() == KeyCode.ENTER){
@@ -114,6 +120,8 @@ public class ClientesController implements Initializable,IAccion {
         table_view_clientes.setRowFactory((param) -> {
             // TableRow<Empleados> row = new TableRow<>();
             JFXTreeTableRow<Cliente> row = new JFXTreeTableRow<>();
+
+          //  row.setPrefHeight(row.getTreeItem().getGraphic().);
 
             row.setOnMouseClicked(event->{
 
@@ -174,6 +182,7 @@ public class ClientesController implements Initializable,IAccion {
             @Override
             public void addRegistro(Registro registro) {
                 listaServicios.add((Cliente) registro);
+                table_view_clientes.getSelectionModel().selectLast();
             }
         });
     }
@@ -195,7 +204,15 @@ public class ClientesController implements Initializable,IAccion {
             Stage primaryStage = new Stage();
             // Parent root = FXMLLoader.load(getClass().getResource("/views/Cruds/taxisCRUD.fxml"));
             primaryStage.setTitle("Taxis añadir");
-            primaryStage.setScene(new Scene(contenedorCRUDClientes));
+            Scene scene = new Scene(contenedorCRUDClientes);
+            scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ENTER), new Runnable() {
+                @Override
+                public void run() {
+                    FXRobot robot = FXRobotFactory.createRobot(scene);
+                    robot.keyPress(KeyCode.TAB);
+                }
+            });
+            primaryStage.setScene(scene);
             primaryStage.setResizable(false);
             primaryStage.initOwner(this.button_actualizarCliente.getScene().getWindow());
             primaryStage.initModality(Modality.WINDOW_MODAL);

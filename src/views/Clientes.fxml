@@ -17,10 +17,10 @@
       <JFXTextField fx:id="txtF_buscar" layoutX="10.0" layoutY="73.0" prefHeight="25.0" prefWidth="170.0" promptText="Buscar..." styleClass="text-field-busqueda" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="73.0" />
       <JFXTreeTableView fx:id="table_view_clientes" layoutY="117.0" prefHeight="410.0" prefWidth="884.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="117.0">
          <columns>
-            <TreeTableColumn fx:id="column_nombre" minWidth="150.0" prefWidth="75.0" text="Nombre" />
-            <TreeTableColumn fx:id="column_direccion" minWidth="150.0" prefWidth="219.0" text="Dirección" />
-            <TreeTableColumn fx:id="column_telefono" minWidth="150.0" prefWidth="222.0" text="Telefono" />
-            <TreeTableColumn fx:id="column_observaciones" minWidth="150.0" prefWidth="75.0" text="Observaciones" />
+            <TreeTableColumn fx:id="column_nombre" maxWidth="250.0" minWidth="120.0" prefWidth="120.0" text="Nombre" />
+            <TreeTableColumn fx:id="column_direccion" minWidth="150.0" prefWidth="354.0" text="Dirección" />
+            <TreeTableColumn fx:id="column_telefono" maxWidth="200.0" minWidth="120.0" prefWidth="120.0" text="Telefono" />
+            <TreeTableColumn fx:id="column_observaciones" minWidth="150.0" prefWidth="420.0" text="Observaciones" />
          </columns>
          <columnResizePolicy>
             <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

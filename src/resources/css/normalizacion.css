@@ -235,16 +235,25 @@ que además es independiente a la de sin foco*/
     -fx-background-color:-label-color-1;
 }
 
-/*.table-row-cell, .tree-table-row-cell {
-    -fx-cell-size: 30px;
-}*/
-.table-row-cell, .tree-table-row-cell:hover {
-    -fx-cell-size: 100px;
-}
-.table-row-cell, .tree-table-row-cell:selected {
-    -fx-cell-size: 100px;
-}
+.table-row-cell, .tree-table-row-cell {
+    -fx-alignment: center ;
+    -fx-wrap-text: true;
 
+    -fx-font-size: 15px;
+    -fx-cell-size: 50px;
+}
+ .tree-table-row-cell:hover {
+    -fx-cell-size: 100px;
+}
+.tree-table-row-cell:selected {
+    -fx-cell-size: 100px;
+}
+/*
+.tree-row-cell{
+    -fx-alignment: center ;
+    -fx-wrap-text: true;
+    -fx-pref-height: ROw_HEIGHT;
+}*/
 
 .table-cell {
     -fx-border-color: -label-color-1 ; /* Vertical Lines*/

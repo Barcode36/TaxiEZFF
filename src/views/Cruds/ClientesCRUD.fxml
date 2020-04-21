@@ -27,7 +27,7 @@
       <Label layoutX="13.0" layoutY="378.0" styleClass="tittle-seccion-CRUD" text="Extra" AnchorPane.leftAnchor="13.0" />
       <Separator layoutX="100.0" layoutY="398.0" prefHeight="3.0" prefWidth="399.0" />
       <JFXTextField fx:id="textField_observ" focusColor="#5ab444" labelFloat="true" layoutX="41.0" layoutY="431.0" prefHeight="31.0" prefWidth="439.0" promptText="Observaciones" />
-      <Button layoutX="388.0" layoutY="501.0" mnemonicParsing="false" onAction="#btn_Agregar_Click" prefHeight="25.0" prefWidth="113.0" styleClass="boton-aceptar" text="Aceptar" />
-      <Button layoutX="261.0" layoutY="500.0" mnemonicParsing="false" onAction="#btn_Cancelar_Click" prefHeight="25.0" prefWidth="113.0" styleClass="boton-cancelar" text="Cancelar" />
+      <Button fx:id="button_Aceptar" layoutX="388.0" layoutY="501.0" mnemonicParsing="false" onAction="#btn_Agregar_Click" prefHeight="25.0" prefWidth="113.0" styleClass="boton-aceptar" text="Aceptar" />
+      <Button fx:id="button_Cancelar" layoutX="261.0" layoutY="500.0" mnemonicParsing="false" onAction="#btn_Cancelar_Click" prefHeight="25.0" prefWidth="113.0" styleClass="boton-cancelar" text="Cancelar" />
    </children>
 </AnchorPane>
