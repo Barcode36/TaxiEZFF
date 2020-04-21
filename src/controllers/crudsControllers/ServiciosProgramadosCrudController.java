@@ -13,6 +13,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import models.interfaces.Registro;
 import models.interfaces.SetAddRegistroListener;
 
 public class ServiciosProgramadosCrudController extends SetAddRegistroListener {
@@ -118,4 +119,13 @@ public class ServiciosProgramadosCrudController extends SetAddRegistroListener {
 
     }
 
+    @Override
+    public void extraerRegistro(Registro registro) {
+
+    }
+
+    @Override
+    public Registro guardarCambiosRegistros() {
+        return null;
+    }
 }

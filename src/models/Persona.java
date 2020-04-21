@@ -8,6 +8,7 @@ public class Persona<S> extends RecursiveTreeObject<S> {
     private String observaciones;
     private Direccion direccion;
 
+
     public Persona(String nombre, String observaciones, Direccion direccion) {
         this.nombre = nombre;
         this.observaciones = observaciones;

@@ -249,6 +249,7 @@ que además es independiente a la de sin foco*/
 .table-cell {
     -fx-border-color: -label-color-1 ; /* Vertical Lines*/
     -fx-border-width: 1;
+    -fx-wrap-text: true;
 }
 /*Vic xd*/
 .tree-table-cell {

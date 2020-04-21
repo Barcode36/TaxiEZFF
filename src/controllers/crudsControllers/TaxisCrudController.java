@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import models.Taxi;
 import models.Taxista;
 import models.interfaces.AddRegistro;
+import models.interfaces.Registro;
 import models.interfaces.SetAddRegistroListener;
 
 public class TaxisCrudController extends SetAddRegistroListener {
@@ -39,7 +40,7 @@ public class TaxisCrudController extends SetAddRegistroListener {
 
     @FXML
     void btn_Agregar_Click(ActionEvent event) {
-        enviarRegistro(null);
+        enviarRegistro();
     }
 
     @FXML
@@ -48,5 +49,13 @@ public class TaxisCrudController extends SetAddRegistroListener {
     }
 
 
+    @Override
+    public void extraerRegistro(Registro registro) {
 
+    }
+
+    @Override
+    public Registro guardarCambiosRegistros() {
+        return null;
+    }
 }
