@@ -178,15 +178,15 @@ public class TaxisController implements Initializable,IAccion {
     private void abrirVentanaCrud(ActionEvent event, AddRegistro addRegistro){
         try {
 
-            FXMLLoader controladorLoader = new FXMLLoader(getClass().getResource("/views/Cruds/EmpleadosCRUD.fxml"));
+            FXMLLoader controladorLoader = new FXMLLoader(getClass().getResource("/views/Cruds/TaxisCRUD.fxml"));
             AnchorPane contenedor = controladorLoader.load();
-            EmpleadosCrudController empleadosCrudController = controladorLoader.getController();
+            TaxisCrudController taxisCrudController = controladorLoader.getController();
 
-            empleadosCrudController.setAddRegistroListener(addRegistro);
+            taxisCrudController.setAddRegistroListener(addRegistro);
 
             Stage primaryStage = new Stage();
             // Parent root = FXMLLoader.load(getClass().getResource("/views/Cruds/taxisCRUD.fxml"));
-            primaryStage.setTitle("Empleados");
+            primaryStage.setTitle("Taxis");
             Scene scene = new Scene(contenedor);
             scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ENTER), new Runnable() {
                 @Override
