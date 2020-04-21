@@ -1,25 +1,41 @@
 package controllers;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXTreeTableView;
+import com.jfoenix.controls.*;
+import com.sun.javafx.robot.FXRobot;
+import com.sun.javafx.robot.FXRobotFactory;
+import controllers.crudsControllers.EmpleadosCrudController;
 import controllers.crudsControllers.TaxisCrudController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import models.Empleado;
+import models.Taxi;
+import models.Taxista;
 import models.interfaces.Registro;
 import models.interfaces.AddRegistro;
 import models.interfaces.IAccion;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class TaxisController implements IAccion {
+public class TaxisController implements Initializable,IAccion {
     @FXML
     private Label label_taxis;
 
@@ -36,64 +52,82 @@ public class TaxisController implements IAccion {
     private JFXButton button_actualizarTaxi;
 
     @FXML
-    private JFXTreeTableView<?> table_taxis;
+    private JFXTreeTableView<Taxi> table_taxis;
 
     @FXML
-    private TreeTableColumn<?, ?> column_unidad;
+    private TreeTableColumn<Taxi, String> column_unidad;
 
     @FXML
-    private TreeTableColumn<?, ?> column_marca;
+    private TreeTableColumn<Taxi, String> column_marca;
 
     @FXML
-    private TreeTableColumn<?, ?> column_modelo;
+    private TreeTableColumn<Taxi, String> column_modelo;
 
     @FXML
-    private TreeTableColumn<?, ?> column_placa;
+    private TreeTableColumn<Taxi, String> column_placa;
 
     @FXML
-    private TreeTableColumn<?, ?> column_taxista;
+    private TreeTableColumn<Taxi, Taxista> column_taxista;
 
-    @FXML
-    void btnAgregarTaxi_OnAction(ActionEvent event) throws IOException {
+    ObservableList<Taxi> listaTaxis = FXCollections.observableArrayList();
 
-        try {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
 
-            FXMLLoader controladorLoader = new FXMLLoader(getClass().getResource("/views/Cruds/TaxisCRUD.fxml"));
-            AnchorPane contenedorServicios = controladorLoader.load();
-            TaxisCrudController taxisCrudController = controladorLoader.getController();
+        this.column_marca.setCellValueFactory(new TreeItemPropertyValueFactory("marca"));
+        this.column_unidad.setCellValueFactory(new TreeItemPropertyValueFactory("idUnidad"));
+        this.column_placa.setCellValueFactory(new TreeItemPropertyValueFactory("placa"));
+        this.column_modelo.setCellValueFactory(new TreeItemPropertyValueFactory("modelo"));
+        this.column_taxista.setCellValueFactory(new TreeItemPropertyValueFactory("taxista"));
+        this.column_taxista.setCellFactory(new Callback<TreeTableColumn<Taxi, Taxista>, TreeTableCell<Taxi, Taxista>>() {
+            @Override
+            public TreeTableCell<Taxi, Taxista> call(TreeTableColumn<Taxi, Taxista> param) {
+                TreeTableCell<Taxi,Taxista> cell = new TreeTableCell<Taxi,Taxista>(){
+                    @Override
+                    protected void updateItem(Taxista item, boolean empty) {
+                        super.updateItem(item, empty);
 
-            taxisCrudController.setAddRegistroListener(new AddRegistro() {
-                @Override
-                public void addRegistro(Registro registro) {
-                    System.out.println("LLegó registro");
+                        if(item!=null){
+                            this.setText(item.getIdTaxista() + " "+item.getNombre());
+                        }
+
+                    }
+                };
+
+                return cell;
+            }
+        });
+
+        TreeItem<Taxi> clienteRecursiveTreeItem = new RecursiveTreeItem<>(listaTaxis, (recursiveTreeObject) -> recursiveTreeObject.getChildren());
+        this.table_taxis.setRoot(clienteRecursiveTreeItem);
+        this.table_taxis.setShowRoot(false);
+
+        table_taxis.setRowFactory((param) -> {
+            JFXTreeTableRow<Taxi> row = new JFXTreeTableRow<>();
+
+            row.setOnMouseClicked(event->{
+
+                //si un registro es seleccionado con 1 o 2 clic
+                if(! row.isEmpty() && event.getButton()== MouseButton.PRIMARY && event.getClickCount() == 2){
+                    // Empleado clickedRow = row.getItem();
+                    //      btnDelete_Cliente.disableProperty().set(false);
+                    //    btnEdit_Cliente.disableProperty().set(false);
+                    //  System.out.println(clickedRow.getNombre());
+                    //abrirá la ventana para edición
+                    button_actualizarTaxi.fire();
+
+                }else
+                if (! row.isEmpty() && event.getButton()==MouseButton.PRIMARY && event.getClickCount() == 1) {
+
+
                 }
+
             });
-            
-            Stage primaryStage = new Stage();
-           // Parent root = FXMLLoader.load(getClass().getResource("/views/Cruds/taxisCRUD.fxml"));
-            primaryStage.setTitle("Taxis añadir");
-            primaryStage.setScene(new Scene(contenedorServicios));
-            primaryStage.setResizable(false);
-            primaryStage.initOwner( ((Node)event.getSource()).getScene().getWindow() );
-            primaryStage.initModality(Modality.WINDOW_MODAL);
-            primaryStage.show();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+            return row;
+        });
 
     }
-    @FXML
-    void btnActualizarTaxi_OnAction(ActionEvent event) {
-
-    }
-
-    @FXML
-    void btnEliminarTaxi_OnAction(ActionEvent event) {
-
-    }
-
     @Override
     public void accionPrimaria() {
         this.button_agregarTaxi.fire();
@@ -108,4 +142,69 @@ public class TaxisController implements IAccion {
     public void accionTerciaria() {
         this.button_actualizarTaxi.fire();
     }
+
+
+    @FXML
+    void btnAgregarTaxi_OnAction(ActionEvent event) throws IOException {
+
+        abrirVentanaCrud(event, new AddRegistro(null) {
+            @Override
+            public void addRegistro(Registro registro) {
+                listaTaxis.add((Taxi) registro);
+                table_taxis.getSelectionModel().selectLast();
+
+            }
+        });
+
+
+    }
+    @FXML
+    void btnActualizarTaxi_OnAction(ActionEvent event) {
+        abrirVentanaCrud(event, new AddRegistro(table_taxis.getSelectionModel().getSelectedItem().getValue()) {
+            @Override
+            public void addRegistro(Registro registro) {
+                table_taxis.getSelectionModel().getSelectedItem().setValue((Taxi) registro);
+                System.out.println("LLegó registro");
+            }
+        });
+    }
+
+    @FXML
+    void btnEliminarTaxi_OnAction(ActionEvent event) {
+
+    }
+
+
+    private void abrirVentanaCrud(ActionEvent event, AddRegistro addRegistro){
+        try {
+
+            FXMLLoader controladorLoader = new FXMLLoader(getClass().getResource("/views/Cruds/EmpleadosCRUD.fxml"));
+            AnchorPane contenedor = controladorLoader.load();
+            EmpleadosCrudController empleadosCrudController = controladorLoader.getController();
+
+            empleadosCrudController.setAddRegistroListener(addRegistro);
+
+            Stage primaryStage = new Stage();
+            // Parent root = FXMLLoader.load(getClass().getResource("/views/Cruds/taxisCRUD.fxml"));
+            primaryStage.setTitle("Empleados");
+            Scene scene = new Scene(contenedor);
+            scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ENTER), new Runnable() {
+                @Override
+                public void run() {
+                    FXRobot robot = FXRobotFactory.createRobot(scene);
+                    robot.keyPress(KeyCode.TAB);
+                }
+            });
+            primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
+            primaryStage.initOwner(this.button_actualizarTaxi.getScene().getWindow());
+            primaryStage.initModality(Modality.WINDOW_MODAL);
+            primaryStage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

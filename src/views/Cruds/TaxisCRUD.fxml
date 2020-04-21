@@ -13,7 +13,7 @@
       <Label layoutX="24.0" layoutY="80.0" styleClass="tittle-seccion-CRUD" text="Datos Vehículo" AnchorPane.leftAnchor="24.0" />
       <Separator layoutX="224.0" layoutY="98.0" prefHeight="3.0" prefWidth="274.0" />
       <JFXTextField fx:id="textField_unidad" focusColor="#5ab444" labelFloat="true" layoutX="35.0" layoutY="134.0" prefHeight="25.0" prefWidth="182.0" promptText="Unidad" />
-      <JFXComboBox fx:id="comboBox_marca" editable="true" focusColor="#5ab444" labelFloat="true" layoutX="273.0" layoutY="134.0" prefHeight="25.0" prefWidth="182.0" promptText="Marca" />
+      <JFXTextField fx:id="textField_marca" editable="true" focusColor="#5ab444" labelFloat="true" layoutX="273.0" layoutY="134.0" prefHeight="25.0" prefWidth="182.0" promptText="Marca" />
       <JFXTextField fx:id="textField_placa" focusColor="#5ab444" labelFloat="true" layoutX="35.0" layoutY="213.0" prefHeight="25.0" prefWidth="182.0" promptText="Placa" />
       <JFXTextField fx:id="textField_modelo" focusColor="#5ab444" labelFloat="true" layoutX="273.0" layoutY="213.0" prefHeight="31.0" prefWidth="182.0" promptText="Modelo" />
       <JFXComboBox fx:id="comboBox_taxista" focusColor="#5ab444" labelFloat="true" layoutX="35.0" layoutY="311.0" prefHeight="31.0" prefWidth="419.0" promptText="Taxista" />
