@@ -21,10 +21,9 @@
             <Font name="Gadugi" size="13.0" />
          </font>
       </JFXTextField>
-      <JFXPasswordField fx:id="textField_password" focusColor="#5ab444" labelFloat="true" layoutX="41.0" layoutY="207.0" prefHeight="31.0" prefWidth="194.0" promptText="Contraseña" />
+      <JFXPasswordField fx:id="textField_password" focusColor="#5ab444" labelFloat="true" layoutX="41.0" layoutY="207.0" prefHeight="31.0" prefWidth="182.0" promptText="Contraseña" />
       <JFXDatePicker fx:id="datePicker_nacimiento" editable="false" layoutX="261.0" layoutY="207.0" prefHeight="31.0" prefWidth="220.0" promptText="Fecha de Nacimiento" />
-      <JFXComboBox fx:id="comboBox_sexo" focusColor="#5ab444" labelFloat="true" layoutX="41.0" layoutY="274.0" prefHeight="25.0" prefWidth="182.0" promptText="Sexo" />
-      <JFXComboBox fx:id="comboBox_tipo_empleado" focusColor="#5ab444" labelFloat="true" layoutX="261.0" layoutY="274.0" prefHeight="25.0" prefWidth="182.0" promptText="Tipo de empleado" />
+      <JFXComboBox fx:id="comboBox_tipo_empleado" focusColor="#5ab444" labelFloat="true" layoutX="41.0" layoutY="274.0" prefHeight="25.0" prefWidth="182.0" promptText="Tipo de empleado" />
       <Label layoutX="25.0" layoutY="325.0" styleClass="tittle-seccion-CRUD" text="Dirección" AnchorPane.leftAnchor="25.0" />
       <Separator layoutX="151.0" layoutY="345.0" prefHeight="3.0" prefWidth="353.0" />
       <JFXTextField fx:id="textField_calle" focusColor="#5ab444" labelFloat="true" layoutX="41.0" layoutY="375.0" prefHeight="25.0" prefWidth="182.0" promptText="Calle" />
@@ -34,7 +33,7 @@
       <Label layoutX="25.0" layoutY="501.0" styleClass="tittle-seccion-CRUD" text="Extra" AnchorPane.leftAnchor="25.0" />
       <Separator layoutX="94.0" layoutY="520.0" prefHeight="3.0" prefWidth="405.0" />
       <JFXTextField fx:id="textField_observ" focusColor="#5ab444" labelFloat="true" layoutX="41.0" layoutY="562.0" prefHeight="31.0" prefWidth="447.0" promptText="Observaciones" />
-      <Button layoutX="261.0" layoutY="626.0" mnemonicParsing="false" onAction="#btn_Cancelar_Click" prefHeight="25.0" prefWidth="113.0" styleClass="boton-cancelar" text="Cancelar" />
-      <Button layoutX="388.0" layoutY="628.0" mnemonicParsing="false" onAction="#btn_Agregar_Click" prefHeight="25.0" prefWidth="113.0" styleClass="boton-aceptar" text="Aceptar" />
+      <Button fx:id="btnAceptar" layoutX="388.0" layoutY="628.0" mnemonicParsing="false" onAction="#btn_Agregar_Click" prefHeight="25.0" prefWidth="113.0" styleClass="boton-aceptar" text="Aceptar" />
+      <Button fx:id="btnCancelar" layoutX="261.0" layoutY="626.0" mnemonicParsing="false" onAction="#btn_Cancelar_Click" prefHeight="25.0" prefWidth="113.0" styleClass="boton-cancelar" text="Cancelar" />
    </children>
 </AnchorPane>

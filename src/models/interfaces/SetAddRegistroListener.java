@@ -13,7 +13,7 @@ public abstract class SetAddRegistroListener {
     }
 
     /**
-     * Envia el registro a la referencia indicada, es decir a la pantalla padre.
+     * Envia el registro a la referencia indicada, es decir a la pantalla padre(Listener).
      */
     public void enviarRegistro(){
         if(addRegistroListener!=null){

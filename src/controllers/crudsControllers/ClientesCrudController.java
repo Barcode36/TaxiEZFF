@@ -59,7 +59,7 @@ public class ClientesCrudController extends SetAddRegistroListener implements In
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-       // setFieldValidations();
+        setFieldValidations();
         button_Aceptar.setOnKeyReleased((event)->{
             if(event.getCode() == KeyCode.ENTER)
                 button_Aceptar.fire();
@@ -127,9 +127,11 @@ public class ClientesCrudController extends SetAddRegistroListener implements In
     @Override
     public void setLengthValidation() {
         this.textField_nombre.getValidators().add(new StringLengthValidator("Longuitud máxima de 70 carácteres.", 70));
-        this.textField_nombre.getValidators().add(new StringLengthValidator("Longuitud máxima de 15 carácteres.", 15));
         this.textField_calle.getValidators().add(new StringLengthValidator("Longuitud máxima de 45 carácteres.", 45));
         this.textField_colonia.getValidators().add(new StringLengthValidator("Longuitud máxima de 45 carácteres.", 45));
+        this.textField_numInt.getValidators().add(new StringLengthValidator("Longuitud máxima de 8 carácteres.", 8));
+        this.textField_numExt.getValidators().add(new StringLengthValidator("Longuitud máxima de 8 carácteres.", 8));
+
         textField_nombre.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
