@@ -7,6 +7,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import models.Direccion;
+import models.Taxista;
 import models.interfaces.Registro;
 import models.interfaces.SetAddRegistroListener;
 
@@ -22,9 +24,6 @@ public class TaxistasCrudController extends SetAddRegistroListener {
 
     @FXML
     private JFXTextField textField_telefono;
-
-    @FXML
-    private JFXComboBox<?> comboBox_sexo;
 
     @FXML
     private JFXDatePicker datePicker_nacimiento;
@@ -54,13 +53,37 @@ public class TaxistasCrudController extends SetAddRegistroListener {
 
     }
 
+    int idTaxista = 0;
+    int idDireccion = 0;
     @Override
     public void extraerRegistro(Registro registro) {
+
+        if(registro!=null){
+            Taxista taxista = (Taxista) registro;
+            Direccion direccion = taxista.getDireccion();
+            this.idTaxista = taxista.getIdTaxista();
+            this.idDireccion = taxista.getDireccion().getIdDireccion();
+            textField_telefono.setText(taxista.getTelefono());
+            textField_nombre.setText(taxista.getNombre());
+
+            datePicker_nacimiento.setValue(taxista.getFechaNac());
+            textField_calle.setText(direccion.getCalle());
+            textField_colonia.setText(direccion.getColonia());
+            textField_numExt.setText(direccion.getNumExt());
+            textField_numInt.setText(direccion.getNumInt());
+
+            textField_observaciones.setText(taxista.getObservaciones());
+        }
 
     }
 
     @Override
     public Registro guardarCambiosRegistros() {
-        return null;
+
+        Direccion direccion =  new Direccion(this.idDireccion, textField_calle.getText(), textField_colonia.getText(), textField_numInt.getText(), textField_numExt.getText());
+        Taxista taxista = new Taxista(this.idTaxista, datePicker_nacimiento.getValue(), textField_telefono.getText(), textField_nombre.getText(), textField_observaciones.getText(), direccion);
+
+
+        return taxista;
     }
 }

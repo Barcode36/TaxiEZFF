@@ -105,8 +105,8 @@ public class EmpleadosController  implements Initializable, IAccion {
             }
         });
 
-        TreeItem<Empleado> clienteRecursiveTreeItem = new RecursiveTreeItem<>(listaEmpleados, (recursiveTreeObject) -> recursiveTreeObject.getChildren());
-        this.table_empleados.setRoot(clienteRecursiveTreeItem);
+        TreeItem<Empleado> empleadoRecursiveTreeItem = new RecursiveTreeItem<>(listaEmpleados, (recursiveTreeObject) -> recursiveTreeObject.getChildren());
+        this.table_empleados.setRoot(empleadoRecursiveTreeItem);
         this.table_empleados.setShowRoot(false);
 
         table_empleados.setRowFactory((param) -> {
