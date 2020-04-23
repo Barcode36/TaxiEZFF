@@ -19,25 +19,16 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import models.interfaces.IValidateCRUD;
 import persistencia.SharePreferencesDB;
+import resources.Statics;
 
 /**
  * FXML Controller class
@@ -66,8 +57,8 @@ public class ConfiguracionController implements Initializable, IValidateCRUD {
 
     private boolean conexionSatisfactoria = false;
     private SharePreferencesDB configuracion;
-    
-    
+    Connection connection;
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -94,6 +85,7 @@ public class ConfiguracionController implements Initializable, IValidateCRUD {
             
             //guardar configuración de la DB en el json
             SharePreferencesDB.setConfiguracion(this.getVentanaConfiguracion());
+            Statics.setConnections(this.connection);
             ( (Stage) ((Node)event.getSource()).getScene().getWindow()).close();
         }
         
@@ -108,10 +100,10 @@ public class ConfiguracionController implements Initializable, IValidateCRUD {
             String user = this.txt_Usuario.getText();
             String pass = this.txt_Contrasena.getText();
  
-            Connection connection;
             try {
                Class.forName("com.mysql.jdbc.Driver").newInstance();
-               connection = DriverManager.getConnection(path,user,pass);
+                connection = DriverManager.getConnection(path,user,pass);
+
                this.conexionSatisfactoria = true;
             } 
             catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SQLException ex) 
