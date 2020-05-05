@@ -5,9 +5,11 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.base.IFXValidatableControl;
 import com.jfoenix.validation.RequiredFieldValidator;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
@@ -141,11 +143,13 @@ public class EmpleadosCrudController extends SetAddRegistroListener implements I
     public void setFieldValidations() {
         setLengthValidation();
         setRequiredValidation();
+        setFocusedProperty();
     }
 
     @Override
     public void setLengthValidation() {
-        this.textField_nombre.getValidators().add(new StringLengthValidator("Longuitud máxima de 70 carácteres.", 70));
+        this.textField_nombre.getValidators().add(new StringLengthValidator("Longuitud máxima de 45 carácteres.", 45));
+        this.textField_telefono.getValidators().add(new StringLengthValidator("Longuitud máxima de 11 carácteres.", 11));
         this.textField_password.getValidators().add(new StringLengthValidator("Longuitud máxima de 15 carácteres.", 15));
         this.textField_calle.getValidators().add(new StringLengthValidator("Longuitud máxima de 45 carácteres.", 45));
         this.textField_colonia.getValidators().add(new StringLengthValidator("Longuitud máxima de 45 carácteres.", 45));
@@ -156,16 +160,58 @@ public class EmpleadosCrudController extends SetAddRegistroListener implements I
 
     @Override
     public void setRequiredValidation() {
-        this.textField_telefono.getValidators().add(new RequiredFieldValidator("Este campo es requerido."));
         this.textField_calle.getValidators().add(new RequiredFieldValidator("Este campo es requerido."));
         this.textField_colonia.getValidators().add(new RequiredFieldValidator("Este campo es requerido."));
         this.textField_password.getValidators().add(new RequiredFieldValidator("Este campo es requerido."));
         this.comboBox_tipo_empleado.getValidators().add(new RequiredFieldValidator("Este campo es requerido."));
+        this.textField_nombre.getValidators().add(new RequiredFieldValidator("Este campo es requerido."));
 
     }
+    private void setFocusedProperty() {
 
+        textField_calle.focusedProperty().addListener((observable,  oldValue,  newValue)-> {
+            if(!newValue)
+                textField_calle.validate();
+        });
+        textField_colonia.focusedProperty().addListener((observable,  oldValue,  newValue)-> {
+            if(!newValue)
+                textField_colonia.validate();
+        });
+        textField_password.focusedProperty().addListener((observable,  oldValue,  newValue)-> {
+            if(!newValue)
+                textField_password.validate();
+        });
+        comboBox_tipo_empleado.focusedProperty().addListener((observable,  oldValue,  newValue)-> {
+            if(!newValue)
+                comboBox_tipo_empleado.validate();
+        });
+        textField_nombre.focusedProperty().addListener((observable,  oldValue,  newValue)-> {
+            if(!newValue)
+                textField_nombre.validate();
+        });
+        textField_numExt.focusedProperty().addListener((observable,  oldValue,  newValue)-> {
+            if(!newValue)
+                textField_numExt.validate();
+        });
+        textField_numInt.focusedProperty().addListener((observable,  oldValue,  newValue)-> {
+            if(!newValue)
+                textField_numInt.validate();
+        });
+
+    }
     @Override
     public boolean validarCampos() {
-        return false;
+        ObservableList<Node> listaHijos = root.getChildren();
+        boolean validacioExitosa = true;
+
+        for(Node node : listaHijos){
+            if(node instanceof IFXValidatableControl){
+                boolean validate = ((IFXValidatableControl) node).validate();
+                validacioExitosa = validacioExitosa&&validate;
+            }
+        }
+
+
+        return validacioExitosa;
     }
 }

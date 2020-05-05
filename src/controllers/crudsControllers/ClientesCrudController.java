@@ -181,12 +181,12 @@ public class ClientesCrudController extends SetAddRegistroListener implements In
 
     @Override
     public void setLengthValidation() {
-        this.textField_nombre.getValidators().add(new StringLengthValidator("Longuitud máxima de 70 carácteres.", 70));
+        this.textField_nombre.getValidators().add(new StringLengthValidator("Longuitud máxima de 45 carácteres.", 45));
         this.textField_calle.getValidators().add(new StringLengthValidator("Longuitud máxima de 45 carácteres.", 45));
         this.textField_colonia.getValidators().add(new StringLengthValidator("Longuitud máxima de 45 carácteres.", 45));
         this.textField_numInt.getValidators().add(new StringLengthValidator("Longuitud máxima de 8 carácteres.", 8));
         this.textField_numExt.getValidators().add(new StringLengthValidator("Longuitud máxima de 8 carácteres.", 8));
-        this.textField_telefono.getValidators().add(new StringLengthValidator("Longuitud máxima de 10 carácteres.", 10));
+        this.textField_telefono.getValidators().add(new StringLengthValidator("Longuitud máxima de 10 carácteres.", 11));
 
         textField_nombre.textProperty().addListener((observable,  oldValue,  newValue)-> {
             textField_nombre.validate();
