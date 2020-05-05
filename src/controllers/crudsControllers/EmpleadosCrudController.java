@@ -78,7 +78,7 @@ public class EmpleadosCrudController extends SetAddRegistroListener implements I
 
     @FXML
     void btn_Agregar_Click(ActionEvent event) {
-        enviarRegistro();
+        enviarRegistro(event);
         ((Stage)textField_observ.getScene().getWindow()).close();
 
     }

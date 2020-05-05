@@ -15,10 +15,13 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import resources.Statics;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
@@ -38,8 +41,6 @@ public class LoginController implements Initializable {
     @FXML
     private Button btn_login;
 
-    @FXML
-    private Button btn_cerrar;
 
     @FXML
     private Button btn_config;
@@ -48,11 +49,34 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        try {
+            Statics.createConnection();
+        } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+            //crear ventana error.
+        }
+
     }
 
 
     @FXML
     void btnConfig_OnAction(ActionEvent event) {
+        Stage stage = new Stage();
+        stage.getIcons().add(new Image("/resources/imagenes/iconos/Taxi/taxi.png"));
+        Parent parent = null;
+        try {
+
+            parent = FXMLLoader.load(getClass().getResource("/views/Configuracion.fxml"));
+            stage.setTitle("Taxis");
+
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(btn_login.getScene().getWindow());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

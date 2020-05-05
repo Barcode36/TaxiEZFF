@@ -88,7 +88,7 @@ public class TaxisCrudController extends SetAddRegistroListener implements Initi
 
     @FXML
     void btn_Agregar_Click(ActionEvent event) {
-        enviarRegistro();
+        enviarRegistro(event);
         ((Stage)this.comboBox_taxista.getScene().getWindow()).close();
     }
 

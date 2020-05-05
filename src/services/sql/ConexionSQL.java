@@ -14,14 +14,14 @@ public class ConexionSQL
    //private final String  PASS="";
    Connection connection=null;
 
-   public  Connection getConexion() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException 
+   public  Connection getConexion() throws SQLException, ClassNotFoundException, InstantiationException, IllegalAccessException
    {
  
            Class.forName(NAME).newInstance();
            SharePreferencesDB configuracionDB = SharePreferencesDB.getConfiguracion();
            String path = "jdbc:mysql://";
            path+=configuracionDB.getIp() + ":";
-           path+=configuracionDB.getPuerto() + "/taxiez";
+           path+=configuracionDB.getPuerto() + "/taxiezf";
            
            connection = DriverManager.getConnection(path,configuracionDB.getUser(),configuracionDB.getPass());
 

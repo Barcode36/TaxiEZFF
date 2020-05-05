@@ -32,6 +32,7 @@ import models.interfaces.AddRegistro;
 import models.interfaces.IAccion;
 import models.interfaces.Registro;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -157,9 +158,10 @@ public class TaxistasController implements Initializable, IAccion {
     void btnActualizarTaxista_OnAction(ActionEvent event) {
         abrirVentanaCrud(event, new AddRegistro(table_taxistas.getSelectionModel().getSelectedItem().getValue()) {
             @Override
-            public void addRegistro(Registro registro) {
+            public boolean addRegistro(Registro registro, ActionEvent event1) {
                 table_taxistas.getSelectionModel().getSelectedItem().setValue((Taxista) registro);
                 System.out.println("Edicion");
+                return false;
             }
         });
     }
@@ -168,9 +170,10 @@ public class TaxistasController implements Initializable, IAccion {
     void btnAgregarTaxista_OnAction(ActionEvent event) {
         abrirVentanaCrud(event, new AddRegistro(null) {
             @Override
-            public void addRegistro(Registro registro) {
+            public boolean addRegistro(Registro registro, ActionEvent event1) {
                 listaTaxistas.add((Taxista) registro);
                 table_taxistas.getSelectionModel().selectLast();
+                return false;
             }
         });
     }

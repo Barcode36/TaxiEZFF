@@ -1,5 +1,7 @@
 package models.interfaces;
 
+import javafx.event.ActionEvent;
+
 public abstract class SetAddRegistroListener {
     protected AddRegistro addRegistroListener;
    // protected Registro registroActualizar=null;
@@ -15,11 +17,15 @@ public abstract class SetAddRegistroListener {
     /**
      * Envia el registro a la referencia indicada, es decir a la pantalla padre(Listener).
      */
-    public void enviarRegistro(){
+    public boolean enviarRegistro(ActionEvent event){
         if(addRegistroListener!=null){
             //haciendo callback con un booleano digamos, para confirmar la adición a la DB y cerrar la ventana. cambiando firma de void a bool.
-            this.addRegistroListener.addRegistro(guardarCambiosRegistros());
+            return this.addRegistroListener.addRegistro(guardarCambiosRegistros(),event);
         }
+        //casi no deseable, este pundo jamás debe llegar,porque significaria que el listener es null. Las ventanas CRUDD que implementan esta clase
+        //son invocadas por otra ventana por eso siempre hay un listener, y en caso de que no lo haya entonces la ventana no existe y tampoco ese punto del programa.
+
+        return false;
     }
 
     /**

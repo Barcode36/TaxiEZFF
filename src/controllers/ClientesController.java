@@ -18,6 +18,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -26,7 +27,9 @@ import models.Direccion;
 import models.interfaces.AddRegistro;
 import models.interfaces.IAccion;
 import models.interfaces.Registro;
+import services.sql.clienteConexion.ClienteSQL;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -74,11 +77,9 @@ public class ClientesController implements Initializable,IAccion {
         this.column_telefono.setCellValueFactory(new TreeItemPropertyValueFactory("numero"));
         this.column_direccion.setCellValueFactory(new TreeItemPropertyValueFactory("direccion"));
         this.column_observaciones.setCellValueFactory(new TreeItemPropertyValueFactory("observaciones"));
-        listaServicios.add(new Cliente("452123456", true, "Vic as kasdkjl", "observando", new Direccion(1, "calle1", "col1", "1", "2")));
-        listaServicios.add(new Cliente("a452123456", true, "Vic as kasdkjl", "observando", new Direccion(1, "calle1", "col1", "1", "2")));
-        listaServicios.add(new Cliente("4s52123456", true, "Vic as kasdkjl", "observando", new Direccion(1, "calle1", "col1", "1", "2")));
+        listaServicios = new ClienteSQL().getClientes();
+
         TreeItem<Cliente> clienteRecursiveTreeItem = new RecursiveTreeItem<>(listaServicios, (recursiveTreeObject) -> recursiveTreeObject.getChildren());
-//label_clientes.wr
         this.table_view_clientes.setRoot(clienteRecursiveTreeItem);
         this.table_view_clientes.setShowRoot(false);
         this.column_direccion.setCellFactory(new Callback<TreeTableColumn<Cliente, Direccion>, TreeTableCell<Cliente, Direccion>>() {
@@ -102,20 +103,7 @@ public class ClientesController implements Initializable,IAccion {
                   return cell;
             }
         });
-    /*     table_view_clientes.setOnKeyReleased(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if(event.getCode() == KeyCode.ENTER){
 
-                        button_actualizarCliente.fire();
-                        System.out.println("Actualizar reg selectede");
-                }else if(event.getCode() == KeyCode.DELETE){
-                    button_eliminarCliente.fire();
-                    System.out.println("Eliminar regselected");
-                }
-            }
-        });
-        */
         //definir una fila de fabrica.
         table_view_clientes.setRowFactory((param) -> {
             // TableRow<Empleados> row = new TableRow<>();
@@ -167,11 +155,15 @@ public class ClientesController implements Initializable,IAccion {
 
     @FXML
     void btnActualizarCliente_OnAction(ActionEvent event) {
+
         abrirVentanaCrud(event, new AddRegistro(table_view_clientes.getSelectionModel().getSelectedItem().getValue()) {
             @Override
-            public void addRegistro(Registro registro) {
-                table_view_clientes.getSelectionModel().getSelectedItem().setValue((Cliente)registro);
-                System.out.println("Edicion");
+            public boolean addRegistro(Registro registro, ActionEvent event1) {
+                if(new ClienteSQL().actualizar((Cliente) registro)){
+                    table_view_clientes.getSelectionModel().getSelectedItem().setValue((Cliente)registro);
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -180,23 +172,31 @@ public class ClientesController implements Initializable,IAccion {
     void btnAddCliente_OnAction(ActionEvent event) {
         abrirVentanaCrud(event, new AddRegistro(null) {
             @Override
-            public void addRegistro(Registro registro) {
-                listaServicios.add((Cliente) registro);
-                table_view_clientes.getSelectionModel().selectLast();
+            public boolean addRegistro(Registro registro,ActionEvent event1) {
+                if(new ClienteSQL().insertar((Cliente) registro,event1)) {
+                    listaServicios.add((Cliente) registro);
+                    table_view_clientes.getSelectionModel().selectLast();
+                    return true;
+                }
+                return false;
+
             }
         });
     }
 
     @FXML
     void btnDeleteCliente_OnAction(ActionEvent event) {
-
+        Cliente clienteSelected = table_view_clientes.getSelectionModel().getSelectedItem().getValue();
+        if(new ClienteSQL().eliminar(clienteSelected)){
+            listaServicios.remove(clienteSelected);
+        }
     }
 
     private void abrirVentanaCrud(ActionEvent event, AddRegistro addRegistro){
         try {
 
             FXMLLoader controladorLoader = new FXMLLoader(getClass().getResource("/views/Cruds/ClientesCRUD.fxml"));
-            AnchorPane contenedorCRUDClientes = controladorLoader.load();
+            StackPane contenedorCRUDClientes = controladorLoader.load();
             ClientesCrudController clientesCrudController = controladorLoader.getController();
 
             clientesCrudController.setAddRegistroListener(addRegistro);

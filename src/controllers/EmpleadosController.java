@@ -159,9 +159,10 @@ public class EmpleadosController  implements Initializable, IAccion {
 
         abrirVentanaCrud(event, new AddRegistro(null) {
             @Override
-            public void addRegistro(Registro registro) {
+            public boolean addRegistro(Registro registro, ActionEvent event1) {
                 listaEmpleados.add((Empleado) registro);
                 table_empleados.getSelectionModel().selectLast();
+                return true;
             }
         });
     }
@@ -173,9 +174,10 @@ public class EmpleadosController  implements Initializable, IAccion {
     void btnActualizarEmpleado_OnAction(ActionEvent event) {
         abrirVentanaCrud(event, new AddRegistro(table_empleados.getSelectionModel().getSelectedItem().getValue()) {
             @Override
-            public void addRegistro(Registro registro) {
+            public boolean addRegistro(Registro registro, ActionEvent event1) {
                 table_empleados.getSelectionModel().getSelectedItem().setValue((Empleado) registro);
                 System.out.println("Edicion");
+                return true;
             }
         });
     }

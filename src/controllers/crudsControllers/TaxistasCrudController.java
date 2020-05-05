@@ -45,7 +45,7 @@ public class TaxistasCrudController extends SetAddRegistroListener {
 
     @FXML
     void btn_Agregar_Click(ActionEvent event) {
-        enviarRegistro();
+        enviarRegistro(event);
     }
 
     @FXML

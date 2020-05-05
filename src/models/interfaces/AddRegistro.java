@@ -1,7 +1,10 @@
 package models.interfaces;
 
 import controllers.crudsControllers.ClientesCrudController;
+import javafx.event.ActionEvent;
 import javafx.util.Callback;
+
+
 
 public abstract class AddRegistro {
 
@@ -11,7 +14,7 @@ public abstract class AddRegistro {
         this.registro = registro;
     }
 
-    public abstract void addRegistro(Registro registro);
+    public abstract boolean addRegistro(Registro registro, ActionEvent event);
 
     public AddRegistro() {
         super();
