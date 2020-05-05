@@ -87,7 +87,7 @@ public class ClientesCrudController extends SetAddRegistroListener implements In
     void btn_Agregar_Click(ActionEvent event) {
 
         if(validarCampos() ){
-            if(enviarRegistro(event)) //si fue posible subir la info se cerrará la ventana
+            if(enviarRegistro(((Stage)button_Aceptar.getScene().getWindow()))) //si fue posible subir la info se cerrará la ventana
                 ((Stage)button_Aceptar.getScene().getWindow()).close();
         }
 

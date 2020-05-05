@@ -2,6 +2,7 @@ package models.interfaces;
 
 import controllers.crudsControllers.ClientesCrudController;
 import javafx.event.ActionEvent;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 
@@ -27,7 +28,7 @@ public abstract class AddRegistro {
      * True si se añadió correctamente(criterio de cada ventana.
      * False si no se añadió correctamente(criterio de cada ventana.
      */
-    public abstract boolean addRegistro(Registro registro, ActionEvent event);
+    public abstract boolean addRegistro(Registro registro, Stage stage);
 
     public AddRegistro() {
         super();

@@ -149,7 +149,7 @@ public class TaxisController implements Initializable,IAccion {
 
         abrirVentanaCrud(event, new AddRegistro(null) {
             @Override
-            public boolean addRegistro(Registro registro, ActionEvent event1) {
+            public boolean addRegistro(Registro registro, Stage stage) {
                 listaTaxis.add((Taxi) registro);
                 table_taxis.getSelectionModel().selectLast();
                 return false;
@@ -162,7 +162,7 @@ public class TaxisController implements Initializable,IAccion {
     void btnActualizarTaxi_OnAction(ActionEvent event) {
         abrirVentanaCrud(event, new AddRegistro(table_taxis.getSelectionModel().getSelectedItem().getValue()) {
             @Override
-            public boolean addRegistro(Registro registro, ActionEvent event1) {
+            public boolean addRegistro(Registro registro, Stage stage) {
                 table_taxis.getSelectionModel().getSelectedItem().setValue((Taxi) registro);
                 System.out.println("LLegó registro");
                 return false;

@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import models.Direccion;
 import models.Taxista;
 import models.interfaces.Registro;
@@ -45,7 +46,7 @@ public class TaxistasCrudController extends SetAddRegistroListener {
 
     @FXML
     void btn_Agregar_Click(ActionEvent event) {
-        enviarRegistro(event);
+        enviarRegistro(((Stage)textField_nombre.getScene().getWindow()));
     }
 
     @FXML

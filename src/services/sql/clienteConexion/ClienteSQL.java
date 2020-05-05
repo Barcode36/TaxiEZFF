@@ -52,14 +52,14 @@ public class ClienteSQL {
      * error SQL que va al Logger.
      * @param cliente
      * El cliente a insertar, este puede tener o no un numero de telefono que ya exista en la bse de datos.
-     * @param event
-     * Se usa para capturar la ventana de donde poner la alerta.
+     * @param stage
+     * La pantalla para mostrar confirmación en caso de ser requerido.
      * @return
      * True si se insertó correctamente.
      * False si no se insertó.
      *
      */
-    public boolean insertar(Cliente cliente, ActionEvent event)  {
+    public boolean insertar(Cliente cliente, Stage stage)  {
         //si existe entonces se "borrará" (ocultará) el registro(s) que contenga a ese numero de telefono.
         this.event = event;
         try{
@@ -67,7 +67,7 @@ public class ClienteSQL {
             if(existe(cliente ,true)){
 
                 Optional<Boolean> resultConfirmacion =
-                        Statics.crearConfirmacion((Stage) ((Node) event.getSource()).getScene().getWindow(),"Ese número de telefono ya está registrado","Los nuevos datos reemplazarán al anterior. \n ¿Desea continuar?");
+                        Statics.crearConfirmacion(stage,"Ese número de telefono ya está registrado","Los nuevos datos reemplazarán al anterior. \n ¿Desea continuar?");
                 //por si solo se cierra la ventana.
                 existe = false;
 

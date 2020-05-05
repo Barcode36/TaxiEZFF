@@ -158,7 +158,7 @@ public class TaxistasController implements Initializable, IAccion {
     void btnActualizarTaxista_OnAction(ActionEvent event) {
         abrirVentanaCrud(event, new AddRegistro(table_taxistas.getSelectionModel().getSelectedItem().getValue()) {
             @Override
-            public boolean addRegistro(Registro registro, ActionEvent event1) {
+            public boolean addRegistro(Registro registro, Stage stage) {
                 table_taxistas.getSelectionModel().getSelectedItem().setValue((Taxista) registro);
                 System.out.println("Edicion");
                 return false;
@@ -170,7 +170,7 @@ public class TaxistasController implements Initializable, IAccion {
     void btnAgregarTaxista_OnAction(ActionEvent event) {
         abrirVentanaCrud(event, new AddRegistro(null) {
             @Override
-            public boolean addRegistro(Registro registro, ActionEvent event1) {
+            public boolean addRegistro(Registro registro, Stage stage) {
                 listaTaxistas.add((Taxista) registro);
                 table_taxistas.getSelectionModel().selectLast();
                 return false;

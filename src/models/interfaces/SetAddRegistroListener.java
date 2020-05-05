@@ -1,6 +1,7 @@
 package models.interfaces;
 
 import javafx.event.ActionEvent;
+import javafx.stage.Stage;
 
 /**
  *  Clase para setear un listener para la transferencia de registros
@@ -23,10 +24,10 @@ public abstract class SetAddRegistroListener {
     /**
      * Envia el registro a la referencia indicada, es decir a la pantalla padre(Listener).
      */
-    public boolean enviarRegistro(ActionEvent event){
+    public boolean enviarRegistro(Stage stage){
         if(addRegistroListener!=null){
             //haciendo callback con un booleano digamos, para confirmar la adición a la DB y cerrar la ventana. cambiando firma de void a bool.
-            return this.addRegistroListener.addRegistro(guardarCambiosRegistros(),event);
+            return this.addRegistroListener.addRegistro(guardarCambiosRegistros(),stage);
         }
         //casi no deseable, este pundo jamás debe llegar,porque significaria que el listener es null. Las ventanas CRUDD que implementan esta clase
         //son invocadas por otra ventana por eso siempre hay un listener, y en caso de que no lo haya entonces la ventana no existe y tampoco ese punto del programa.

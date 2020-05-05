@@ -158,7 +158,7 @@ public class ClientesController implements Initializable,IAccion {
 
         abrirVentanaCrud(event, new AddRegistro(table_view_clientes.getSelectionModel().getSelectedItem().getValue()) {
             @Override
-            public boolean addRegistro(Registro registro, ActionEvent event1) {
+            public boolean addRegistro(Registro registro, Stage stage) {
                 if(new ClienteSQL().actualizar((Cliente) registro)){
                     table_view_clientes.getSelectionModel().getSelectedItem().setValue((Cliente)registro);
                     return true;
@@ -172,8 +172,8 @@ public class ClientesController implements Initializable,IAccion {
     void btnAddCliente_OnAction(ActionEvent event) {
         abrirVentanaCrud(event, new AddRegistro(null) {
             @Override
-            public boolean addRegistro(Registro registro,ActionEvent event1) {
-                if(new ClienteSQL().insertar((Cliente) registro,event1)) {
+            public boolean addRegistro(Registro registro,Stage stage) {
+                if(new ClienteSQL().insertar((Cliente) registro, stage)) {
                     listaServicios.add((Cliente) registro);
                     table_view_clientes.getSelectionModel().selectLast();
                     return true;
