@@ -2,6 +2,12 @@ package models.interfaces;
 
 import javafx.event.ActionEvent;
 
+/**
+ *  Clase para setear un listener para la transferencia de registros
+ *  mediante un objeto AddRegistro.
+ *  Cualquier ventana secundaria o CRUD que manipule un Registro (model que implemente registro)
+ *  y deba retornar una instancia de ese tipo de Registro, deberá heredar de esta clase.
+ */
 public abstract class SetAddRegistroListener {
     protected AddRegistro addRegistroListener;
    // protected Registro registroActualizar=null;
@@ -36,7 +42,7 @@ public abstract class SetAddRegistroListener {
      */
     public abstract void extraerRegistro(Registro registro);
 
-    /**
+    /**button_eliminarEmpleado
      * Su implementación debe contener primero una validación de datos para después
      * retornar la instancia editada o creada.
      * @return
