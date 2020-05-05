@@ -1,23 +1,12 @@
 package services.sql.clienteConexion;
 
-import com.jfoenix.animation.alert.JFXAlertAnimation;
-import com.jfoenix.controls.JFXAlert;
-import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXDialogLayout;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import javafx.event.ActionEvent;
-import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Cliente;
 import models.Direccion;
-import models.interfaces.ResultDialog;
 import resources.Statics;
 import services.sql.DireccionSQL;
 

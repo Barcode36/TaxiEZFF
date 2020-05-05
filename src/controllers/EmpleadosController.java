@@ -23,12 +23,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import models.Cliente;
 import models.Direccion;
 import models.Empleado;
 import models.interfaces.AddRegistro;
 import models.interfaces.IAccion;
 import models.interfaces.Registro;
+import services.sql.EmpleadoSQL;
 
 import java.io.IOException;
 import java.net.URL;
@@ -82,6 +82,8 @@ public class EmpleadosController  implements Initializable, IAccion {
         this.column_observaciones.setCellValueFactory(new TreeItemPropertyValueFactory("observaciones"));
         this.column_direccion.setCellValueFactory(new TreeItemPropertyValueFactory("direccion"));
         this.column_fechaNac.setCellValueFactory(new TreeItemPropertyValueFactory("fechaNac"));
+
+        listaEmpleados = new EmpleadoSQL().getEmpleados();
 
         this.column_direccion.setCellFactory(new Callback<TreeTableColumn<Empleado, Direccion>, TreeTableCell<Empleado, Direccion>>() {
             public TreeTableCell<Empleado, Direccion> call(TreeTableColumn<Empleado, Direccion> param) {
