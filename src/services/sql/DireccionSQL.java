@@ -60,6 +60,11 @@ public class DireccionSQL {
 
     }
 
+    /**
+     * Si es 0 el id que entró darle el ultimo, así esta consulta se hace internamente en esta clase.
+     * @return
+     * @throws SQLException
+     */
     public int getLastId() throws SQLException {
 
         int idDireccion = -1;
