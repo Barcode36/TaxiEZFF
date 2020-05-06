@@ -75,7 +75,7 @@ public class EmpleadoSQL {
             return false;
         }
         try {
-            query = "UPDATE empleado SET nombre = ?,fechaNac =?,telefono = ?,tipoEmpleado = ?,observaciones = ?, observaciones = ?,  contrasena = ? WHERE empleado.idEmpleado = ?";
+            query = "UPDATE empleado SET nombre = ?,fechaNac =?,telefono = ?,tipoEmpleado = ?,observaciones = ?,  contrasena = ? WHERE empleado.idEmpleado = ?";
             ps = connection.prepareStatement(query);
 
 
@@ -87,9 +87,9 @@ public class EmpleadoSQL {
             ps.setString(6, empleado.getContrasena());
             ps.setInt(7,empleado.getIdEmpleado());
 
-            if(ps.executeUpdate() ==1){
-                return true;
-            }
+            ps.executeUpdate();
+            return true;
+
         }
         catch (SQLException e) {
             e.printStackTrace();

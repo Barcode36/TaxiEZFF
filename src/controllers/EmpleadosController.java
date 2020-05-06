@@ -162,24 +162,38 @@ public class EmpleadosController  implements Initializable, IAccion {
         abrirVentanaCrud(event, new AddRegistro(null) {
             @Override
             public boolean addRegistro(Registro registro, Stage stage) {
-                listaEmpleados.add((Empleado) registro);
-                table_empleados.getSelectionModel().selectLast();
-                return true;
+                if(new EmpleadoSQL().insertar((Empleado) registro)){
+                    listaEmpleados.add((Empleado) registro);
+                    table_empleados.getSelectionModel().selectLast();
+                    return true;
+                }
+                return false;
             }
         });
     }
 
     @FXML
     void btnEliminarEmpleado_OnAction(ActionEvent event) {
+
+        Empleado empleado = table_empleados.getSelectionModel().getSelectedItem().getValue();
+
+        if(new EmpleadoSQL().eliminar(empleado)){
+            listaEmpleados.remove(empleado);
+        }
+
     }
+
+
     @FXML
     void btnActualizarEmpleado_OnAction(ActionEvent event) {
         abrirVentanaCrud(event, new AddRegistro(table_empleados.getSelectionModel().getSelectedItem().getValue()) {
             @Override
             public boolean addRegistro(Registro registro, Stage stage) {
-                table_empleados.getSelectionModel().getSelectedItem().setValue((Empleado) registro);
-                System.out.println("Edicion");
-                return true;
+                if(new EmpleadoSQL().actualizar((Empleado) registro)){
+                    table_empleados.getSelectionModel().getSelectedItem().setValue((Empleado) registro);
+                    return true;
+                }
+                return false;
             }
         });
     }

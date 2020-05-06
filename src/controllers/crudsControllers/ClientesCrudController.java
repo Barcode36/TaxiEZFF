@@ -96,6 +96,7 @@ public class ClientesCrudController extends SetAddRegistroListener implements In
     @FXML
     void btn_Cancelar_Click(ActionEvent event) {
         //cerrar ventana
+        ((Stage)button_Aceptar.getScene().getWindow()).close();
     }
 
 

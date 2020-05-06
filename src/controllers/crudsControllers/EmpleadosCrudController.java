@@ -5,6 +5,7 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.base.IFXValidatableControl;
 import com.jfoenix.validation.RequiredFieldValidator;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -69,6 +70,9 @@ public class EmpleadosCrudController extends SetAddRegistroListener implements I
     @FXML
     private Button btnCancelar;
 
+    private int idEmpleado = 0;
+    private int idDireccion = 0;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setFieldValidations();
@@ -76,12 +80,19 @@ public class EmpleadosCrudController extends SetAddRegistroListener implements I
             if(event.getCode() == KeyCode.ENTER)
                 btnAceptar.fire();
         });
+
+        ObservableList<String> listaTiposEmpleado = FXCollections.observableArrayList();
+        listaTiposEmpleado.addAll("Estándar","Administrador");
+
+        comboBox_tipo_empleado.setItems(listaTiposEmpleado);
+
     }
 
     @FXML
     void btn_Agregar_Click(ActionEvent event) {
-        enviarRegistro(((Stage)btnAceptar.getScene().getWindow()));
-        ((Stage)textField_observ.getScene().getWindow()).close();
+        if(validarCampos() )
+            if(enviarRegistro(((Stage)btnAceptar.getScene().getWindow())))
+                ((Stage)textField_observ.getScene().getWindow()).close();
 
     }
 
@@ -95,6 +106,9 @@ public class EmpleadosCrudController extends SetAddRegistroListener implements I
         if(registro!=null){
             Empleado empleado = (Empleado) registro;
             Direccion direccion = empleado.getDireccion();
+
+            this.idEmpleado = empleado.getIdEmpleado();
+            this.idDireccion = empleado.getDireccion().getIdDireccion();
 
             textField_telefono.setText(empleado.getTelefono());
             textField_nombre.setText(empleado.getNombre());
@@ -120,12 +134,12 @@ public class EmpleadosCrudController extends SetAddRegistroListener implements I
     }
 
     private Empleado getEmpleadoVentana() {
-        Direccion direccion =  new Direccion(0, textField_calle.getText(), textField_colonia.getText(), textField_numInt.getText(), textField_numExt.getText());
+        Direccion direccion =  new Direccion(this.idDireccion, textField_calle.getText(), textField_colonia.getText(), textField_numInt.getText(), textField_numExt.getText());
         Empleado empleado = new Empleado(
                 textField_nombre.getText(),
                 textField_observ.getText(),
                 direccion,
-                0,
+                this.idEmpleado,
                 textField_telefono.getText(),
                 textField_password.getText(),
                 datePicker_nacimiento.getValue(),
