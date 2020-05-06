@@ -3,11 +3,9 @@ package services.sql;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import models.Cliente;
 import models.Direccion;
 import models.Empleado;
 import resources.Statics;
-import services.sql.clienteConexion.ClienteSQL;
 
 import java.sql.*;
 import java.util.logging.Level;

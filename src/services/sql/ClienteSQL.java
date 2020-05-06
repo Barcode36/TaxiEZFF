@@ -1,4 +1,4 @@
-package services.sql.clienteConexion;
+package services.sql;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 import models.Cliente;
 import models.Direccion;
 import resources.Statics;
-import services.sql.DireccionSQL;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
