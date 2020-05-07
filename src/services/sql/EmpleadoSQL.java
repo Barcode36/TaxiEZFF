@@ -54,9 +54,10 @@ public class EmpleadoSQL {
             ps.setString(6,empleado.getContrasena());
             ps.setInt(7,empleado.getDireccion().getIdDireccion());
 
-            if(ps.executeUpdate() ==1){
+            ps.executeUpdate();
+            empleado.setIdEmpleado(Statics.getLastId());
                 return true;
-            }
+
 
         }
         catch (SQLException sqlE){

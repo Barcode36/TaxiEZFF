@@ -31,6 +31,7 @@ import models.Taxista;
 import models.interfaces.AddRegistro;
 import models.interfaces.IAccion;
 import models.interfaces.Registro;
+import services.sql.TaxistaSQL;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -80,6 +81,7 @@ public class TaxistasController implements Initializable, IAccion {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        listaTaxistas = new TaxistaSQL().getTaxistas();
         this.column_nombre_taxistas.setCellValueFactory(new TreeItemPropertyValueFactory("nombre"));
         this.column_telefono_taxistas.setCellValueFactory(new TreeItemPropertyValueFactory("telefono"));
         this.column_direccion_taxistas.setCellValueFactory(new TreeItemPropertyValueFactory("direccion"));
@@ -159,8 +161,12 @@ public class TaxistasController implements Initializable, IAccion {
         abrirVentanaCrud(event, new AddRegistro(table_taxistas.getSelectionModel().getSelectedItem().getValue()) {
             @Override
             public boolean addRegistro(Registro registro, Stage stage) {
-                table_taxistas.getSelectionModel().getSelectedItem().setValue((Taxista) registro);
-                System.out.println("Edicion");
+
+                if(new TaxistaSQL().actualizar((Taxista) registro)){
+                    table_taxistas.getSelectionModel().getSelectedItem().setValue((Taxista) registro);
+                    return  true;
+                }
+
                 return false;
             }
         });
@@ -171,8 +177,12 @@ public class TaxistasController implements Initializable, IAccion {
         abrirVentanaCrud(event, new AddRegistro(null) {
             @Override
             public boolean addRegistro(Registro registro, Stage stage) {
-                listaTaxistas.add((Taxista) registro);
-                table_taxistas.getSelectionModel().selectLast();
+                if(new TaxistaSQL().insertar((Taxista) registro)) {
+
+                    listaTaxistas.add((Taxista) registro);
+                    table_taxistas.getSelectionModel().selectLast();
+                    return true;
+                }
                 return false;
             }
         });
@@ -181,6 +191,10 @@ public class TaxistasController implements Initializable, IAccion {
     @FXML
     void btnEliminarTaxista_OnAction(ActionEvent event) {
 
+        Taxista taxista = table_taxistas.getSelectionModel().getSelectedItem().getValue();
+        if(new TaxistaSQL().eliminar(taxista)){
+            listaTaxistas.remove(taxista);
+        }
     }
 
     private void abrirVentanaCrud(ActionEvent event, AddRegistro addRegistro){

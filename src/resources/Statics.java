@@ -25,6 +25,8 @@ import services.sql.ConexionSQL;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -166,4 +168,26 @@ public class Statics {
             }*/
     }
 
+    /**
+     * Busca el ultimo ID primario IA insertado o updateado.
+     * @return
+     * Devuelve ese ID.
+     * @throws SQLException
+     */
+    public static int getLastId() throws SQLException {
+
+        int lastId = -1;
+        String query=" SELECT LAST_INSERT_ID()";
+
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if(resultSet.next()){
+            lastId = resultSet.getInt(1) ;
+            if( lastId == 0){
+                lastId = 1;
+            }
+        }
+
+        return lastId;
+    }
 }

@@ -74,18 +74,19 @@ public class ClienteSQL {
                 return false;
             }
 
-            query = "INSERT INTO cliente (telefono, observaciones, visible, nombre, idDireccion,idCliente) VALUES (?, ?,?, ?,?,?)";
+            query = "INSERT INTO cliente (telefono, observaciones, visible, nombre, idDireccion) VALUES (?, ?,?, ?,?)";
             ps = connection.prepareStatement(query);
             ps.setString(1, cliente.getNumero());
             ps.setString(2, cliente.getObservaciones());
             ps.setBoolean(3, cliente.isVisible());
             ps.setString(4, cliente.getNombre());
             ps.setInt(5, cliente.getDireccion().getIdDireccion());
-            ps.setInt(6,this.getLastId());
+            //ps.setInt(6,Statics.getLastId());
 
-            if(ps.executeUpdate() ==1){
+            ps.executeUpdate() ;
+            cliente.setIdCliente(Statics.getLastId());
                 return true;
-            }
+
 
         }
         catch (SQLException sqlE){
@@ -169,22 +170,7 @@ public class ClienteSQL {
         }
     }
 
-    public int getLastId() throws SQLException {
 
-        int idDireccion = -1;
-        String query=" SELECT MAX(idCliente) FROM cliente";
-
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next()){
-            idDireccion = resultSet.getInt(1) + 1;
-            if( idDireccion == 0){
-                idDireccion = 1;
-            }
-        }
-
-        return idDireccion;
-    }
     /**
      * @return
      * Lista de los clientes existentes actualmente en la base de datos.
@@ -194,7 +180,6 @@ public class ClienteSQL {
 
         ObservableList<Cliente> clientes =  FXCollections.observableArrayList();
         query="SELECT * FROM `cliente` JOIN direccion on cliente.idDireccion = direccion.idDireccion WHERE visible = 1";
-        Direccion direccion;
         try
         {
             ps = connection.prepareStatement(query);

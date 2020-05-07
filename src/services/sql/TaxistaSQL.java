@@ -48,17 +48,18 @@ public class TaxistaSQL {
             return false;
         }
         try{
-            query = "INSERT INTO taxista (nombre, telefono,fechaNac, observaciones, idDireccion) " +
+            query = "INSERT INTO taxista (nombre, telefono,fechNac, observaciones, idDireccion) " +
                     "VALUES ( ?, ?, ?, ?, ?)";
 
             ps = connection.prepareStatement(query);
             ps.setString(1, taxista.getNombre());
             ps.setString(2, taxista.getTelefono());
-            ps.setDate(3, Date.valueOf(taxista.getFechaNac()));
+            ps.setDate(3, (taxista.getFechaNac() == null) ? null : Date.valueOf(taxista.getFechaNac()));
             ps.setString(4, taxista.getObservaciones());
             ps.setInt(5, taxista.getDireccion().getIdDireccion());
 
             ps.executeUpdate();
+            taxista.setIdTaxista(Statics.getLastId());
             return true;
 
 
@@ -77,12 +78,12 @@ public class TaxistaSQL {
             return false;
         }
         try {
-            query = "UPDATE taxista SET nombre = ?,fechaNac =?,telefono = ?,observaciones = ? WHERE taxista.idTaxista = ?";
+            query = "UPDATE taxista SET nombre = ?,fechNac =?,telefono = ?,observaciones = ? WHERE taxista.idTaxista = ?";
             ps = connection.prepareStatement(query);
 
 
             ps.setString(1, taxista.getNombre());
-            ps.setDate(2, Date.valueOf(taxista.getFechaNac()));
+            ps.setDate(2, (taxista.getFechaNac() == null) ? null : Date.valueOf(taxista.getFechaNac()));
             ps.setString(3, taxista.getTelefono());
             ps.setString(4, taxista.getObservaciones());
             ps.setInt(5, taxista.getIdTaxista());
@@ -176,7 +177,7 @@ public class TaxistaSQL {
      * @param rs tupla {@link Taxista}.
      * La tupla obtenia es:
      * @return Instancia de Cliente a partir de la tupla contenida en rs.
-     * idTaxista	nombre	telefono	fechNac	observaciones	idDireccion
+     * idTaxista	nombre	telefono	fechNac	observaciones	idDireccion visible
      * idDireccion calle colonia numInt numExt.
      * @throws SQLException
      */
@@ -184,16 +185,24 @@ public class TaxistaSQL {
         //Cliente cliente = new Cliente(rs.getString(0), rs.getBoolean(3), rs.getString(1), rs.getString(2), );
 
         Direccion direcion  = new Direccion(
-                rs.getInt(7),
-                rs.getString(8),
+                rs.getInt(8),
                 rs.getString(9),
                 rs.getString(10),
-                rs.getString(11)
+                rs.getString(11),
+                rs.getString(12)
         );
 
         Taxista taxista =
-                new Taxista(this.idTaxista, rs.getDate(4).toLocalDate(), rs.getString(3), rs.getString(2), rs.getString(5), direcion);
+                new Taxista(rs.getInt(1),
+                        rs.getDate(4)==null?null:rs.getDate(4).toLocalDate(),
+                        rs.getString(3),
+                        rs.getString(2),
+                        rs.getString(5),
+                        direcion);
 
         return taxista;
     }
+
+
+
 }

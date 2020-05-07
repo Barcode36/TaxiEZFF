@@ -136,13 +136,6 @@ public class ClientesCrudController extends SetAddRegistroListener implements In
      * Retorna objeto cliente, del resultado de la extracción de los datos de la ventana Clientes.
      */
     private Cliente getClienteVentana() {
-        if(idDireccion == 0){
-            try {
-                idDireccion = new DireccionSQL().getLastId();
-            } catch (SQLException e) {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,"Error al obtener indice nuevo para la dirección del cliente.",e);
-            }
-        }
         Direccion direccion =
                 new Direccion(this.idDireccion, textField_calle.getText(), textField_colonia.getText(), textField_numInt.getText(), textField_numExt.getText());
         Cliente clienteVentana =

@@ -30,6 +30,7 @@ public class DireccionSQL {
             preparedStatement.setString(5,direccion.getNumExt());
 
             int i = preparedStatement.executeUpdate();
+            direccion.setIdDireccion(Statics.getLastId());
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -58,28 +59,6 @@ public class DireccionSQL {
         }
 
 
-    }
-
-    /**
-     * Si es 0 el id que entró darle el ultimo, así esta consulta se hace internamente en esta clase.
-     * @return
-     * @throws SQLException
-     */
-    public int getLastId() throws SQLException {
-
-        int idDireccion = -1;
-        String query=" SELECT MAX(idDireccion) FROM Direccion";
-
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next()){
-            idDireccion = resultSet.getInt(1) + 1;
-            if( idDireccion == 0){
-                idDireccion = 1;
-            }
-        }
-
-        return idDireccion;
     }
 
 }
