@@ -40,4 +40,10 @@ public class Taxista extends Persona<Taxista> implements Registro {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
+
+
+    @Override
+    public String toString() {
+        return idTaxista + " " + this.getNombre();
+    }
 }

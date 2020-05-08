@@ -3,23 +3,25 @@ package controllers.crudsControllers;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTimePicker;
+import com.jfoenix.controls.base.IFXValidatableControl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import models.interfaces.IValidateCRUD;
 import models.interfaces.Registro;
 import models.interfaces.SetAddRegistroListener;
 
-public class ServicioRegularCrudController extends SetAddRegistroListener {
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
+public class ServicioRegularCrudController extends SetAddRegistroListener implements Initializable,IValidateCRUD {
 
     @FXML
     private AnchorPane root;
-
-    @FXML
-    private JFXTextField textField_telefono_buscar;
 
     @FXML
     private Label lbl_tittle;
@@ -43,9 +45,6 @@ public class ServicioRegularCrudController extends SetAddRegistroListener {
     private JFXTextField textField_numInt;
 
     @FXML
-    private JFXTextField textField_notas;
-
-    @FXML
     private JFXTextField textField_observaciones;
 
     @FXML
@@ -55,16 +54,13 @@ public class ServicioRegularCrudController extends SetAddRegistroListener {
     private JFXDatePicker datePicker_dia;
 
     @FXML
-    private JFXTextField txt_destino;
-
-    @FXML
     private Button btn_aceptar;
 
     @FXML
     private Button btn_cancelar;
 
-    @FXML
-    void DetectFocusable_OnMouse(MouseEvent event) {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
 
     }
 
@@ -79,9 +75,30 @@ public class ServicioRegularCrudController extends SetAddRegistroListener {
     }
 
 
-    @FXML
-    void txtBuscarTelefono_OnKeyRealased(KeyEvent event) {
 
+    @Override
+    public ArrayList<IFXValidatableControl> listControlsRequired() {
+        return null;
+    }
+
+    @Override
+    public void setFieldValidations() {
+
+    }
+
+    @Override
+    public void setLengthValidation() {
+
+    }
+
+    @Override
+    public void setRequiredValidation() {
+
+    }
+
+    @Override
+    public boolean validarCampos() {
+        return false;
     }
 
     @Override

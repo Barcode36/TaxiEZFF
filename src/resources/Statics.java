@@ -170,6 +170,8 @@ public class Statics {
 
     /**
      * Busca el ultimo ID primario IA insertado o updateado.
+     * Si no existe Ultimo ID se retorna 1.
+     * Solo Aplica para campos IA.
      * @return
      * Devuelve ese ID.
      * @throws SQLException

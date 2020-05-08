@@ -8,6 +8,7 @@ import javafx.stage.Stage;
  *  mediante un objeto AddRegistro.
  *  Cualquier ventana secundaria o CRUD que manipule un Registro (model que implemente registro)
  *  y deba retornar una instancia de ese tipo de Registro, deberá heredar de esta clase.
+ *
  */
 public abstract class SetAddRegistroListener {
     protected AddRegistro addRegistroListener;

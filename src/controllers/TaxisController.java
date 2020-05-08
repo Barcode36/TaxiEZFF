@@ -24,15 +24,19 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import models.Direccion;
 import models.Empleado;
 import models.Taxi;
 import models.Taxista;
 import models.interfaces.Registro;
 import models.interfaces.AddRegistro;
 import models.interfaces.IAccion;
+import services.sql.TaxisSQL;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 public class TaxisController implements Initializable,IAccion {
@@ -98,6 +102,7 @@ public class TaxisController implements Initializable,IAccion {
             }
         });
 
+        listaTaxis = new TaxisSQL().getTaxis();
         TreeItem<Taxi> clienteRecursiveTreeItem = new RecursiveTreeItem<>(listaTaxis, (recursiveTreeObject) -> recursiveTreeObject.getChildren());
         this.table_taxis.setRoot(clienteRecursiveTreeItem);
         this.table_taxis.setShowRoot(false);
@@ -146,13 +151,20 @@ public class TaxisController implements Initializable,IAccion {
 
     @FXML
     void btnAgregarTaxi_OnAction(ActionEvent event) throws IOException {
+        //listaTaxis.add(new Taxi(1,"mar","model","placaaaa",new Taxista(2, LocalDate.now(),"telef","nomb","obser",null)));
 
         abrirVentanaCrud(event, new AddRegistro(null) {
             @Override
             public boolean addRegistro(Registro registro, Stage stage) {
-                listaTaxis.add((Taxi) registro);
-                table_taxis.getSelectionModel().selectLast();
+
+                if(new TaxisSQL().insertar((Taxi) registro)){
+                    listaTaxis.add((Taxi) registro);
+                    //table_taxis.getSelectionModel().selectLast();
+                    return true;
+                }
                 return false;
+
+
             }
         });
 
@@ -160,28 +172,38 @@ public class TaxisController implements Initializable,IAccion {
     }
     @FXML
     void btnActualizarTaxi_OnAction(ActionEvent event) {
+
         abrirVentanaCrud(event, new AddRegistro(table_taxis.getSelectionModel().getSelectedItem().getValue()) {
             @Override
             public boolean addRegistro(Registro registro, Stage stage) {
-                table_taxis.getSelectionModel().getSelectedItem().setValue((Taxi) registro);
-                System.out.println("LLegó registro");
+                if(new TaxisSQL().actualizar((Taxi) registro)) {
+                    table_taxis.getSelectionModel().getSelectedItem().setValue((Taxi) registro);
+                    return true;
+                }
                 return false;
             }
-        });
+        }).textField_unidad.setDisable(true);
     }
 
     @FXML
     void btnEliminarTaxi_OnAction(ActionEvent event) {
 
+        Taxi empleado = table_taxis.getSelectionModel().getSelectedItem().getValue();
+
+        if(new TaxisSQL().eliminar(empleado)){
+            listaTaxis.remove(empleado);
+        }
     }
 
 
-    private void abrirVentanaCrud(ActionEvent event, AddRegistro addRegistro){
+    private TaxisCrudController abrirVentanaCrud(ActionEvent event, AddRegistro addRegistro){
+
+        TaxisCrudController taxisCrudController = null;
         try {
 
             FXMLLoader controladorLoader = new FXMLLoader(getClass().getResource("/views/Cruds/TaxisCRUD.fxml"));
             AnchorPane contenedor = controladorLoader.load();
-            TaxisCrudController taxisCrudController = controladorLoader.getController();
+            taxisCrudController = controladorLoader.getController();
 
             taxisCrudController.setAddRegistroListener(addRegistro);
 
@@ -205,6 +227,7 @@ public class TaxisController implements Initializable,IAccion {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return  taxisCrudController;
     }
 
 

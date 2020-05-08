@@ -151,6 +151,7 @@ public class TaxistaSQL {
      */
     public ObservableList<Taxista> getTaxistas()
     {
+        //SELECT * FROM taxista A WHERE A.idTaxista NOT IN (SELECT unidad.idTaxista FROM unidad)
         ObservableList<Taxista> taxistas =  FXCollections.observableArrayList();
         query="SELECT * FROM taxista JOIN direccion on taxista.idDireccion = direccion.idDireccion WHERE visible = 1";
         Direccion direccion;
@@ -168,6 +169,38 @@ public class TaxistaSQL {
         catch(SQLException ex)
         {
             Logger.getLogger(ClienteSQL.class.getName()).log(Level.SEVERE, "Error al extraer clientes.", ex);
+        }
+
+        return taxistas;
+    }
+
+    /**
+     * @return
+     * Lista de los taxistas existentes sin unidad asignada actualmente en la base de datos.
+     */
+    public ObservableList<Taxista> getTaxistasLibres()
+    {
+        //SELECT * FROM taxista A WHERE A.idTaxista NOT IN (SELECT unidad.idTaxista FROM unidad)
+        ObservableList<Taxista> taxistas =  FXCollections.observableArrayList();
+        //selecciona los taxistas que no se encuentran referenciados en la tabla taxis, es decir que taxi no lo tenga como su "dueño"
+        query="SELECT * FROM taxista JOIN direccion on taxista.idDireccion = direccion.idDireccion WHERE taxista.visible = 1 and taxista.idTaxista" +
+                " NOT IN (SELECT unidad.idTaxista FROM unidad  WHERE unidad.visible = 1)";
+        //unidad.visible = 1, para que si se borró X unidad, entonces ya no se tome en cuenta el taxista que tenia relacionado,
+        //por lo tanto ese taxista queda "desbloqueado" en el select principal
+        try
+        {
+            ps = connection.prepareStatement(query);
+            rs=ps.executeQuery();
+            while(rs.next())
+            {
+                taxistas.add( crearTaxista(rs) );
+            }
+
+            ps.close();
+        }
+        catch(SQLException ex)
+        {
+            Logger.getLogger(ClienteSQL.class.getName()).log(Level.SEVERE, "Error al extraer taxistas libres.", ex);
         }
 
         return taxistas;
