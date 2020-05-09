@@ -72,6 +72,7 @@ public class ServicioRegularSQL {
      * Inserta un @{@link ServicioRegular} "pendiente" es decir, con la fecha de aplicacion nula y el campo isCancelado como false.
      * Esta instancia es creada dentro del programa por lo tanto el idServicio no se toma en cuenta en la inserción (campo AutoIncrement) posteriormente
      * de la insersión se modifica el idServicio de la instancia.
+     * Los miembros internos como Direccion,Cliente,Empleado ya deben tener ID (la instancia) y deben existir en la DB.
      * @param servicioRegular
      * Instancia a insertar en la base de datos.
      * @return

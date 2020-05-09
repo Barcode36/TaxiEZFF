@@ -57,4 +57,17 @@ public class Direccion {
     public void setNumExt(String numExt) {
         this.numExt = numExt;
     }
+
+    /**
+     *
+     * @return Una instancia nueva con los mismo valores que esta.
+     * @throws CloneNotSupportedException
+     */
+    @Override
+    public Direccion clone() throws CloneNotSupportedException {
+
+        Direccion direcionClonada =
+                new Direccion(this.idDireccion, this.calle, this.colonia, this.numInt,this.numExt);
+        return direcionClonada;
+    }
 }

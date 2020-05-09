@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TreeItem;
@@ -28,6 +29,7 @@ import models.ServicioRegular;
 import models.interfaces.AddRegistro;
 import models.interfaces.IAccion;
 import models.interfaces.Registro;
+import services.sql.ClienteSQL;
 import services.sql.DireccionSQL;
 import services.sql.ServicioRegularSQL;
 
@@ -325,6 +327,28 @@ public class ServiciosController implements Initializable, IAccion {
         abrirVentanaCrud(event, new AddRegistro() {
             @Override
             public boolean addRegistro(Registro registro, Stage stage) {
+
+                ServicioRegular servicioRegular= (ServicioRegular) registro;
+                Direccion direccion = servicioRegular.getDireccion();
+                Cliente cliente = servicioRegular.getCliente();
+                //si el id es 0 entonces esa direccón es nueva, por lo tanto se introduce primero a la DB.
+               /* if(direccion.getIdDireccion()==0){
+                    if(!new DireccionSQL().insertarDireccion(direccion)){
+                        return false;
+                    }
+                }*/
+                //si el ciente es igual a null significa que cuando se busco el numero para añadir los datos de dirección autamaticamente.
+                //Entonces se debe crear un nuevo cliente con los mismos datos de dirección que contiene el servicio
+                if(cliente == null){
+
+                    cliente =
+                            new Cliente(0,servicioRegular.getTelefonoAux(),true,servicioRegular.getNombre(),servicioRegular.getObservaciones(),direccion);
+
+                    new ClienteSQL().insertar(cliente, ((Stage)((Node)event.getSource()).getScene().getWindow()));
+                    servicioRegular.setCliente(cliente);
+                }
+
+
                 if(new ServicioRegularSQL().insertarServicioRegular((ServicioRegular) registro)){
                     listaServicioRegularesPendientes.add((ServicioRegular) registro);
 

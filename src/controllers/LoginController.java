@@ -3,6 +3,9 @@ package controllers;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.validation.RequiredFieldValidator;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +20,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.Empleado;
+import persistencia.SharePreferences;
 import resources.Statics;
+import services.sql.EmpleadoSQL;
 
 import java.io.IOException;
 import java.net.URL;
@@ -48,6 +54,12 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+
+        setValidatorsRequired();
+
+            getCredeciales();
+
 
         try {
             Statics.createConnection();
@@ -80,6 +92,24 @@ public class LoginController implements Initializable {
 
     }
 
+    private void setValidatorsRequired(){
+        txt_usuario.getValidators().add(new RequiredFieldValidator("Este campo no debe estar vacío..."));
+        txt_usuario.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(!newValue)
+                    txt_usuario.validate();
+            }
+        });
+        txt_contrasena.getValidators().add(new RequiredFieldValidator("Este campo no debe estar vacío..."));
+        txt_contrasena.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(!newValue)
+                    txt_contrasena.validate();
+            }
+        });
+    }
 
     @FXML
     private void txtUsuario_ReleasedKey(KeyEvent event) {
@@ -99,16 +129,51 @@ public class LoginController implements Initializable {
     @FXML
     void btnLogin_Click(ActionEvent event) throws IOException {
 
-        Stage stage = new Stage();
-        stage.getIcons().add(new Image("/resources/imagenes/iconos/Taxi/taxi.png"));
-        Parent parent = FXMLLoader.load(getClass().getResource("/views/Principal.fxml"));
-        stage.setTitle("Taxis");
+        Empleado empleado = null;
+        try {
+            empleado = new EmpleadoSQL().existe(txt_usuario.getText(), txt_contrasena.getText());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        Scene scene = new Scene(parent);
-        stage.setScene(scene);
-        stage.show();
-        ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
+        if(empleado==null){
+            //ventana error de credenciales.
+        }else{
+
+            Statics.empleadoSesionActual = empleado;
+            Stage stage = new Stage();
+            stage.getIcons().add(new Image("/resources/imagenes/iconos/Taxi/taxi.png"));
+            Parent parent = FXMLLoader.load(getClass().getResource("/views/Principal.fxml"));
+            stage.setTitle("Taxis");
+
+            Scene scene = new Scene(parent);
+            stage.setScene(scene);
+            stage.show();
+            ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
+        }
+
+
 
     }
+
+    private void getCredeciales()
+    {
+        SharePreferences sharePreferences = SharePreferences.getCredenciales();
+        if(sharePreferences.getRecordar())
+        {
+            cb_recordar.setSelected(true);
+            txt_usuario.setText(sharePreferences.getUsuario());
+        }
+        else
+        {
+            cb_recordar.setSelected(false);
+        }
+    }
+    private void setCredenciales()
+    {
+        SharePreferences sharePreferences = new SharePreferences(cb_recordar.isSelected(),txt_usuario.getText());
+        SharePreferences.setCredenciales(sharePreferences);
+    }
+
 
 }

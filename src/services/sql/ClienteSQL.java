@@ -36,8 +36,12 @@ public class ClienteSQL {
 
 
     /**
+     * Si el cliente ya existe, con una confimación del usuario, se puede "actualizar" los datos de ese cliente.
      * La insersión puede ser correcta o no, ya que el usuario puede cancelarla, pero también puede haber
      * error SQL que va al Logger.
+     * Al insertar cliente, su dirección debe tener idDirección 0, para que inserte nueva direeción y posteriormente inserte
+     * el empleado.
+     * Si ese IDdirección es diferente de 0 (ya existe), retornará siempre falso porque la inserción de esa dirección no es posible al existir ese IDdireccion.
      * @param cliente
      * El cliente a insertar, este puede tener o no un numero de telefono que ya exista en la bse de datos.
      * @param stage

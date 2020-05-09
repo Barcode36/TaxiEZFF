@@ -15,4 +15,14 @@ public class ServicioRegular extends Servicio<ServicioRegular> {
     public ServicioRegular(Persona datos, int idServicio, LocalDateTime fechaAgregacion, LocalDateTime fechaServicio, LocalDateTime fechaAplcacion, boolean isCancelado, Cliente cliente, Empleado empleado) {
         super(datos, idServicio, fechaAgregacion, fechaServicio, fechaAplcacion, isCancelado, cliente, empleado);
     }
+
+    String telefonoAux = "";
+
+    public String getTelefonoAux() {
+        return telefonoAux;
+    }
+
+    public void setTelefonoAux(String telefonoAux) {
+        this.telefonoAux = telefonoAux;
+    }
 }

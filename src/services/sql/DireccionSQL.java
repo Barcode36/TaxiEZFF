@@ -18,16 +18,23 @@ public class DireccionSQL {
         this. connection = Statics.getConnections();
     }
 
+    /**
+     * Inserta una nueva direccion.
+     * Esta dirección debe tener idDireccion = 0, si es diferente de 0 el id quedará reemplazado como si fuera un nuevo registro Dirección.
+     * @param direccion
+     * @return
+     */
     public boolean insertarDireccion(Direccion direccion)  {
-        String query = "INSERT INTO `direccion` (`idDireccion`, `calle`, `colonia`, `numInt`, `numExt`) VALUES (?, ?,?,?,?); ";
+   //     String query = "INSERT INTO `direccion` (`idDireccion`, `calle`, `colonia`, `numInt`, `numExt`) VALUES (?, ?,?,?,?); ";
+        String query = "INSERT INTO `direccion` ( `calle`, `colonia`, `numInt`, `numExt`) VALUES (?,?,?,?); ";
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1,direccion.getIdDireccion());
-            preparedStatement.setString(2,direccion.getCalle());
-            preparedStatement.setString(3,direccion.getColonia());
-            preparedStatement.setString(4,direccion.getNumInt());
-            preparedStatement.setString(5,direccion.getNumExt());
+           // preparedStatement.setInt(1,direccion.getIdDireccion());
+            preparedStatement.setString(1,direccion.getCalle());
+            preparedStatement.setString(2,direccion.getColonia());
+            preparedStatement.setString(3,direccion.getNumInt());
+            preparedStatement.setString(4,direccion.getNumExt());
 
             int i = preparedStatement.executeUpdate();
             direccion.setIdDireccion(Statics.getLastId());

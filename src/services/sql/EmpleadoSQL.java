@@ -41,6 +41,9 @@ public class EmpleadoSQL {
      */
     public boolean insertar(Empleado empleado)  {
 
+        if(!new DireccionSQL().insertarDireccion(empleado.getDireccion())){
+            return false;
+        }
         try{
             query = "INSERT INTO empleado (nombre, fechaNac, telefono, tipoEmpleado, observaciones, contrasena, idDireccion) " +
                     "VALUES ( ?, ?, ?, ?, ?, ?, ?)";
@@ -126,6 +129,39 @@ public class EmpleadoSQL {
         return existe;
 
     }
+    /**
+     * Buscará ese registro para saber si existe en la bse de datos.
+     *
+     * @param usuario
+     * Nombre del empleado.
+     * @param contrasena
+     * Contraseña del empleado
+     * @return
+     * Instancia si existe
+     * False si no.
+     * @throws SQLException
+     */
+    public Empleado existe(String usuario,String contrasena) throws SQLException {
+        boolean existe = false;
+
+        query = "SELECT * FROM empleado JOIN direccion on empleado.idDireccion = direccion.idDireccion WHERE nombre = ? AND contrasena = ? AND visible = 1";
+
+        ps = connection.prepareStatement(query);
+        ps.setString(1,usuario);
+        ps.setString(2,contrasena);
+
+        //0 no existe, mayor qué 0 existe
+        ResultSet resultSet = ps.executeQuery();
+        if(resultSet.next()){
+            return crearEmpleado(resultSet);
+
+        }
+
+        return null;
+    }
+
+
+
     public boolean eliminar(Empleado empleado){
         //eliminar todos los que tengan ese telefono
         query= "UPDATE empleado SET visible = 0 WHERE empleado.idEmpleado = ?";
@@ -196,10 +232,12 @@ public class EmpleadoSQL {
                 rs.getInt(1),
                 rs.getString(4),
                 rs.getString(7),
-                rs.getDate(3).toLocalDate(),
+                rs.getDate(3) ==null?null:rs.getDate(3).toLocalDate(),
                 rs.getBoolean(5)
         );
 
         return empleado;
     }
+
+
 }

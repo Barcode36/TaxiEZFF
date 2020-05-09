@@ -26,11 +26,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Cliente;
 import models.Direccion;
+import models.Persona;
 import models.ServicioRegular;
 import models.interfaces.AddRegistro;
 import models.interfaces.IValidateCRUD;
 import models.interfaces.Registro;
 import models.interfaces.SetAddRegistroListener;
+import resources.Statics;
 import services.StringLengthValidator;
 import services.sql.ClienteSQL;
 import services.sql.TaxisSQL;
@@ -39,6 +41,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -83,6 +86,7 @@ public class ServicioRegularCrudController extends SetAddRegistroListener implem
 
     @FXML
     private Button btn_cancelar;
+    private Cliente cliente;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -201,8 +205,7 @@ public class ServicioRegularCrudController extends SetAddRegistroListener implem
             }
         }
 
-        this.datePicker_dia.setValue(LocalDate.now());
-        this.timePicker_horaServicio.setValue(LocalTime.now());
+
 
         return validacioExitosa;
     }
@@ -226,16 +229,48 @@ public class ServicioRegularCrudController extends SetAddRegistroListener implem
             textField_colonia.setText(direccion.getColonia());
             textField_numInt.setText(direccion.getNumInt());
             textField_num_ext.setText(direccion.getNumExt());
+        }else{
+
+            //si no existe limpia todo.
+            textField_nombre. clear();
+            textField_calle.clear();
+            textField_colonia.clear();
+            textField_numInt.clear();
+            textField_num_ext.clear();
         }
 
+        //lo guardo para cuando se guarden los cambios, se tome este cliente para ese servicio, y si es null se creará uno nuevo con los datos de direccion
+        this.cliente = (Cliente) registro;
 
     }
+
 
     @Override
     public Registro guardarCambiosRegistros() {
 
+        Direccion direccion = null;
 
-        return null;
+        if(cliente!=null){
+            //cuando se buscó y encontró el numero de telefono automaticamente.
+            try {
+                direccion = cliente.getDireccion().clone();
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }else{//cliente == null
+
+            //si la dirección es id=0, se deberá insertar en la DB.
+            direccion =
+                    new Direccion(0, textField_calle.getText(), textField_colonia.getText(), textField_numInt.getText(), textField_num_ext.getText());
+        }
+
+        Persona datos = new Persona(textField_nombre.getText(),textField_observaciones.getText(),direccion);
+        //si cliente == null, esa propiedad debe ser creada
+        ServicioRegular servicioRegular =
+                new ServicioRegular(datos,0,LocalDateTime.now(),LocalDateTime.of(datePicker_dia.getValue(),timePicker_horaServicio.getValue()),null,false,cliente, Statics.empleadoSesionActual);
+        servicioRegular.setTelefonoAux(textField_telefono.getText());
+
+        return servicioRegular;
 
     }
 
