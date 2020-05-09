@@ -202,7 +202,7 @@ public class ServicioRegularCrudController extends SetAddRegistroListener implem
     public Registro guardarCambiosRegistros() {
 
 
-
+        return null;
 
     }
 

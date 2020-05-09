@@ -30,7 +30,7 @@ public class ServicioRegularSQL {
 
     public ObservableList<ServicioRegular> getServiciosRegularesPendientes(){
         ObservableList<ServicioRegular> serviciosRegulares =  FXCollections.observableArrayList();
-        query="SELECT servicio.idServicio,servicio.nombre,servicio.observaciones,servicio.fechaAgregacion,servicio.fechaServicio,servicio.fechaAplicacion,servicio.isCancelado,servicio.idCliente,servicio.idEmpleado,servicio.idDireccion, " +
+       /* query="SELECT servicio.idServicio,servicio.nombre,servicio.observaciones,servicio.fechaAgregacion,servicio.fechaServicio,servicio.fechaAplicacion,servicio.isCancelado,servicio.idCliente,servicio.idEmpleado,servicio.idDireccion, " +
                 "direccion.idDireccion,direccion.calle,direccion.colonia,direccion.numInt,direccion.numExt, " +
                 "cliente.telefono, cliente.idCliente, " +
                 "empleado.idEmpleado, empleado.nombre " +
@@ -40,7 +40,14 @@ public class ServicioRegularSQL {
                 "JOIN cliente ON servicio.idCliente = cliente.idCliente " +
                 "JOIN empleado ON servicio.idEmpleado = empleado.idEmpleado " +
                 "WHERE servicio.isCancelado = 0 and servicio.fechaAplicacion IS NULL " +
-                "LIMIT 0, 25";
+                "LIMIT 0, 25";*/
+       query = "SELECT * FROM " +
+               "servicio " +
+               "JOIN cliente ON servicio.idCliente = cliente.idCliente " +
+               "JOIN empleado  on servicio.idEmpleado = empleado.idEmpleado " +
+               "JOIN direccion ON servicio.idDireccion = direccion.idDireccion " +
+               "WHERE servicio.isCancelado = 0 and servicio.fechaAplicacion IS NULL " +
+               "LIMIT 0, 250";
         try
         {
             ps = connection.prepareStatement(query);
@@ -71,12 +78,12 @@ public class ServicioRegularSQL {
      * True si fue exitosa la inserción.
      * False si lo contrario.
      */
-    public boolean insertar(ServicioRegular servicioRegular) {
+    public boolean insertarServicioRegular(ServicioRegular servicioRegular) {
 
         query = "INSERT INTO servicio " +
                 "(nombre, observaciones, fechaAgregacion, fechaServicio, fechaAplicacion, isCancelado, idCliente, idEmpleado, idDireccion) " +
                 "VALUES" +
-                " ('Victor Servicio', 'Observación serv 1 vic', '2020-05-06 00:00:00', '2020-05-08 00:06:00', NULL, '0', '3', '1', '12')";
+                " (?,?,?,?, ?, ?, ?, ?, ?)";
 
         try {
 
@@ -88,8 +95,8 @@ public class ServicioRegularSQL {
             ps.setTimestamp(5, null);//fecha aplicacion nula para servicio pendiente
 
             ps.setBoolean(6, false);
-            ps.setInt(7,servicioRegular.getIdCliente());
-            ps.setInt(8,servicioRegular.getIdEmpleado());
+            ps.setInt(7,servicioRegular.getCliente().getIdCliente());
+            ps.setInt(8,servicioRegular.getEmpleado().getIdEmpleado());
             ps.setInt(9,servicioRegular.getDireccion().getIdDireccion());
 
 
@@ -104,6 +111,15 @@ public class ServicioRegularSQL {
         return false;
     }
 
+
+    public boolean cancelarServicioPendiente(int idServicioRegularPendiente) throws SQLException {
+
+        query = ("UPDATE servicio SET isCancelado = 1 WHERE servicio.idServicio = ?");
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1,idServicioRegularPendiente);
+
+        return preparedStatement.executeUpdate() == 1;
+    }
 
     /**
      * idServicio nombre observaciones fechaAgregacion fechaServicio fechaAplicacion isCancelado idCliente idEmpleado idDireccion (La instancia )
@@ -121,8 +137,8 @@ public class ServicioRegularSQL {
 
 
 
-        LocalDateTime localDateTimeAgregacion = rs.getTimestamp("fechaAgregacion").toLocalDateTime();
-        LocalDateTime localDateTimeServicio = rs.getTimestamp("fechaServicio").toLocalDateTime();
+        LocalDateTime localDateTimeAgregacion = rs.getTimestamp("servicio.fechaAgregacion").toLocalDateTime();
+        LocalDateTime localDateTimeServicio = rs.getTimestamp("servicio.fechaServicio").toLocalDateTime();
 
 
         LocalDateTime localDateTimeAplicacion =
@@ -130,14 +146,22 @@ public class ServicioRegularSQL {
                         null:rs.getTimestamp("fechaAplicacion").toLocalDateTime();
 
 
+        Cliente cliente = new Cliente(rs.getInt("cliente.idCliente"),rs.getString("cliente.telefono"),rs.getBoolean("Visible"), rs.getString("cliente.nombre"),
+                rs.getString("observaciones"), new DireccionSQL().get(rs.getInt("cliente.idDireccion")));
+
+        Empleado empleado = new Empleado(
+                rs.getString("empleado.nombre"),rs.getString("empleado.observaciones"),
+                new  DireccionSQL().get(rs.getInt("empleado.idDireccion")),
+                rs.getInt("empleado.idEmpleado"), rs.getString("empleado.telefono"), rs.getString("contrasena"),
+                rs.getDate("fechaNac")==null?null:rs.getDate("fechaNac").toLocalDate(), rs.getBoolean("tipoEmpleado"));
 
         ServicioRegular servicioRegular =
-            new ServicioRegular(rs.getInt("idServicio"),rs.getInt("idCliente"),rs.getString("cliente.telefono"),rs.getInt("idEmpleado"),
-                    localDateTimeAgregacion,localDateTimeServicio,localDateTimeAplicacion,datos
-                    );
+            new ServicioRegular(
+                    datos,
+                    rs.getInt("servicio.idServicio"),localDateTimeAgregacion, localDateTimeServicio, localDateTimeAplicacion,
+                    rs.getBoolean("servicio.isCancelado"),cliente,empleado);
 
-        //servicioRegular.setUnidad(rs.getInt(""));
-        servicioRegular.setNombreEmpleado(rs.getInt("empleado.idEmpleado") + " " + rs.getString("empleado.nombre"));
+
         return servicioRegular;
 
     }

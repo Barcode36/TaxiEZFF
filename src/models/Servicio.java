@@ -10,38 +10,42 @@ import java.time.LocalDateTime;
  */
 public class Servicio<S> extends Persona<S> implements Registro {
 
-    private int idServicio;//primarykey
-    private String clienteTelefono;//foreign key
-    private int idEmpleado;//foreign key, no es necesario guardar todos los datos del empleado, solo su ID.
+    private int idServicio;
+    //nombre,observaciones y dirección están heredadas ya.
+
     private LocalDateTime fechaAgregacion;
     private LocalDateTime fechaServicio;
     private LocalDateTime fechaAplcacion;
 
-    //campos para acceso secundario.
-    private Integer unidad = null;
-    private String nombreEmpleado;
-    private int idCliente;
+    private boolean isCancelado;
+    private Cliente cliente;
+    private Empleado empleado;
 
-    public Servicio(int idServicio, int idCliente, String clienteTelefono, int idEmpleado, LocalDateTime fechaAgregacion, LocalDateTime fechaServicio, LocalDateTime fechaAplcacion, String nombre, String observaciones, Direccion direccion) {
+
+    public Servicio(String nombre, String observaciones, Direccion direccion,
+                    int idServicio, LocalDateTime fechaAgregacion, LocalDateTime fechaServicio, LocalDateTime fechaAplcacion,
+                    boolean isCancelado, Cliente cliente, Empleado empleado) {
         super(nombre, observaciones, direccion);
         this.idServicio = idServicio;
-        this.clienteTelefono = clienteTelefono;
-        this.idEmpleado = idEmpleado;
         this.fechaAgregacion = fechaAgregacion;
-        this.fechaAplcacion = fechaAplcacion;
         this.fechaServicio = fechaServicio;
-        this.idCliente = idCliente;
+        this.fechaAplcacion = fechaAplcacion;
+        this.isCancelado = isCancelado;
+        this.cliente = cliente;
+        this.empleado = empleado;
     }
 
-    public Servicio(int idServicio, int idCliente, String clienteTelefono, int idEmpleado, LocalDateTime fechaAgregacion, LocalDateTime fechaServicio, LocalDateTime fechaAplcacion, Persona datos) {
+    public Servicio(Persona datos,
+                    int idServicio, LocalDateTime fechaAgregacion, LocalDateTime fechaServicio, LocalDateTime fechaAplcacion,
+                    boolean isCancelado, Cliente cliente, Empleado empleado) {
         super(datos);
         this.idServicio = idServicio;
-        this.clienteTelefono = clienteTelefono;
-        this.idEmpleado = idEmpleado;
         this.fechaAgregacion = fechaAgregacion;
-        this.fechaAplcacion = fechaAplcacion;
         this.fechaServicio = fechaServicio;
-        this.idCliente = idCliente;
+        this.fechaAplcacion = fechaAplcacion;
+        this.isCancelado = isCancelado;
+        this.cliente = cliente;
+        this.empleado = empleado;
     }
 
     public int getIdServicio() {
@@ -52,20 +56,12 @@ public class Servicio<S> extends Persona<S> implements Registro {
         this.idServicio = idServicio;
     }
 
-    public String getClienteTelefono() {
-        return clienteTelefono;
+    public LocalDateTime getFechaAgregacion() {
+        return fechaAgregacion;
     }
 
-    public void setClienteTelefono(String clienteTelefono) {
-        this.clienteTelefono = clienteTelefono;
-    }
-
-    public int getIdEmpleado() {
-        return idEmpleado;
-    }
-
-    public void setIdEmpleado(int idEmpleado) {
-        this.idEmpleado = idEmpleado;
+    public void setFechaAgregacion(LocalDateTime fechaAgregacion) {
+        this.fechaAgregacion = fechaAgregacion;
     }
 
     public LocalDateTime getFechaServicio() {
@@ -76,14 +72,6 @@ public class Servicio<S> extends Persona<S> implements Registro {
         this.fechaServicio = fechaServicio;
     }
 
-    public LocalDateTime getFechaAgregacion() {
-        return fechaAgregacion;
-    }
-
-    public void setFechaAgregacion(LocalDateTime fechaAgregacion) {
-        this.fechaAgregacion = fechaAgregacion;
-    }
-
     public LocalDateTime getFechaAplcacion() {
         return fechaAplcacion;
     }
@@ -92,27 +80,27 @@ public class Servicio<S> extends Persona<S> implements Registro {
         this.fechaAplcacion = fechaAplcacion;
     }
 
-    public Integer getUnidad() {
-        return unidad;
+    public boolean isCancelado() {
+        return isCancelado;
     }
 
-    public void setUnidad(Integer unidad) {
-        this.unidad = unidad;
+    public void setCancelado(boolean cancelado) {
+        isCancelado = cancelado;
     }
 
-    public String getNombreEmpleado() {
-        return nombreEmpleado;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setNombreEmpleado(String nombreEmpleado) {
-        this.nombreEmpleado = nombreEmpleado;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
-    public int getIdCliente() {
-        return idCliente;
+    public Empleado getEmpleado() {
+        return empleado;
     }
 
-    public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
     }
 }

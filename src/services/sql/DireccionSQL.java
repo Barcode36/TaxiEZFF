@@ -61,4 +61,41 @@ public class DireccionSQL {
 
     }
 
+    /**
+     * Retorna instancia de {@link Direccion}.
+     * @param idDireccion
+     * el indice a buscar para crear la instancia.
+     * @return
+     * Si el indice no existe retorna NULL.
+     */
+    public Direccion get(int idDireccion){
+        String query = "SELECT * FROM direccion WHERE direccion.idDireccion = ?";
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1,idDireccion);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.first()){
+                return crearDireccion(resultSet);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return null;
+
+    }
+
+    private Direccion crearDireccion(ResultSet rs) throws SQLException {
+
+        Direccion direccion = new Direccion(rs.getInt("idDireccion"),
+                rs.getString("calle"),rs.getString("colonia"),
+                rs.getString("numInt"),rs.getString("numExt"));
+
+        return direccion;
+    }
+
 }

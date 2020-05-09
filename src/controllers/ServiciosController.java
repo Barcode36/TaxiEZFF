@@ -23,15 +23,17 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import models.Cliente;
 import models.Direccion;
+import models.Empleado;
 import models.ServicioRegular;
 import models.interfaces.AddRegistro;
 import models.interfaces.IAccion;
 import models.interfaces.Registro;
-import services.sql.ClienteSQL;
+import services.sql.DireccionSQL;
 import services.sql.ServicioRegularSQL;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
@@ -110,7 +112,7 @@ public class ServiciosController implements Initializable, IAccion {
     public TreeTableColumn<ServicioRegular, LocalDateTime> cmServiciosPend_fechaServicio;
 
     @FXML
-    private TreeTableColumn<ServicioRegular, String> cmServiciosPend_telefono;
+    private TreeTableColumn<ServicioRegular, Cliente> cmServiciosPend_telefono;
 
     @FXML
     private TreeTableColumn<ServicioRegular, String> cmServiciosPend_nombre;
@@ -122,7 +124,7 @@ public class ServiciosController implements Initializable, IAccion {
     private TreeTableColumn<ServicioRegular, String> cmServiciosPend_notas;
 
     @FXML
-    private TreeTableColumn<ServicioRegularSQL, String> cmServiciosPend_modulador;
+    private TreeTableColumn<ServicioRegular, Empleado> cmServiciosPend_modulador;
 
     @FXML
     private Tab tabServiciosProgramados;
@@ -191,15 +193,51 @@ public class ServiciosController implements Initializable, IAccion {
 
         this.cmServiciosPend_fechaAdd.setCellValueFactory(new TreeItemPropertyValueFactory("fechaAgregacion"));
         this.cmServiciosPend_fechaServicio.setCellValueFactory(new TreeItemPropertyValueFactory("fechaServicio"));
-        this.cmServiciosPend_telefono.setCellValueFactory(new TreeItemPropertyValueFactory("clienteTelefono"));
+        this.cmServiciosPend_telefono.setCellValueFactory(new TreeItemPropertyValueFactory("cliente"));
         this.cmServiciosPend_nombre.setCellValueFactory(new TreeItemPropertyValueFactory("nombre"));
         this.cmServiciosPend_direccion.setCellValueFactory(new TreeItemPropertyValueFactory("direccion"));
         this.cmServiciosPend_notas.setCellValueFactory(new TreeItemPropertyValueFactory("observaciones"));
-        this.cmServiciosPend_modulador.setCellValueFactory(new TreeItemPropertyValueFactory("nombreEmpleado"));
+        this.cmServiciosPend_modulador.setCellValueFactory(new TreeItemPropertyValueFactory("empleado"));
 
         this.cmServiciosPend_fechaAdd.setCellFactory(callbackDateTime);
         this.cmServiciosPend_fechaServicio.setCellFactory(callbackDateTime);
         this.cmServiciosPend_direccion.setCellFactory(callbackDireccion);
+        this.cmServiciosPend_telefono.setCellFactory(new Callback<TreeTableColumn<ServicioRegular, Cliente>, TreeTableCell<ServicioRegular, Cliente>>() {
+            @Override
+            public TreeTableCell<ServicioRegular, Cliente> call(TreeTableColumn<ServicioRegular, Cliente> param) {
+
+
+                TreeTableCell<ServicioRegular,Cliente> cell = new TreeTableCell<ServicioRegular,Cliente>(){
+                    @Override
+                    protected void updateItem(Cliente item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if(item!=null){
+                            setText(item.getNumero());
+                        }
+                    }
+                };
+                return cell;
+
+            }
+        });
+
+        this.cmServiciosPend_modulador.setCellFactory((param -> {
+
+            TreeTableCell<ServicioRegular,Empleado> cell = new TreeTableCell<ServicioRegular,Empleado>(){
+                @Override
+                protected void updateItem(Empleado item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if(item!=null){
+                        setText(item.getIdEmpleado() + " " + item.getNombre());
+                    }
+                }
+            };
+            return cell;
+
+        }));
+
+
+
 
 
         listaServicioRegularesPendientes = new ServicioRegularSQL().getServiciosRegularesPendientes();
@@ -287,7 +325,7 @@ public class ServiciosController implements Initializable, IAccion {
         abrirVentanaCrud(event, new AddRegistro() {
             @Override
             public boolean addRegistro(Registro registro, Stage stage) {
-                if(new ServicioRegularSQL().insertar((ServicioRegular) registro)){
+                if(new ServicioRegularSQL().insertarServicioRegular((ServicioRegular) registro)){
                     listaServicioRegularesPendientes.add((ServicioRegular) registro);
 
                     return true;
@@ -315,6 +353,19 @@ public class ServiciosController implements Initializable, IAccion {
 
     @FXML
     void btnCancelServicioNormal_OnAction(ActionEvent event) {
+
+        try {
+            ServicioRegular servicioRegularSeleccionado = tablaServicioPend.getSelectionModel().getSelectedItem().getValue();
+            if(servicioRegularSeleccionado!=null){
+                if(new ServicioRegularSQL().cancelarServicioPendiente(servicioRegularSeleccionado.getIdServicio())){
+                    listaServicioRegularesPendientes.remove(servicioRegularSeleccionado);
+                }
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         System.out.println("Cancel servicio normal.");
     }
 

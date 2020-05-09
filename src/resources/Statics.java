@@ -20,6 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
+import models.Empleado;
 import models.interfaces.ResultDialog;
 import services.sql.ConexionSQL;
 
@@ -34,6 +35,8 @@ public class Statics {
 
     //Singleton.
     private static Connection connection;
+    public static Empleado empleadoSesionActual;
+
 
     public static void createConnection() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException {
         connection = new ConexionSQL().getConexion();
@@ -192,4 +195,7 @@ public class Statics {
 
         return lastId;
     }
+
+
+
 }

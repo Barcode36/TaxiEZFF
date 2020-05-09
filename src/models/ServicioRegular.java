@@ -8,12 +8,11 @@ Clase para dar compatibilidad al parametro de clase y ser asignado a la clase pa
  */
 public class ServicioRegular extends Servicio<ServicioRegular> {
 
-    public ServicioRegular(int idServicio,int idCliente, String clienteTelefono, int idEmpleado, LocalDateTime fechaAgregación,LocalDateTime fechaServicio, LocalDateTime fechaAplcación, String nombre, String observaciones, Direccion direccion) {
-        super(idServicio, idCliente,clienteTelefono, idEmpleado, fechaAgregación,fechaServicio, fechaAplcación, nombre, observaciones, direccion);
+    public ServicioRegular(String nombre, String observaciones, Direccion direccion, int idServicio, LocalDateTime fechaAgregacion, LocalDateTime fechaServicio, LocalDateTime fechaAplcacion, boolean isCancelado, Cliente cliente, Empleado empleado) {
+        super(nombre, observaciones, direccion, idServicio, fechaAgregacion, fechaServicio, fechaAplcacion, isCancelado, cliente, empleado);
     }
 
-    public ServicioRegular(int idServicio, int idCliente,String clienteTelefono, int idEmpleado, LocalDateTime fechaAgregación, LocalDateTime fechaServicio, LocalDateTime fechaAplcación, Persona datos) {
-        super(idServicio,idCliente, clienteTelefono, idEmpleado, fechaAgregación, fechaServicio, fechaAplcación, datos);
+    public ServicioRegular(Persona datos, int idServicio, LocalDateTime fechaAgregacion, LocalDateTime fechaServicio, LocalDateTime fechaAplcacion, boolean isCancelado, Cliente cliente, Empleado empleado) {
+        super(datos, idServicio, fechaAgregacion, fechaServicio, fechaAplcacion, isCancelado, cliente, empleado);
     }
-
 }

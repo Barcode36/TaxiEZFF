@@ -14,9 +14,8 @@ public class ServiciosProgramado extends Servicio<ServiciosProgramado> {
     private boolean isDomingo;
 
 
-    public ServiciosProgramado(int idServicio,int idCliente, String clienteTelefono, int idEmpleado, LocalDateTime fechaAgregación,LocalDateTime fechaInicio, LocalDateTime fechaAplcación, String nombre, String observaciones, Direccion direccion, LocalDateTime fechaUltimaAplicacion,
-                               boolean isLunes, boolean isMartes, boolean isMiercoles, boolean isJueves, boolean isViernes, boolean isSabado, boolean isDomingo) {
-        super(idServicio, idCliente,clienteTelefono, idEmpleado, fechaAgregación,fechaInicio, fechaAplcación, nombre, observaciones, direccion);
+    public ServiciosProgramado(String nombre, String observaciones, Direccion direccion, int idServicio, LocalDateTime fechaAgregacion, LocalDateTime fechaServicio, LocalDateTime fechaAplcacion, boolean isCancelado, Cliente cliente, Empleado empleado, LocalDateTime fechaUltimaAplicacion, boolean isLunes, boolean isMartes, boolean isMiercoles, boolean isJueves, boolean isViernes, boolean isSabado, boolean isDomingo) {
+        super(nombre, observaciones, direccion, idServicio, fechaAgregacion, fechaServicio, fechaAplcacion, isCancelado, cliente, empleado);
         this.fechaUltimaAplicacion = fechaUltimaAplicacion;
         this.isLunes = isLunes;
         this.isMartes = isMartes;
@@ -27,9 +26,8 @@ public class ServiciosProgramado extends Servicio<ServiciosProgramado> {
         this.isDomingo = isDomingo;
     }
 
-    public ServiciosProgramado(int idServicio, int idCliente,String clienteTelefono, int idEmpleado, LocalDateTime fechaAgregación,LocalDateTime fechaInicio, LocalDateTime fechaAplcación, Persona datos, LocalDateTime fechaUltimaAplicacion,
-                               boolean isLunes, boolean isMartes, boolean isMiercoles, boolean isJueves, boolean isViernes, boolean isSabado, boolean isDomingo) {
-        super(idServicio,idCliente, clienteTelefono, idEmpleado, fechaAgregación,fechaInicio, fechaAplcación, datos);
+    public ServiciosProgramado(Persona datos, int idServicio, LocalDateTime fechaAgregacion, LocalDateTime fechaServicio, LocalDateTime fechaAplcacion, boolean isCancelado, Cliente cliente, Empleado empleado, LocalDateTime fechaUltimaAplicacion, boolean isLunes, boolean isMartes, boolean isMiercoles, boolean isJueves, boolean isViernes, boolean isSabado, boolean isDomingo) {
+        super(datos, idServicio, fechaAgregacion, fechaServicio, fechaAplcacion, isCancelado, cliente, empleado);
         this.fechaUltimaAplicacion = fechaUltimaAplicacion;
         this.isLunes = isLunes;
         this.isMartes = isMartes;
@@ -39,6 +37,4 @@ public class ServiciosProgramado extends Servicio<ServiciosProgramado> {
         this.isSabado = isSabado;
         this.isDomingo = isDomingo;
     }
-
-
 }
