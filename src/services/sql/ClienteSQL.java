@@ -155,6 +155,54 @@ public class ClienteSQL {
         return existe;
 
     }
+
+    /**
+     * Verifica si existe el cliente especificado.
+     * @param idCliente
+     * Id del cliente a verificar.
+     * @return
+     * Si existe retorna una instancia de ese cliente.
+     * Si no existe retorna NULL
+     * @throws SQLException
+     */
+    public Cliente existe(int idCliente) throws SQLException {
+        query = "SELECT * FROM cliente JOIN direccion on cliente.idDireccion = direccion.idDireccion WHERE idCliente = ? AND visible = 1";
+
+        ps = connection.prepareStatement(query);
+        ps.setInt(1,idCliente);
+        ResultSet resultSet = ps.executeQuery();
+        if(resultSet.first()){
+            return crearCliente(resultSet);
+
+        }
+
+        return null;
+    }
+
+    /**
+     * Verifica si existe el cliente especificado.
+     * @param clienteTelefono
+     * Número telefonico del cliente a verificar.
+     * @return
+     * Si existe retorna una instancia de ese cliente.
+     * Si no existe retorna NULL
+     * @throws SQLException
+     */
+    public Cliente existe(String clienteTelefono) throws SQLException {
+        query = "SELECT * FROM cliente JOIN direccion on cliente.idDireccion = direccion.idDireccion WHERE telefono  like '" + clienteTelefono+ "%' AND visible = 1";
+
+        ps = connection.prepareStatement(query);
+       // ps.setString(1,clienteTelefono);
+        ResultSet resultSet = ps.executeQuery();
+        if(resultSet.first()){
+            return crearCliente(resultSet);
+
+        }
+
+        return null;
+    }
+
+
     public boolean eliminar(Cliente cliente){
         //eliminar todos los que tengan ese telefono
         query= "UPDATE cliente SET visible = 0 WHERE cliente.telefono = ?";

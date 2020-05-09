@@ -7,6 +7,8 @@ import com.jfoenix.controls.base.IFXValidatableControl;
 import com.jfoenix.validation.RequiredFieldValidator;
 import com.sun.javafx.robot.FXRobot;
 import com.sun.javafx.robot.FXRobotFactory;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,12 +24,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.Cliente;
+import models.Direccion;
 import models.ServicioRegular;
 import models.interfaces.AddRegistro;
 import models.interfaces.IValidateCRUD;
 import models.interfaces.Registro;
 import models.interfaces.SetAddRegistroListener;
 import services.StringLengthValidator;
+import services.sql.ClienteSQL;
 import services.sql.TaxisSQL;
 
 import java.io.IOException;
@@ -84,7 +89,7 @@ public class ServicioRegularCrudController extends SetAddRegistroListener implem
 
         timePicker_horaServicio.setValue(LocalTime.now());
         datePicker_dia.setValue(LocalDate.now());
-
+        this.setFieldValidations();
 
     }
 
@@ -115,6 +120,15 @@ public class ServicioRegularCrudController extends SetAddRegistroListener implem
         this.setLengthValidation();
         this.setRequiredValidation();
         this.setFocusedProperty();
+
+        textField_telefono.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                extraerRegistro(new ClienteSQL().existe(newValue));
+            } catch (SQLException e) {
+                e.printStackTrace();
+                //ventana error.
+            }
+        });
     }
 
     @Override
@@ -187,14 +201,33 @@ public class ServicioRegularCrudController extends SetAddRegistroListener implem
             }
         }
 
+        this.datePicker_dia.setValue(LocalDate.now());
+        this.timePicker_horaServicio.setValue(LocalTime.now());
 
         return validacioExitosa;
     }
 
+    /**
+     * los servicios no son editables, este metodo nunca se usará para editar un servicio.
+     * Pero sí se usará para la busqueda automatica  de los datos de cliente.
+     * Si el numero de cliente existe se rellenarán los campos con ese cliente.
+     * @param registro
+     */
     @Override
     public void extraerRegistro(Registro registro) {
 
-        //los servicios son editables, este metodo nunca se usará en este controller.
+        if(registro!=null){
+            Cliente cliente = (Cliente) registro;
+            Direccion direccion = cliente.getDireccion();
+
+            textField_nombre.setText(cliente.getNombre());
+
+            textField_calle.setText(direccion.getCalle());
+            textField_colonia.setText(direccion.getColonia());
+            textField_numInt.setText(direccion.getNumInt());
+            textField_num_ext.setText(direccion.getNumExt());
+        }
+
 
     }
 

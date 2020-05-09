@@ -379,7 +379,7 @@ public class ServiciosController implements Initializable, IAccion {
         try {
 
             FXMLLoader controladorLoader = new FXMLLoader(getClass().getResource("/views/Cruds/ServicioRegularCRUD.fxml"));
-            AnchorPane contenedorCRUDClientes = controladorLoader.load();
+            AnchorPane contenedorServicioRegularCRUD = controladorLoader.load();
             ServicioRegularCrudController servicioRegularCrudController = controladorLoader.getController();
 
             servicioRegularCrudController.setAddRegistroListener(addRegistro);
@@ -387,7 +387,7 @@ public class ServiciosController implements Initializable, IAccion {
             Stage primaryStage = new Stage();
             // Parent root = FXMLLoader.load(getClass().getResource("/views/Cruds/taxisCRUD.fxml"));
             primaryStage.setTitle("Servicios");
-            Scene scene = new Scene(contenedorCRUDClientes);
+            Scene scene = new Scene(contenedorServicioRegularCRUD);
             scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ENTER), new Runnable() {
                 @Override
                 public void run() {
