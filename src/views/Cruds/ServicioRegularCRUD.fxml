@@ -39,5 +39,10 @@
       </VBox>
       <Button fx:id="btn_aceptar" layoutX="713.0" layoutY="372.0" mnemonicParsing="false" onAction="#btnAceptar_OnAction" prefHeight="25.0" prefWidth="113.0" styleClass="boton-aceptar" text="Aceptar" />
       <Button fx:id="btn_cancelar" layoutX="586.0" layoutY="371.0" mnemonicParsing="false" onAction="#btnCancelar_OnAction" prefHeight="25.0" prefWidth="113.0" styleClass="boton-cancelar" text="Cancelar" />
+      <JFXTextField fx:id="textField_buscarTelefono" focusColor="#5ab444" labelFloat="true" layoutX="311.0" layoutY="29.0" prefHeight="25.0" prefWidth="182.0" promptText="Buscar télefono">
+         <font>
+            <Font name="Gadugi" size="13.0" />
+         </font>
+      </JFXTextField>
    </children>
 </AnchorPane>

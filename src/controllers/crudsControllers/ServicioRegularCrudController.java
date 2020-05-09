@@ -5,39 +5,26 @@ import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTimePicker;
 import com.jfoenix.controls.base.IFXValidatableControl;
 import com.jfoenix.validation.RequiredFieldValidator;
-import com.sun.javafx.robot.FXRobot;
-import com.sun.javafx.robot.FXRobotFactory;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Cliente;
 import models.Direccion;
 import models.Persona;
 import models.ServicioRegular;
-import models.interfaces.AddRegistro;
 import models.interfaces.IValidateCRUD;
 import models.interfaces.Registro;
 import models.interfaces.SetAddRegistroListener;
 import resources.Statics;
 import services.StringLengthValidator;
 import services.sql.ClienteSQL;
-import services.sql.TaxisSQL;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -48,11 +35,15 @@ import java.util.ResourceBundle;
 
 public class ServicioRegularCrudController extends SetAddRegistroListener implements Initializable,IValidateCRUD {
 
+
     @FXML
     private AnchorPane root;
 
     @FXML
     private Label lbl_tittle;
+
+    @FXML
+    public JFXTextField textField_buscarTelefono;
 
     @FXML
     private JFXTextField textField_telefono;
@@ -125,7 +116,7 @@ public class ServicioRegularCrudController extends SetAddRegistroListener implem
         this.setRequiredValidation();
         this.setFocusedProperty();
 
-        textField_telefono.textProperty().addListener((observable, oldValue, newValue) -> {
+        textField_buscarTelefono.textProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 extraerRegistro(new ClienteSQL().existe(newValue));
             } catch (SQLException e) {
@@ -223,6 +214,7 @@ public class ServicioRegularCrudController extends SetAddRegistroListener implem
             Cliente cliente = (Cliente) registro;
             Direccion direccion = cliente.getDireccion();
 
+            textField_telefono.setText(cliente.getNumero());
             textField_nombre.setText(cliente.getNombre());
 
             textField_calle.setText(direccion.getCalle());
@@ -253,7 +245,7 @@ public class ServicioRegularCrudController extends SetAddRegistroListener implem
         if(cliente!=null){
             //cuando se buscó y encontró el numero de telefono automaticamente.
             try {
-                direccion = cliente.getDireccion().clone();
+                direccion = cliente.getDireccion().clone();//una copia para asignarsela a la instancia de servicioRegular.
             } catch (CloneNotSupportedException e) {
                 e.printStackTrace();
             }
