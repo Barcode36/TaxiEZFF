@@ -22,10 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import models.Cliente;
-import models.Direccion;
-import models.Empleado;
-import models.ServicioRegular;
+import models.*;
 import models.interfaces.AddRegistro;
 import models.interfaces.IAccion;
 import models.interfaces.Registro;
@@ -250,11 +247,6 @@ public class ServiciosController implements Initializable, IAccion {
         this.tablaServicioPend.setRoot(serivicioRegularPendienteRecursiveTreeItem);
         this.tablaServicioPend.setShowRoot(false);
 
-
-
-
-
-
     }
 
     Callback<TreeTableColumn<ServicioRegular, Direccion>, TreeTableCell<ServicioRegular, Direccion>> callbackDireccion = new Callback<TreeTableColumn<ServicioRegular, Direccion>, TreeTableCell<ServicioRegular, Direccion>>() {
@@ -367,6 +359,59 @@ public class ServiciosController implements Initializable, IAccion {
 
     @FXML
     void btnAplicarServicioNormal_OnAction(ActionEvent event) {
+
+        //si no hay selección, a pastar.
+        if(tablaServicioPend.getSelectionModel().isEmpty()){
+            return;
+        }
+
+        try {
+            FXMLLoader controladorLoader = new FXMLLoader(getClass().getResource("/views/AsignarUnidad.fxml"));
+            AnchorPane contenedorAsignarUnidad = controladorLoader.load();
+            AsignarUnidadController servicioRegularCrudController = controladorLoader.getController();
+
+            servicioRegularCrudController.setAddRegistroListener(new AddRegistro(tablaServicioPend.getSelectionModel().getSelectedItem().getValue()) {
+                @Override
+                public boolean addRegistro(Registro registro, Stage stage) {
+
+                    //regresa la instancia que mandamos pero con ID Direccion = true;
+
+
+                    try {
+                        if(new ServicioRegularSQL().aplicarServicioRegular( (ConfirmaciónServicioData) registro)){
+                            return true;
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    return false;
+                }
+
+            });
+            Stage primaryStage = new Stage();
+            // Parent root = FXMLLoader.load(getClass().getResource("/views/Cruds/taxisCRUD.fxml"));
+            primaryStage.setTitle("Asignar unidad");
+            Scene scene = new Scene(contenedorAsignarUnidad);
+            scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ENTER), new Runnable() {
+                @Override
+                public void run() {
+                    FXRobot robot = FXRobotFactory.createRobot(scene);
+                    robot.keyPress(KeyCode.TAB);
+                }
+            });
+            primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
+            primaryStage.initOwner(this.textField_servicioRapido.getScene().getWindow());
+            primaryStage.initModality(Modality.WINDOW_MODAL);
+            primaryStage.show();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         System.out.println("Aplicar servicio normal.");
     }
 

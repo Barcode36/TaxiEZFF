@@ -5,25 +5,28 @@
  */
 package controllers;
 
-import com.jfoenix.controls.JFXAutoCompletePopup;
 import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.base.IFXLabelFloatControl;
+import com.jfoenix.controls.JFXTextArea;
+
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.util.Callback;
+import models.ConfirmaciónServicioData;
+import models.ServicioRegular;
+import models.Taxi;
+import models.Taxista;
+import models.interfaces.Registro;
+import models.interfaces.SetAddRegistroListener;
+import services.sql.TaxisSQL;
+import services.sql.TaxistaSQL;
 
 
 /**
@@ -31,7 +34,7 @@ import javafx.scene.layout.AnchorPane;
  *
  * @author VAPESIN
  */
-public class AsignarUnidadController implements Initializable {
+public class AsignarUnidadController extends SetAddRegistroListener implements Initializable {
 
     @FXML
     private AnchorPane ap_tittleBar;
@@ -42,23 +45,76 @@ public class AsignarUnidadController implements Initializable {
     @FXML
     private Label lbl_tittleBar;
     @FXML
-    private JFXComboBox<String> cb_unidad;
+    private JFXComboBox<Taxi> cb_unidad;
     @FXML
-    private JFXTextField textField_notas;
-    @FXML
-    private JFXTextField textField_observaciones;
+    private JFXTextArea textField_notas;
+
     @FXML
     private Button btnAceptar;
-   /// private IAbrir_Edicion_Registros abrir_Edicion_Registros;
-  //  private final ConexionLecturaUnidades conexionLecturaUnidades = new ConexionLecturaUnidades();
-    int focus=-1;
+    private ServicioRegular servicioRegular;
 
+    @FXML
+    private JFXComboBox<Taxista> comboBox_taxista;
+
+
+    Callback<ListView<Taxi>, ListCell<Taxi>> callbackComboTaxi = new Callback<ListView<Taxi>, ListCell<Taxi>>() {
+
+        @Override
+        public ListCell<Taxi> call(ListView<Taxi> param) {
+
+            ListCell<Taxi> listCell = new ListCell<Taxi>(){
+                @Override
+                protected void updateItem(Taxi item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if(item!=null){
+                        this.setText(item.getIdUnidad() +"");
+                    }else{
+                        //setText(null);
+                        setGraphic(null);
+                    }
+                }
+            };
+
+            return listCell;
+        }
+    };
+
+    Callback<ListView<Taxista>, ListCell<Taxista>> callbackComboTaxista = new Callback<ListView<Taxista>, ListCell<Taxista>>() {
+
+        @Override
+        public ListCell<Taxista> call(ListView<Taxista> param) {
+
+            ListCell<Taxista> listCell = new ListCell<Taxista>(){
+                @Override
+                protected void updateItem(Taxista item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if(item!=null){
+                        this.setText(item.getIdTaxista() + " " + item.getNombre());
+                    }else{
+                        //setText(null);
+                        setGraphic(null);
+                    }
+                }
+            };
+
+            return listCell;
+        }
+    };
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-      //  cb_unidad.setItems(conexionLecturaUnidades.getUnidades());
-        focus++;
-        JFXAutoCompletePopup<String> autoCompletePopup = new JFXAutoCompletePopup<>();
+     //   cb_unidad.setCellFactory(callbackCombo);
+        cb_unidad.setItems(new TaxisSQL().getTaxis());
+        comboBox_taxista.setItems(new TaxistaSQL().getTaxistas());
+        comboBox_taxista.setCellFactory(callbackComboTaxista);
+
+        //cb_unidad.getSelectionModel().select(0);
+     //   Taxi titem = cb_unidad.getSelectionModel().getSelectedItem();
+
+        // cb_unidad.setButtonCell(callbackCombo.call(null));
+        /*JFXAutoCompletePopup<String> autoCompletePopup = new JFXAutoCompletePopup<>();
         autoCompletePopup.getSuggestions().addAll(cb_unidad.getItems());
         autoCompletePopup.getStyleClass().add("combo-box-popup");
         autoCompletePopup.getStyleClass().add("jfx-combo-box");
@@ -82,7 +138,7 @@ public class AsignarUnidadController implements Initializable {
                 autoCompletePopup.show(editor);
                 
             }
-        });
+        });*/
     }    
 
 
@@ -91,7 +147,7 @@ public class AsignarUnidadController implements Initializable {
         
         if(!cb_unidad.getSelectionModel().isEmpty()){
             //retornar valor seleccionado.
-            if(cb_unidad.getSelectionModel().getSelectedItem().split(" ")[0].equals("0"))
+            /*if(cb_unidad.getSelectionModel().getSelectedItem().split(" ")[0].equals("0"))
                 return;
             else if(cb_unidad.getItems().indexOf(cb_unidad.getEditor().getText()) == -1)
                 return;//si el elemento no existe (o sea, escribio algo que no).
@@ -103,49 +159,34 @@ public class AsignarUnidadController implements Initializable {
             Object informacion = idUnidad+":"+nota+":"+observaciones;
           //  abrir_Edicion_Registros.registroEditNuevo(informacion);
             this.btn_cerrar.fire();
-  
-        
-            
-        }
-        
-    }
-    
-
-//    public void setIAbrirEdicionRegistro(IAbrir_Edicion_Registros abrir_Edicion_Registros){
-  //      this.abrir_Edicion_Registros = abrir_Edicion_Registros;
-  //  }
-    //cambiar este desmadre, por un switch , en key realeased, comparando
-    //if eventKeyCode == enter->switch(event.getSource) case txtcombobox{notas.request...}, case txtnotas(observaciones.request)
-    @FXML
-    void root_OnKeyReleased(KeyEvent event) 
-    {
-        if(event.getCode()==KeyCode.ENTER){
-            
-            /*switch((IFXLabelFloatControl)event.getSource()){
-                case cb_unidad:
-                    textField_observaciones.requestFocus();
-                break;
-                case textField_notas: 
-                    textField_observaciones.requestFocus();
-                break;
-                case textField_observaciones:
-                    btnAceptar.fire();
-                break;
-            }*/
-            if(event.getSource() == cb_unidad){
-                textField_notas.requestFocus();
-            }else if(event.getSource() == textField_notas){
-                textField_observaciones.requestFocus();
-            }else if(event.getSource() == textField_observaciones){
-                btnAceptar.fire();
+  */
+            if(enviarRegistro( ((Stage)((Node)event.getSource()).getScene().getWindow()) )){
+                ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
             }
+        
             
-        } 
-        else if(event.getCode()==KeyCode.ESCAPE){
-            btn_cerrar.fire();
         }
-         
+        
     }
 
-    
+
+    @Override
+    public void extraerRegistro(Registro registro) {
+
+
+        this.servicioRegular = (ServicioRegular) registro;
+        this.textField_notas.setText(servicioRegular.getObservaciones());
+
+    }
+
+    @Override
+    public Registro guardarCambiosRegistros() {
+        Taxista selectedItem = comboBox_taxista.getSelectionModel().getSelectedItem();
+        Taxi titem = cb_unidad.getSelectionModel().getSelectedItem();
+        return new ConfirmaciónServicioData(
+                titem.getIdUnidad(),
+                servicioRegular.getIdServicio(),
+                textField_notas.getText());
+
+    }
 }

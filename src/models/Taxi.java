@@ -58,4 +58,9 @@ public class Taxi extends RecursiveTreeObject<Taxi> implements Registro {
     public void setTaxista(Taxista taxista) {
         this.taxista = taxista;
     }
+    /*
+    @Override
+    public String toString() {
+        return idUnidad + " " + taxista.getNombre();
+    }*/
 }

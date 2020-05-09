@@ -168,5 +168,24 @@ public class ServicioRegularSQL {
     }
 
 
+    public boolean aplicarServicioRegular(ConfirmaciónServicioData confirmaciónServicioData) throws SQLException {
+
+        query = "UPDATE servicio SET fechaAplicacion = ? WHERE idServicio = ? ";
+        ps = connection.prepareStatement(query);
+        ps.setTimestamp(1,Timestamp.valueOf(LocalDateTime.now()) );
+        ps.setInt(2, confirmaciónServicioData.getIdServicio());
+        ps.executeUpdate();
+
+
+        query = "INSERT INTO servicio_has_unidad (idServicio,idUnidad) VALUES (?,?) ";
+        ps = connection.prepareStatement(query);
+        ps.setInt(1, confirmaciónServicioData.getIdServicio());
+        ps.setInt(2, confirmaciónServicioData.getIdUnidad());
+        ps.executeUpdate();
+
+
+
+        return true;
+    }
 
 }
