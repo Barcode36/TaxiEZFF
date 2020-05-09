@@ -34,7 +34,7 @@
       <VBox layoutX="543.0" layoutY="216.0" prefHeight="128.0" prefWidth="285.0" spacing="30.0">
          <children>
             <JFXTimePicker fx:id="timePicker_horaServicio" prefHeight="31.0" prefWidth="313.0" promptText="00:00" />
-            <JFXDatePicker fx:id="datePicker_dia" prefHeight="31.0" prefWidth="307.0" promptText="DD/MM/AAAA" />
+            <JFXDatePicker fx:id="datePicker_dia" editable="false" prefHeight="31.0" prefWidth="307.0" promptText="DD/MM/AAAA" />
          </children>
       </VBox>
       <Button fx:id="btn_aceptar" layoutX="713.0" layoutY="372.0" mnemonicParsing="false" onAction="#btnAceptar_OnAction" prefHeight="25.0" prefWidth="113.0" styleClass="boton-aceptar" text="Aceptar" />

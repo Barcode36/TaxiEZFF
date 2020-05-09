@@ -2,34 +2,46 @@ package models;
 
 import models.interfaces.Registro;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-//Servicio no es una persona literalmente, pero contiene los mismos campos.
+/**
+ * Servicio no es una persona literalmente, pero contiene los mismos campos.
+ * @param <S>
+ */
 public class Servicio<S> extends Persona<S> implements Registro {
 
     private int idServicio;//primarykey
     private String clienteTelefono;//foreign key
     private int idEmpleado;//foreign key, no es necesario guardar todos los datos del empleado, solo su ID.
-    private LocalDateTime fechaAgregación;
-    private LocalDateTime fechaAplcación;
+    private LocalDateTime fechaAgregacion;
+    private LocalDateTime fechaServicio;
+    private LocalDateTime fechaAplcacion;
 
-    public Servicio( int idServicio, String clienteTelefono, int idEmpleado, LocalDateTime fechaAgregación, LocalDateTime fechaAplcación,String nombre, String observaciones, Direccion direccion) {
+    //campos para acceso secundario.
+    private Integer unidad = null;
+    private String nombreEmpleado;
+    private int idCliente;
+
+    public Servicio(int idServicio, int idCliente, String clienteTelefono, int idEmpleado, LocalDateTime fechaAgregacion, LocalDateTime fechaServicio, LocalDateTime fechaAplcacion, String nombre, String observaciones, Direccion direccion) {
         super(nombre, observaciones, direccion);
         this.idServicio = idServicio;
         this.clienteTelefono = clienteTelefono;
         this.idEmpleado = idEmpleado;
-        this.fechaAgregación = fechaAgregación;
-        this.fechaAplcación = fechaAplcación;
+        this.fechaAgregacion = fechaAgregacion;
+        this.fechaAplcacion = fechaAplcacion;
+        this.fechaServicio = fechaServicio;
+        this.idCliente = idCliente;
     }
 
-    public Servicio( int idServicio, String clienteTelefono, int idEmpleado, LocalDateTime fechaAgregación, LocalDateTime fechaAplcación,Persona datos) {
+    public Servicio(int idServicio, int idCliente, String clienteTelefono, int idEmpleado, LocalDateTime fechaAgregacion, LocalDateTime fechaServicio, LocalDateTime fechaAplcacion, Persona datos) {
         super(datos);
         this.idServicio = idServicio;
         this.clienteTelefono = clienteTelefono;
         this.idEmpleado = idEmpleado;
-        this.fechaAgregación = fechaAgregación;
-        this.fechaAplcación = fechaAplcación;
+        this.fechaAgregacion = fechaAgregacion;
+        this.fechaAplcacion = fechaAplcacion;
+        this.fechaServicio = fechaServicio;
+        this.idCliente = idCliente;
     }
 
     public int getIdServicio() {
@@ -56,19 +68,51 @@ public class Servicio<S> extends Persona<S> implements Registro {
         this.idEmpleado = idEmpleado;
     }
 
-    public LocalDateTime getFechaAgregación() {
-        return fechaAgregación;
+    public LocalDateTime getFechaServicio() {
+        return fechaServicio;
     }
 
-    public void setFechaAgregación(LocalDateTime fechaAgregación) {
-        this.fechaAgregación = fechaAgregación;
+    public void setFechaServicio(LocalDateTime fechaServicio) {
+        this.fechaServicio = fechaServicio;
     }
 
-    public LocalDateTime getFechaAplcación() {
-        return fechaAplcación;
+    public LocalDateTime getFechaAgregacion() {
+        return fechaAgregacion;
     }
 
-    public void setFechaAplcación(LocalDateTime fechaAplcación) {
-        this.fechaAplcación = fechaAplcación;
+    public void setFechaAgregacion(LocalDateTime fechaAgregacion) {
+        this.fechaAgregacion = fechaAgregacion;
+    }
+
+    public LocalDateTime getFechaAplcacion() {
+        return fechaAplcacion;
+    }
+
+    public void setFechaAplcacion(LocalDateTime fechaAplcacion) {
+        this.fechaAplcacion = fechaAplcacion;
+    }
+
+    public Integer getUnidad() {
+        return unidad;
+    }
+
+    public void setUnidad(Integer unidad) {
+        this.unidad = unidad;
+    }
+
+    public String getNombreEmpleado() {
+        return nombreEmpleado;
+    }
+
+    public void setNombreEmpleado(String nombreEmpleado) {
+        this.nombreEmpleado = nombreEmpleado;
+    }
+
+    public int getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
     }
 }

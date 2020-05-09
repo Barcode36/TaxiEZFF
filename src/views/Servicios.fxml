@@ -25,11 +25,12 @@
                         <JFXTreeTableView fx:id="tablaServicio" layoutY="70.0" prefHeight="562.0" prefWidth="991.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
                            <columns>
                               <TreeTableColumn fx:id="cmServicios_fechaAdd" prefWidth="103.0" text="Fecha adición" />
+                              <TreeTableColumn fx:id="cmServicios_fechaServicio" prefWidth="103.0" text="Fecha Servicio" />
                               <TreeTableColumn fx:id="cmServicios_FechaAplic" prefWidth="99.0" text="Fecha aplicación" />
                               <TreeTableColumn fx:id="cmServicios_telefono" prefWidth="85.0" text="Teléfono" />
                               <TreeTableColumn fx:id="cmServicios_nombre" text="Nombre" />
                               <TreeTableColumn fx:id="cmServicios_direccion" prefWidth="60.0" text="Dirección" />
-                              <TreeTableColumn fx:id="cmServicios_notas" minWidth="3.0" prefWidth="67.0" text="Notas" />
+                              <TreeTableColumn fx:id="cmServicios_observaciones" minWidth="3.0" prefWidth="67.0" text="Notas" />
                               <TreeTableColumn fx:id="cmServicios_unidad" prefWidth="109.0" text="Unidad" />
                               <TreeTableColumn fx:id="cmServicios_modulador" prefWidth="90.0" text="Modulador" />
                            </columns>
@@ -90,6 +91,7 @@
                         <JFXTreeTableView fx:id="tablaServicioPend" layoutY="94.0" prefHeight="538.0" prefWidth="991.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
                            <columns>
                               <TreeTableColumn fx:id="cmServiciosPend_fechaAdd" prefWidth="75.0" text="Fecha agregación" />
+                              <TreeTableColumn fx:id="cmServiciosPend_fechaServicio" prefWidth="75.0" text="Fecha Servicio" />
                               <TreeTableColumn fx:id="cmServiciosPend_telefono" prefWidth="75.0" text="Teléfono" />
                               <TreeTableColumn fx:id="cmServiciosPend_nombre" prefWidth="75.0" text="Nombre" />
                               <TreeTableColumn fx:id="cmServiciosPend_direccion" prefWidth="75.0" text="Dirección" />
@@ -109,6 +111,7 @@
                      <children>
                         <JFXTreeTableView fx:id="tablaServicioProgr" layoutX="-7.0" layoutY="77.0" prefHeight="555.0" prefWidth="998.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
                            <columns>
+                              <TreeTableColumn fx:id="cmServiciosProg_FechaAdicion" prefWidth="75.0" text="Fecha adición" />
                               <TreeTableColumn fx:id="cmServiciosProg_FechaInicio" prefWidth="75.0" text="Fecha inicio" />
                               <TreeTableColumn fx:id="cmServiciosProg_FechaFin" prefWidth="75.0" text="Fecha fin" />
                               <TreeTableColumn fx:id="cmServiciosProg_telefono" prefWidth="75.0" text="Teléfono" />

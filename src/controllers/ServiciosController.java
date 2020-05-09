@@ -1,18 +1,38 @@
 package controllers;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTabPane;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXTreeTableView;
+import com.jfoenix.controls.*;
+import com.sun.javafx.robot.FXRobot;
+import com.sun.javafx.robot.FXRobotFactory;
+import controllers.crudsControllers.ServicioRegularCrudController;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.Callback;
+import models.Cliente;
+import models.Direccion;
+import models.ServicioRegular;
+import models.interfaces.AddRegistro;
 import models.interfaces.IAccion;
+import models.interfaces.Registro;
+import services.sql.ClienteSQL;
+import services.sql.ServicioRegularSQL;
 
+import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 public class ServiciosController implements Initializable, IAccion {
@@ -30,31 +50,34 @@ public class ServiciosController implements Initializable, IAccion {
     private JFXTextField textField_buscarServicios;
 
     @FXML
-    private JFXTreeTableView<?> tablaServicio;
+    private JFXTreeTableView<ServicioRegular> tablaServicio;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServicios_fechaAdd;
+    private TreeTableColumn<ServicioRegular, LocalDateTime> cmServicios_fechaAdd;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServicios_FechaAplic;
+    public TreeTableColumn<ServicioRegular,LocalDateTime> cmServicios_fechaServicio;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServicios_telefono;
+    private TreeTableColumn<ServicioRegular, LocalDateTime>  cmServicios_FechaAplic;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServicios_nombre;
+    private TreeTableColumn<ServicioRegular, String> cmServicios_telefono;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServicios_direccion;
+    private TreeTableColumn<ServicioRegular, String> cmServicios_nombre;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServicios_notas;
+    private TreeTableColumn<ServicioRegular, Direccion> cmServicios_direccion;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServicios_unidad;
+    private TreeTableColumn<ServicioRegular, String> cmServicios_observaciones;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServicios_modulador;
+    private TreeTableColumn<ServicioRegular, String> cmServicios_unidad;
+
+    @FXML
+    private TreeTableColumn<ServicioRegular,String> cmServicios_modulador;
 
     @FXML
     private JFXTextField textField_buscarPendiente;
@@ -78,31 +101,37 @@ public class ServiciosController implements Initializable, IAccion {
     private Tab tabServiciosPendientes;
 
     @FXML
-    private JFXTreeTableView<?> tablaServicioPend;
+    private JFXTreeTableView<ServicioRegular> tablaServicioPend;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServiciosPend_fechaAdd;
+    private TreeTableColumn<ServicioRegular, LocalDateTime> cmServiciosPend_fechaAdd;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServiciosPend_telefono;
+    public TreeTableColumn<ServicioRegular, LocalDateTime> cmServiciosPend_fechaServicio;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServiciosPend_nombre;
+    private TreeTableColumn<ServicioRegular, String> cmServiciosPend_telefono;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServiciosPend_direccion;
+    private TreeTableColumn<ServicioRegular, String> cmServiciosPend_nombre;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServiciosPend_notas;
+    private TreeTableColumn<ServicioRegular, Direccion> cmServiciosPend_direccion;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServiciosPend_modulador;
+    private TreeTableColumn<ServicioRegular, String> cmServiciosPend_notas;
+
+    @FXML
+    private TreeTableColumn<ServicioRegularSQL, String> cmServiciosPend_modulador;
 
     @FXML
     private Tab tabServiciosProgramados;
 
     @FXML
     private JFXTreeTableView<?> tablaServicioProgr;
+
+    @FXML
+    public TreeTableColumn<?, ?> cmServiciosProg_FechaAdicion;
 
     @FXML
     private TreeTableColumn<?, ?> cmServiciosProg_FechaInicio;
@@ -140,9 +169,90 @@ public class ServiciosController implements Initializable, IAccion {
     @FXML
     private JFXButton btnAplicarServicioProgramado;
 
+    ObservableList<ServicioRegular> listaServicioRegularesPendientes;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+
+        /*this.tablaServicio.setRoot(clienteRecursiveTreeItem);
+        this.tablaServicio.setShowRoot(false);
+
+        cmServicios_fechaAdd.setCellValueFactory(new TreeItemPropertyValueFactory("fechaAgregacion"));
+        cmServicios_fechaServicio.setCellValueFactory(new TreeItemPropertyValueFactory("fechaServicio"));
+        cmServicios_FechaAplic.setCellValueFactory(new TreeItemPropertyValueFactory("fechaAplicacion"));
+        cmServicios_telefono.setCellValueFactory(new TreeItemPropertyValueFactory("clienteTelefono"));
+        cmServicios_nombre.setCellValueFactory(new TreeItemPropertyValueFactory("nombre"));
+        cmServicios_direccion.setCellValueFactory(new TreeItemPropertyValueFactory("direccion"));
+        cmServicios_observaciones.setCellValueFactory(new TreeItemPropertyValueFactory("observaciones"));
+        cmServicios_unidad.setCellValueFactory(new TreeItemPropertyValueFactory("unidad"));
+        cmServicios_modulador.setCellValueFactory(new TreeItemPropertyValueFactory("nombreEmpleado"));
+*/
+
+        this.cmServiciosPend_fechaAdd.setCellValueFactory(new TreeItemPropertyValueFactory("fechaAgregacion"));
+        this.cmServiciosPend_fechaServicio.setCellValueFactory(new TreeItemPropertyValueFactory("fechaServicio"));
+        this.cmServiciosPend_telefono.setCellValueFactory(new TreeItemPropertyValueFactory("clienteTelefono"));
+        this.cmServiciosPend_nombre.setCellValueFactory(new TreeItemPropertyValueFactory("nombre"));
+        this.cmServiciosPend_direccion.setCellValueFactory(new TreeItemPropertyValueFactory("direccion"));
+        this.cmServiciosPend_notas.setCellValueFactory(new TreeItemPropertyValueFactory("observaciones"));
+        this.cmServiciosPend_modulador.setCellValueFactory(new TreeItemPropertyValueFactory("nombreEmpleado"));
+
+        this.cmServiciosPend_fechaAdd.setCellFactory(callbackDateTime);
+        this.cmServiciosPend_fechaServicio.setCellFactory(callbackDateTime);
+        this.cmServiciosPend_direccion.setCellFactory(callbackDireccion);
+
+
+        listaServicioRegularesPendientes = new ServicioRegularSQL().getServiciosRegularesPendientes();
+
+        TreeItem<ServicioRegular> serivicioRegularPendienteRecursiveTreeItem =
+                new RecursiveTreeItem<>(listaServicioRegularesPendientes, (recursiveTreeObject) -> recursiveTreeObject.getChildren());
+
+        this.tablaServicioPend.setRoot(serivicioRegularPendienteRecursiveTreeItem);
+        this.tablaServicioPend.setShowRoot(false);
+
+
+
+
+
+
     }
+
+    Callback<TreeTableColumn<ServicioRegular, Direccion>, TreeTableCell<ServicioRegular, Direccion>> callbackDireccion = new Callback<TreeTableColumn<ServicioRegular, Direccion>, TreeTableCell<ServicioRegular, Direccion>>() {
+        @Override
+        public TreeTableCell<ServicioRegular, Direccion> call(TreeTableColumn<ServicioRegular, Direccion> param) {
+
+            TreeTableCell<ServicioRegular, Direccion> cell = new TreeTableCell<ServicioRegular, Direccion>() {
+                protected void updateItem(Direccion item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item != null) {
+                        this.setText("Calle: " + item.getCalle() + " Colonia: " + item.getColonia()+ " \nNum ext: " + item.getNumExt() + (item.getNumInt() == null ? "" : " Num int: " + item.getNumInt()) );
+                        //this.setPrefHeight(35);
+                    } else {
+                        this.setText((String)null);
+                    }
+                }
+            };
+            return cell;
+
+        }
+    };
+
+    Callback<TreeTableColumn<ServicioRegular, LocalDateTime>, TreeTableCell<ServicioRegular, LocalDateTime>> callbackDateTime = new Callback<TreeTableColumn<ServicioRegular, LocalDateTime>, TreeTableCell<ServicioRegular, LocalDateTime>>() {
+        @Override
+        public TreeTableCell<ServicioRegular, LocalDateTime> call(TreeTableColumn<ServicioRegular, LocalDateTime> param) {
+            TreeTableCell<ServicioRegular, LocalDateTime> cell = new TreeTableCell<ServicioRegular,LocalDateTime>(){
+                @Override
+                protected void updateItem(LocalDateTime item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if(item!= null){
+                        setText(item.toString().replace('T','\n'));
+                    }
+                }
+            };
+            return cell;
+        }
+    };
 
     @Override
     public void accionPrimaria() {
@@ -173,7 +283,19 @@ public class ServiciosController implements Initializable, IAccion {
 
     @FXML
     void btnAddServicioNormal_OnAction(ActionEvent event) {
-        System.out.println("Add servicio normal.");
+
+        abrirVentanaCrud(event, new AddRegistro() {
+            @Override
+            public boolean addRegistro(Registro registro, Stage stage) {
+                if(new ServicioRegularSQL().insertar((ServicioRegular) registro)){
+                    listaServicioRegularesPendientes.add((ServicioRegular) registro);
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
 
     @FXML
@@ -199,5 +321,37 @@ public class ServiciosController implements Initializable, IAccion {
     @FXML
     void btnFinalizarServicioProgramado_OnAction(ActionEvent event) {
         System.out.println("FInalizar servicio programado.");
+    }
+
+
+    private void abrirVentanaCrud(ActionEvent event, AddRegistro addRegistro){
+        try {
+
+            FXMLLoader controladorLoader = new FXMLLoader(getClass().getResource("/views/Cruds/ServicioRegularCRUD.fxml"));
+            AnchorPane contenedorCRUDClientes = controladorLoader.load();
+            ServicioRegularCrudController servicioRegularCrudController = controladorLoader.getController();
+
+            servicioRegularCrudController.setAddRegistroListener(addRegistro);
+
+            Stage primaryStage = new Stage();
+            // Parent root = FXMLLoader.load(getClass().getResource("/views/Cruds/taxisCRUD.fxml"));
+            primaryStage.setTitle("Servicios");
+            Scene scene = new Scene(contenedorCRUDClientes);
+            scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ENTER), new Runnable() {
+                @Override
+                public void run() {
+                    FXRobot robot = FXRobotFactory.createRobot(scene);
+                    robot.keyPress(KeyCode.TAB);
+                }
+            });
+            primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
+            primaryStage.initOwner(this.textField_servicioRapido.getScene().getWindow());
+            primaryStage.initModality(Modality.WINDOW_MODAL);
+            primaryStage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
