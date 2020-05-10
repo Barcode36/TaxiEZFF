@@ -328,16 +328,19 @@ public class ServiciosController implements Initializable, IAccion {
         }));
 
 
+        try {
+            listaServicioRegularesPendientes = new ServicioRegularSQL().getServiciosRegularesPendientes2();
 
+            TreeItem<ServicioRegular> serivicioRegularPendienteRecursiveTreeItem =
+                    new RecursiveTreeItem<>(listaServicioRegularesPendientes, (recursiveTreeObject) -> recursiveTreeObject.getChildren());
 
+            this.tablaServicioPend.setRoot(serivicioRegularPendienteRecursiveTreeItem);
+            this.tablaServicioPend.setShowRoot(false);
 
-        listaServicioRegularesPendientes = new ServicioRegularSQL().getServiciosRegularesPendientes();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        TreeItem<ServicioRegular> serivicioRegularPendienteRecursiveTreeItem =
-                new RecursiveTreeItem<>(listaServicioRegularesPendientes, (recursiveTreeObject) -> recursiveTreeObject.getChildren());
-
-        this.tablaServicioPend.setRoot(serivicioRegularPendienteRecursiveTreeItem);
-        this.tablaServicioPend.setShowRoot(false);
 /*----------------------------------------------------FIN PENDIENTES ---------------------------------------------------------------*/
 
 
@@ -369,11 +372,17 @@ public class ServiciosController implements Initializable, IAccion {
             TreeTableCell<ServicioRegular, LocalDateTime> cell = new TreeTableCell<ServicioRegular,LocalDateTime>(){
                 @Override
                 protected void updateItem(LocalDateTime item, boolean empty) {
-                    super.updateItem(item, empty);
+                    super.updateItem(item, empty);//empty hace referencia a row no usado. o sin valo.
 
                     if(item!= null){
                         setText(item.toString().replace('T','\n'));
+                    }else{
+                        //cuando no aparece fechar o es nulla siempre será la columna de fecha aplicación
+                        //por lo tanto se mostrará el mensaje:
+                        if(!empty)
+                            setText("Servicio cancelado.");
                     }
+
                 }
             };
             return cell;
