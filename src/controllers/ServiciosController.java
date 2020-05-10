@@ -475,7 +475,7 @@ public class ServiciosController implements Initializable, IAccion {
                         if(new ServicioRegularSQL().aplicarServicioRegular(CSD)){
                             servicioRegularPostModificiacion.setIdUnidad(CSD.getIdUnidad());
                             servicioRegularPostModificiacion.setObservaciones(CSD.getObservaciones());
-                            //añadir a la lista de aplicados.
+                            //TODO añadir a la lista de aplicados.
                             listaServicioRegularesPendientes.remove(servicioRegularPostModificiacion);
                             //tablaServicioPend.getSelectionModel().getSelectedItem().setValue(servicioRegularPostModificiacion);
                             return true;
