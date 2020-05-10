@@ -4,6 +4,7 @@ import com.jfoenix.controls.*;
 import com.sun.javafx.robot.FXRobot;
 import com.sun.javafx.robot.FXRobotFactory;
 import controllers.crudsControllers.ServicioRegularCrudController;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,10 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableCell;
-import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -34,6 +32,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
 public class ServiciosController implements Initializable, IAccion {
@@ -176,21 +175,8 @@ public class ServiciosController implements Initializable, IAccion {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+
         /*----------------------------------------------------Aplicados ---------------------------------------------------------------*/
-
-        /*this.tablaServicio.setRoot(clienteRecursiveTreeItem);
-        this.tablaServicio.setShowRoot(false);
-
-        cmServicios_fechaAdd.setCellValueFactory(new TreeItemPropertyValueFactory("fechaAgregacion"));
-        cmServicios_fechaServicio.setCellValueFactory(new TreeItemPropertyValueFactory("fechaServicio"));
-        cmServicios_FechaAplic.setCellValueFactory(new TreeItemPropertyValueFactory("fechaAplicacion"));
-        cmServicios_telefono.setCellValueFactory(new TreeItemPropertyValueFactory("clienteTelefono"));
-        cmServicios_nombre.setCellValueFactory(new TreeItemPropertyValueFactory("nombre"));
-        cmServicios_direccion.setCellValueFactory(new TreeItemPropertyValueFactory("direccion"));
-        cmServicios_observaciones.setCellValueFactory(new TreeItemPropertyValueFactory("observaciones"));
-        cmServicios_unidad.setCellValueFactory(new TreeItemPropertyValueFactory("unidad"));
-        cmServicios_modulador.setCellValueFactory(new TreeItemPropertyValueFactory("nombreEmpleado"));
-*/
 
         cmServicios_fechaAdd.setCellValueFactory(new TreeItemPropertyValueFactory("fechaAgregacion"));
         cmServicios_fechaServicio.setCellValueFactory(new TreeItemPropertyValueFactory("fechaServicio"));
@@ -331,6 +317,7 @@ public class ServiciosController implements Initializable, IAccion {
         try {
             listaServicioRegularesPendientes = new ServicioRegularSQL().getServiciosRegularesPendientes2();
 
+
             TreeItem<ServicioRegular> serivicioRegularPendienteRecursiveTreeItem =
                     new RecursiveTreeItem<>(listaServicioRegularesPendientes, (recursiveTreeObject) -> recursiveTreeObject.getChildren());
 
@@ -342,6 +329,73 @@ public class ServiciosController implements Initializable, IAccion {
         }
 
 /*----------------------------------------------------FIN PENDIENTES ---------------------------------------------------------------*/
+        tablaServicioPend.setSortPolicy(new Callback<TreeTableView<ServicioRegular>, Boolean>()
+        {
+            @Override
+            public Boolean call(TreeTableView<ServicioRegular> param)
+            {
+                Comparator<TreeItem<ServicioRegular>> comparator = new Comparator<TreeItem<ServicioRegular>>()
+                {
+                    @Override
+                    public int compare(TreeItem<ServicioRegular> o1, TreeItem<ServicioRegular> o2)
+                    {
+                        ServicioRegular s1 = o1.getValue();
+                        ServicioRegular s2 = o2.getValue();
+
+                        if(s1.getFechaAgregacion().isBefore(s2.getFechaAgregacion()))// la fecha 1 es menor que la fecha 2
+                        {
+                            return 1;
+                        }
+                        else if(s1.getFechaAgregacion().isEqual(s2.getFechaAgregacion()))//iguales
+                        {
+                            return 0;
+                        }
+                        else// fecha 1 es mayor que fecha 2
+                        {
+                            return -1;
+                        }
+                    }
+                };
+
+                ObservableList<TreeItem<ServicioRegular>> children = tablaServicioPend.getRoot().getChildren();
+                FXCollections.sort(children,comparator);
+                return true;
+            }
+        });
+
+        tablaServicio.setSortPolicy( new Callback<TreeTableView<ServicioRegular>, Boolean>()
+        {
+            @Override
+            public Boolean call(TreeTableView<ServicioRegular> param)
+            {
+                Comparator<TreeItem<ServicioRegular>> comparator = new Comparator<TreeItem<ServicioRegular>>()
+                {
+                    @Override
+                    public int compare(TreeItem<ServicioRegular> o1, TreeItem<ServicioRegular> o2)
+                    {
+                        ServicioRegular s1 = o1.getValue();
+                        ServicioRegular s2 = o2.getValue();
+
+                        if(s1.getFechaAgregacion().isBefore(s2.getFechaAgregacion()))// la fecha 1 es menor que la fecha 2
+                        {
+                            return 1;
+                        }
+                        else if(s1.getFechaAgregacion().isEqual(s2.getFechaAgregacion()))//iguales
+                        {
+                            return 0;
+                        }
+                        else// fecha 1 es mayor que fecha 2
+                        {
+                            return -1;
+                        }
+                    }
+                };
+
+                ObservableList<TreeItem<ServicioRegular>> children = tablaServicio.getRoot().getChildren();
+                FXCollections.sort(children,comparator);
+                return true;
+            }
+        });
 
 
     }
@@ -374,7 +428,7 @@ public class ServiciosController implements Initializable, IAccion {
                 protected void updateItem(LocalDateTime item, boolean empty) {
                     super.updateItem(item, empty);//empty hace referencia a row no usado. o sin valo.
 
-                    if(item!= null){
+                    if(item!= null && !empty){
                         setText(item.toString().replace('T','\n'));
                     }else{
                         //cuando no aparece fechar o es nulla siempre será la columna de fecha aplicación
@@ -386,6 +440,38 @@ public class ServiciosController implements Initializable, IAccion {
                 }
             };
             return cell;
+        }
+    };
+
+
+    Callback<TreeTableView<ServicioRegular>, Boolean> callbackSortDate = new Callback<TreeTableView<ServicioRegular>, Boolean>()
+    {
+        @Override
+        public Boolean call(TreeTableView<ServicioRegular> param)
+        {
+            Comparator<TreeItem<ServicioRegular>> comparator = new Comparator<TreeItem<ServicioRegular>>()
+            {
+                @Override
+                public int compare(TreeItem<ServicioRegular> o1, TreeItem<ServicioRegular> o2)
+                {
+                    ServicioRegular s1 = o1.getValue();
+                    ServicioRegular s2 = o2.getValue();
+
+                    if(s1.getFechaAgregacion().isBefore(s2.getFechaAgregacion()))// la fecha 1 es menor que la fecha 2
+                    {
+                        return 1;
+                    }
+                    else if(s1.getFechaAgregacion().isEqual(s2.getFechaAgregacion()))//iguales
+                    {
+                        return 0;
+                    }
+                    else// fecha 1 es mayor que fecha 2
+                    {
+                        return -1;
+                    }
+                }
+            };
+            return true;
         }
     };
 
@@ -446,7 +532,7 @@ public class ServiciosController implements Initializable, IAccion {
 
                 if(new ServicioRegularSQL().insertarServicioRegular((ServicioRegular) registro)){
                     listaServicioRegularesPendientes.add((ServicioRegular) registro);
-
+                    tablaServicioPend.sort();
                     return true;
                 }
                 return false;
@@ -471,22 +557,32 @@ public class ServiciosController implements Initializable, IAccion {
         try {
             FXMLLoader controladorLoader = new FXMLLoader(getClass().getResource("/views/AsignarUnidad.fxml"));
             AnchorPane contenedorAsignarUnidad = controladorLoader.load();
-            AsignarUnidadController servicioRegularCrudController = controladorLoader.getController();
+            AsignarUnidadController asignarUnidadController = controladorLoader.getController();
 
-            servicioRegularCrudController.setAddRegistroListener(new AddRegistro(tablaServicioPend.getSelectionModel().getSelectedItem().getValue()) {
+         //   listaServicioRegularesPendientes.remove(tablaServicioPend.getSelectionModel().getSelectedItem().getValue());
+           // if(true)
+             //   return;
+
+            asignarUnidadController.setAddRegistroListener(new AddRegistro(tablaServicioPend.getSelectionModel().getSelectedItem().getValue()) {
                 @Override
                 public boolean addRegistro(Registro registro, Stage stage) {
 
                     //regresa la instancia que mandamos pero con ID Direccion = true;
-                    ConfirmaciónServicioData CSD = (ConfirmaciónServicioData) registro;
-                    ServicioRegular servicioRegularPostModificiacion = tablaServicioPend.getSelectionModel().getSelectedItem().getValue();
+                    ServicioRegular SRAplicado = (ServicioRegular) registro;
+                    ServicioRegular servicioRegularPendientePorAplicar = tablaServicioPend.getSelectionModel().getSelectedItem().getValue();
+                    //   ServicioRegular servicioRegularPostModificiacion = tablaServicioPend.getSelectionModel().getSelectedItem().getValue();
                     try {
-                        if(new ServicioRegularSQL().aplicarServicioRegular(CSD)){
-                            servicioRegularPostModificiacion.setIdUnidad(CSD.getIdUnidad());
-                            servicioRegularPostModificiacion.setObservaciones(CSD.getObservaciones());
-                            //TODO añadir a la lista de aplicados.
-                            listaServicioRegularesPendientes.remove(servicioRegularPostModificiacion);
+                        if(new ServicioRegularSQL().aplicarServicioRegular(SRAplicado)){
+
+                            TreeItem<ServicioRegular> selectedItem = tablaServicioPend.getSelectionModel().getSelectedItem();
+
+                            listaServicioRegularesPendientes.remove(servicioRegularPendientePorAplicar);
+                            tablaServicioPend.getSelectionModel().getSelectedItem().getParent().getChildren().remove(selectedItem);
+                            tablaServicioPend.refresh();
+
+                            listaServicioRegularesAplicados.add(servicioRegularPendientePorAplicar);
                             //tablaServicioPend.getSelectionModel().getSelectedItem().setValue(servicioRegularPostModificiacion);
+                            tablaServicio.sort();
                             return true;
                         }
                     } catch (SQLException e) {

@@ -19,7 +19,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import models.ConfirmaciónServicioData;
 import models.ServicioRegular;
 import models.Taxi;
 import models.Taxista;
@@ -53,9 +52,6 @@ public class AsignarUnidadController extends SetAddRegistroListener implements I
     private Button btnAceptar;
     private ServicioRegular servicioRegular;
 
-    @FXML
-    private JFXComboBox<Taxista> comboBox_taxista;
-
 
     Callback<ListView<Taxi>, ListCell<Taxi>> callbackComboTaxi = new Callback<ListView<Taxi>, ListCell<Taxi>>() {
 
@@ -68,7 +64,7 @@ public class AsignarUnidadController extends SetAddRegistroListener implements I
                     super.updateItem(item, empty);
 
                     if(item!=null){
-                        this.setText(item.getIdUnidad() +"");
+                        this.setText(item.getIdUnidad() +" " + item.getTaxista().getNombre());
                     }else{
                         //setText(null);
                         setGraphic(null);
@@ -105,11 +101,9 @@ public class AsignarUnidadController extends SetAddRegistroListener implements I
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-     //   cb_unidad.setCellFactory(callbackCombo);
+       cb_unidad.setCellFactory(callbackComboTaxi);
         cb_unidad.setItems(new TaxisSQL().getTaxis());
-        comboBox_taxista.setItems(new TaxistaSQL().getTaxistas());
-        comboBox_taxista.setCellFactory(callbackComboTaxista);
-
+        cb_unidad.setButtonCell(callbackComboTaxi.call(null));
         //cb_unidad.getSelectionModel().select(0);
      //   Taxi titem = cb_unidad.getSelectionModel().getSelectedItem();
 
@@ -146,20 +140,6 @@ public class AsignarUnidadController extends SetAddRegistroListener implements I
     private void btnAceptar_OnAction(ActionEvent event) {
         
         if(!cb_unidad.getSelectionModel().isEmpty()){
-            //retornar valor seleccionado.
-            /*if(cb_unidad.getSelectionModel().getSelectedItem().split(" ")[0].equals("0"))
-                return;
-            else if(cb_unidad.getItems().indexOf(cb_unidad.getEditor().getText()) == -1)
-                return;//si el elemento no existe (o sea, escribio algo que no).
-            
-            
-            Integer idUnidad = new Integer(cb_unidad.getSelectionModel().getSelectedItem().split(" ")[0]);
-            String nota= textField_notas.getText().toUpperCase().trim();
-            String observaciones = textField_observaciones.getText().toLowerCase().trim();
-            Object informacion = idUnidad+":"+nota+":"+observaciones;
-          //  abrir_Edicion_Registros.registroEditNuevo(informacion);
-            this.btn_cerrar.fire();
-  */
             if(enviarRegistro( ((Stage)((Node)event.getSource()).getScene().getWindow()) )){
                 ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
             }
@@ -181,12 +161,12 @@ public class AsignarUnidadController extends SetAddRegistroListener implements I
 
     @Override
     public Registro guardarCambiosRegistros() {
-        Taxista selectedItem = comboBox_taxista.getSelectionModel().getSelectedItem();
+        //Taxista selectedItem = comboBox_taxista.getSelectionModel().getSelectedItem();
         Taxi titem = cb_unidad.getSelectionModel().getSelectedItem();
-        return new ConfirmaciónServicioData(
-                titem.getIdUnidad(),
-                servicioRegular.getIdServicio(),
-                textField_notas.getText());
+        this.servicioRegular.setTaxi(titem);
+        this.servicioRegular.setObservaciones(textField_notas.getText());
+
+        return this.servicioRegular;
 
     }
 }

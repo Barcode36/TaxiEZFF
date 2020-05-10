@@ -286,19 +286,22 @@ public class ServicioRegularSQL {
     }
 
 
-    public boolean aplicarServicioRegular(ConfirmaciónServicioData confirmaciónServicioData) throws SQLException {
+    public boolean aplicarServicioRegular(ServicioRegular servicioRegularAplicado) throws SQLException {
+
+        LocalDateTime horaAplicacion = LocalDateTime.now();
 
         query = "UPDATE servicio SET fechaAplicacion = ? WHERE idServicio = ? ";
         ps = connection.prepareStatement(query);
-        ps.setTimestamp(1,Timestamp.valueOf(LocalDateTime.now()) );
-        ps.setInt(2, confirmaciónServicioData.getIdServicio());
+        ps.setTimestamp(1,Timestamp.valueOf(horaAplicacion) );
+        ps.setInt(2, servicioRegularAplicado.getIdServicio());
         ps.executeUpdate();
 
+        servicioRegularAplicado.setFechaAplicacion(horaAplicacion);
 
         query = "INSERT INTO servicio_has_unidad (idServicio,idUnidad) VALUES (?,?) ";
         ps = connection.prepareStatement(query);
-        ps.setInt(1, confirmaciónServicioData.getIdServicio());
-        ps.setInt(2, confirmaciónServicioData.getIdUnidad());
+        ps.setInt(1, servicioRegularAplicado.getIdServicio());
+        ps.setInt(2, servicioRegularAplicado.getTaxi().getIdUnidad());
         ps.executeUpdate();
 
 

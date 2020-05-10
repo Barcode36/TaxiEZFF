@@ -37,6 +37,5 @@
             <Font name="Gadugi" size="15.0" />
          </font>
       </Label>
-      <JFXComboBox fx:id="comboBox_taxista" focusColor="#5ab444" labelFloat="true" layoutX="7.0" layoutY="266.0" prefHeight="31.0" prefWidth="257.0" promptText="Taxista" />
    </children>
 </AnchorPane>
