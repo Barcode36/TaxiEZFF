@@ -63,7 +63,7 @@ public class ServiciosController implements Initializable, IAccion {
     private TreeTableColumn<ServicioRegular, LocalDateTime>  cmServicios_FechaAplic;
 
     @FXML
-    private TreeTableColumn<ServicioRegular, String> cmServicios_telefono;
+    private TreeTableColumn<ServicioRegular, Cliente> cmServicios_telefono;
 
     @FXML
     private TreeTableColumn<ServicioRegular, String> cmServicios_nombre;
@@ -75,10 +75,10 @@ public class ServiciosController implements Initializable, IAccion {
     private TreeTableColumn<ServicioRegular, String> cmServicios_observaciones;
 
     @FXML
-    private TreeTableColumn<ServicioRegular, String> cmServicios_unidad;
+    private TreeTableColumn<ServicioRegular, Taxi> cmServicios_unidad;
 
     @FXML
-    private TreeTableColumn<ServicioRegular,String> cmServicios_modulador;
+    private TreeTableColumn<ServicioRegular,Empleado> cmServicios_modulador;
 
     @FXML
     private JFXTextField textField_buscarPendiente;
@@ -171,10 +171,12 @@ public class ServiciosController implements Initializable, IAccion {
     private JFXButton btnAplicarServicioProgramado;
 
     ObservableList<ServicioRegular> listaServicioRegularesPendientes;
+    ObservableList<ServicioRegular> listaServicioRegularesAplicados;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        /*----------------------------------------------------Aplicados ---------------------------------------------------------------*/
 
         /*this.tablaServicio.setRoot(clienteRecursiveTreeItem);
         this.tablaServicio.setShowRoot(false);
@@ -190,6 +192,96 @@ public class ServiciosController implements Initializable, IAccion {
         cmServicios_modulador.setCellValueFactory(new TreeItemPropertyValueFactory("nombreEmpleado"));
 */
 
+        cmServicios_fechaAdd.setCellValueFactory(new TreeItemPropertyValueFactory("fechaAgregacion"));
+        cmServicios_fechaServicio.setCellValueFactory(new TreeItemPropertyValueFactory("fechaServicio"));
+        cmServicios_FechaAplic.setCellValueFactory(new TreeItemPropertyValueFactory("fechaAplicacion"));
+        cmServicios_telefono.setCellValueFactory(new TreeItemPropertyValueFactory("cliente"));//solo numero de telefono
+        cmServicios_nombre.setCellValueFactory(new TreeItemPropertyValueFactory("nombre"));
+        cmServicios_direccion.setCellValueFactory(new TreeItemPropertyValueFactory("direccion"));
+        cmServicios_observaciones.setCellValueFactory(new TreeItemPropertyValueFactory("observaciones"));
+        cmServicios_unidad.setCellValueFactory(new TreeItemPropertyValueFactory("taxi"));
+        cmServicios_modulador.setCellValueFactory(new TreeItemPropertyValueFactory("empleado"));
+
+        cmServicios_fechaAdd.setCellFactory(callbackDateTime);
+        cmServicios_fechaServicio.setCellFactory(callbackDateTime);
+        cmServicios_FechaAplic.setCellFactory(callbackDateTime);
+
+        cmServicios_telefono.setCellFactory(new Callback<TreeTableColumn<ServicioRegular, Cliente>, TreeTableCell<ServicioRegular, Cliente>>() {
+            @Override
+            public TreeTableCell<ServicioRegular, Cliente> call(TreeTableColumn<ServicioRegular, Cliente> param) {
+
+
+                TreeTableCell<ServicioRegular, Cliente> cell = new TreeTableCell<ServicioRegular, Cliente>(){
+                    @Override
+                    protected void updateItem(Cliente item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if(item!=null){
+                            setText(item.getNumero());
+                        }
+                    }
+                };
+                return cell;
+
+            }
+        });
+
+        cmServicios_direccion.setCellFactory(callbackDireccion);
+
+
+        cmServicios_unidad.setCellFactory(new Callback<TreeTableColumn<ServicioRegular, Taxi>, TreeTableCell<ServicioRegular, Taxi>>() {
+            @Override
+            public TreeTableCell<ServicioRegular, Taxi> call(TreeTableColumn<ServicioRegular, Taxi> param) {
+                TreeTableCell<ServicioRegular, Taxi> cell = new TreeTableCell<ServicioRegular, Taxi>(){
+
+                    @Override
+                    protected void updateItem(Taxi item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if(item!=null){
+                            setText(item.getIdUnidad() + " " + item.getTaxista().getNombre());
+                        }
+                    }
+
+                };
+                return cell;
+            }
+        });
+
+        cmServicios_modulador.setCellFactory(new Callback<TreeTableColumn<ServicioRegular, Empleado>, TreeTableCell<ServicioRegular, Empleado>>() {
+            @Override
+            public TreeTableCell<ServicioRegular, Empleado> call(TreeTableColumn<ServicioRegular, Empleado> param) {
+
+                TreeTableCell<ServicioRegular, Empleado> cell = new TreeTableCell<ServicioRegular, Empleado>(){
+
+                    @Override
+                    protected void updateItem(Empleado item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if(item!=null){
+                            setText(item.getIdEmpleado() + " " + item.getNombre());
+                        }
+                    }
+
+                };
+                return cell;
+
+            }
+        });
+
+        try {
+            this.listaServicioRegularesAplicados = new ServicioRegularSQL().getServiciosRegularesAplicadosyCancelados();
+            TreeItem<ServicioRegular> serivicioRegularAplicadosRecursiveTreeItem =
+                    new RecursiveTreeItem<>(listaServicioRegularesAplicados, (recursiveTreeObject) -> recursiveTreeObject.getChildren());
+
+            this.tablaServicio.setRoot(serivicioRegularAplicadosRecursiveTreeItem);
+            this.tablaServicio.setShowRoot(false);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            //ventana error
+        }
+
+        /*----------------------------------------------------FIN APLICADOS ---------------------------------------------------------------*/
+
+        /*---------------------------------------------------- PENDIENTES ---------------------------------------------------------------*/
         this.cmServiciosPend_fechaAdd.setCellValueFactory(new TreeItemPropertyValueFactory("fechaAgregacion"));
         this.cmServiciosPend_fechaServicio.setCellValueFactory(new TreeItemPropertyValueFactory("fechaServicio"));
         this.cmServiciosPend_telefono.setCellValueFactory(new TreeItemPropertyValueFactory("cliente"));
@@ -246,6 +338,8 @@ public class ServiciosController implements Initializable, IAccion {
 
         this.tablaServicioPend.setRoot(serivicioRegularPendienteRecursiveTreeItem);
         this.tablaServicioPend.setShowRoot(false);
+/*----------------------------------------------------FIN PENDIENTES ---------------------------------------------------------------*/
+
 
     }
 
@@ -375,10 +469,15 @@ public class ServiciosController implements Initializable, IAccion {
                 public boolean addRegistro(Registro registro, Stage stage) {
 
                     //regresa la instancia que mandamos pero con ID Direccion = true;
-
-
+                    ConfirmaciónServicioData CSD = (ConfirmaciónServicioData) registro;
+                    ServicioRegular servicioRegularPostModificiacion = tablaServicioPend.getSelectionModel().getSelectedItem().getValue();
                     try {
-                        if(new ServicioRegularSQL().aplicarServicioRegular( (ConfirmaciónServicioData) registro)){
+                        if(new ServicioRegularSQL().aplicarServicioRegular(CSD)){
+                            servicioRegularPostModificiacion.setIdUnidad(CSD.getIdUnidad());
+                            servicioRegularPostModificiacion.setObservaciones(CSD.getObservaciones());
+                            //añadir a la lista de aplicados.
+                            listaServicioRegularesPendientes.remove(servicioRegularPostModificiacion);
+                            //tablaServicioPend.getSelectionModel().getSelectedItem().setValue(servicioRegularPostModificiacion);
                             return true;
                         }
                     } catch (SQLException e) {

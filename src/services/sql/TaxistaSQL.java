@@ -235,7 +235,28 @@ public class TaxistaSQL {
 
         return taxista;
     }
+    /**
+     * Consigue el Taxista según el id Indicado.
+     * @param idTaxista
+     * Id del empleado a buscarr.
+     * @return
+     * Instancia con los datos que contiene la base de datos.
+     * Null si no existe ese indice.
+     * @throws SQLException
+     */
+    public Taxista get(int idTaxista) throws SQLException {
+        query =
+                "SELECT * FROM taxista JOIN direccion on taxista.idDireccion = direccion.idDireccion WHERE taxis.visible = 1 AND taxista.idTaxista = ?";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1,idTaxista);
 
+        ResultSet resultSet = ps.executeQuery();
+
+        if(resultSet.first()){
+            return crearTaxista(resultSet);
+        }
+        return null;
+    }
 
 
 }

@@ -240,4 +240,27 @@ public class EmpleadoSQL {
     }
 
 
+    /**
+     * Consigue el empleado según el idIndicado.
+     * @param idEmpleado
+     * Id del empleado a buscarr.
+     * @return
+     * Instancia con los datos que contiene la base de datos.
+     * Null si no existe ese indice.
+     * @throws SQLException
+     */
+    public Empleado get(int idEmpleado) throws SQLException {
+        query = "SELECT * FROM empleado JOIN direccion ON empleado.idDireccion = direccion.idDireccion WHERE idEmpleado = ? AND visible = 1";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1,idEmpleado);
+
+        ResultSet resultSet = ps.executeQuery();
+
+        if(resultSet.first()){
+            return crearEmpleado(resultSet);
+        }
+        return null;
+    }
+
+
 }

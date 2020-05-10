@@ -17,6 +17,9 @@ public class ServicioRegular extends Servicio<ServicioRegular> {
     }
 
     String telefonoAux = "";
+    //para cuando se asigne unidad
+    private int idUnidad ;
+    private Taxi taxi;
 
     public String getTelefonoAux() {
         return telefonoAux;
@@ -24,5 +27,21 @@ public class ServicioRegular extends Servicio<ServicioRegular> {
 
     public void setTelefonoAux(String telefonoAux) {
         this.telefonoAux = telefonoAux;
+    }
+
+    public int getIdUnidad() {
+        return idUnidad;
+    }
+
+    public void setIdUnidad(int idUnidad) {
+        this.idUnidad = idUnidad;
+    }
+
+    public Taxi getTaxi() {
+        return taxi;
+    }
+
+    public void setTaxi(Taxi taxi) {
+        this.taxi = taxi;
     }
 }

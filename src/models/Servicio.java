@@ -15,7 +15,7 @@ public class Servicio<S> extends Persona<S> implements Registro {
 
     private LocalDateTime fechaAgregacion;
     private LocalDateTime fechaServicio;
-    private LocalDateTime fechaAplcacion;
+    private LocalDateTime fechaAplicacion;
 
     private boolean isCancelado;
     private Cliente cliente;
@@ -23,26 +23,26 @@ public class Servicio<S> extends Persona<S> implements Registro {
 
 
     public Servicio(String nombre, String observaciones, Direccion direccion,
-                    int idServicio, LocalDateTime fechaAgregacion, LocalDateTime fechaServicio, LocalDateTime fechaAplcacion,
+                    int idServicio, LocalDateTime fechaAgregacion, LocalDateTime fechaServicio, LocalDateTime fechaAplicacion,
                     boolean isCancelado, Cliente cliente, Empleado empleado) {
         super(nombre, observaciones, direccion);
         this.idServicio = idServicio;
         this.fechaAgregacion = fechaAgregacion;
         this.fechaServicio = fechaServicio;
-        this.fechaAplcacion = fechaAplcacion;
+        this.fechaAplicacion = fechaAplicacion;
         this.isCancelado = isCancelado;
         this.cliente = cliente;
         this.empleado = empleado;
     }
 
     public Servicio(Persona datos,
-                    int idServicio, LocalDateTime fechaAgregacion, LocalDateTime fechaServicio, LocalDateTime fechaAplcacion,
+                    int idServicio, LocalDateTime fechaAgregacion, LocalDateTime fechaServicio, LocalDateTime fechaAplicacion,
                     boolean isCancelado, Cliente cliente, Empleado empleado) {
         super(datos);
         this.idServicio = idServicio;
         this.fechaAgregacion = fechaAgregacion;
         this.fechaServicio = fechaServicio;
-        this.fechaAplcacion = fechaAplcacion;
+        this.fechaAplicacion = fechaAplicacion;
         this.isCancelado = isCancelado;
         this.cliente = cliente;
         this.empleado = empleado;
@@ -72,12 +72,12 @@ public class Servicio<S> extends Persona<S> implements Registro {
         this.fechaServicio = fechaServicio;
     }
 
-    public LocalDateTime getFechaAplcacion() {
-        return fechaAplcacion;
+    public LocalDateTime getFechaAplicacion() {
+        return fechaAplicacion;
     }
 
-    public void setFechaAplcacion(LocalDateTime fechaAplcacion) {
-        this.fechaAplcacion = fechaAplcacion;
+    public void setFechaAplicacion(LocalDateTime fechaAplicacion) {
+        this.fechaAplicacion = fechaAplicacion;
     }
 
     public boolean isCancelado() {

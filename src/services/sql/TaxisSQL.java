@@ -3,6 +3,7 @@ package services.sql;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import models.Empleado;
 import models.Taxi;
 import models.Taxista;
 import resources.Statics;
@@ -194,6 +195,7 @@ public class TaxisSQL {
     }
 
     /**
+     * TODO //Nombre está mal xd, corregir.
      * @param rs tupla {@link Taxi}.
      * La tupla obtenia es:
      * @return Instancia de Cliente a partir de la tupla contenida en rs.
@@ -222,6 +224,27 @@ public class TaxisSQL {
         return taxi;
     }
 
+    /**
+     * Consigue el empleado según el idIndicado.
+     * @param unidad
+     * Id del empleado a buscarr.
+     * @return
+     * Instancia con los datos que contiene la base de datos.
+     * Null si no existe ese indice.
+     * @throws SQLException
+     */
+    public Taxi get(int unidad) throws SQLException {
+        query = "SELECT * FROM unidad JOIN taxista on unidad.idTaxista = taxista.idTaxista  WHERE taxista.visible = 1 and unidad.visible = 1 AND unidad.idUnidad = ?";
 
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1,unidad);
+
+        ResultSet resultSet = ps.executeQuery();
+
+        if(resultSet.first()){
+            return crearTaxista(resultSet);
+        }
+        return null;
+    }
 
 }

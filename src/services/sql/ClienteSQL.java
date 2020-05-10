@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.stage.Stage;
 import models.Cliente;
 import models.Direccion;
+import models.Empleado;
 import resources.Statics;
 
 import java.sql.Connection;
@@ -280,4 +281,28 @@ public class ClienteSQL {
 
         return cliente;
     }
+
+
+    /**
+     * Consigue el empleado según el idIndicado.
+     * @param idCliente
+     * Id del empleado a buscarr.
+     * @return
+     * Instancia con los datos que contiene la base de datos.
+     * Null si no existe ese indice.
+     * @throws SQLException
+     */
+    public Cliente get(int idCliente) throws SQLException {
+        query = "SELECT * FROM cliente JOIN direccion ON cliente.idDireccion = cliente.idDireccion WHERE idCliente = ? AND visible = 1";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1,idCliente);
+
+        ResultSet resultSet = ps.executeQuery();
+
+        if(resultSet.first()){
+            return crearCliente(resultSet);
+        }
+        return null;
+    }
+
 }

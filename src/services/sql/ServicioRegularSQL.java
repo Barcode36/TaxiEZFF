@@ -54,7 +54,7 @@ public class ServicioRegularSQL {
             rs=ps.executeQuery();
             while(rs.next())
             {
-                serviciosRegulares.add( crearServicio(rs) );
+                serviciosRegulares.add( crearServicioPendiente(rs) );
             }
 
             ps.close();
@@ -65,6 +65,48 @@ public class ServicioRegularSQL {
         }
 
         return serviciosRegulares;
+    }
+
+    public ObservableList<ServicioRegular> getServiciosRegularesAplicadosyCancelados() throws SQLException {
+        ObservableList<ServicioRegular> serviciosRegularesAplicados =  FXCollections.observableArrayList();
+
+        query ="SELECT * FROM servicio_has_unidad " +
+                " JOIN servicio ON servicio_has_unidad.idServicio = servicio.idServicio " +
+                " JOIN unidad ON servicio_has_unidad.idUnidad = unidad.idUnidad " + //este join se puede quitar para que se llame al new TaxisSQL.get.
+                " LIMIT 0,300 ";
+
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        ResultSet rs = preparedStatement.executeQuery();
+
+        while(rs.next()){
+
+            Cliente clienteDelServicio = new ClienteSQL().get(rs.getInt("idCliente"));
+            Direccion direccionDelServicio = new DireccionSQL().get(rs.getInt("idDireccion"));
+            Empleado empleadoRegistroServicio = new  EmpleadoSQL().get(rs.getInt("idEmpleado"));
+            Taxi taxisDelServicio = new TaxisSQL().get(rs.getInt("idUnidad"));
+
+            Persona datosServicio = new Persona(rs.getString("servicio.nombre"),rs.getString("servicio.observaciones"),direccionDelServicio);
+
+
+            LocalDateTime localDateTimeAgregacion = rs.getTimestamp("servicio.fechaAgregacion").toLocalDateTime();
+            LocalDateTime localDateTimeServicio = rs.getTimestamp("servicio.fechaServicio").toLocalDateTime();
+
+            LocalDateTime localDateTimeAplicacion =
+                    rs.getTimestamp("servicio.fechaAplicacion") ==null?
+                            null:rs.getTimestamp("servicio.fechaAplicacion").toLocalDateTime();
+
+            ServicioRegular SRAplicado =
+                    new ServicioRegular(datosServicio, rs.getInt("servicio.idServicio"),
+                            localDateTimeAgregacion, localDateTimeServicio, localDateTimeAplicacion,
+                            rs.getBoolean("servicio.isCancelado"), clienteDelServicio, empleadoRegistroServicio);
+
+            SRAplicado.setTaxi(taxisDelServicio);
+
+            serviciosRegularesAplicados.add(SRAplicado);
+        }
+
+        return serviciosRegularesAplicados;
+
     }
 
 
@@ -129,7 +171,50 @@ public class ServicioRegularSQL {
      * @param rs
      * @return
      */
-    private ServicioRegular crearServicio(ResultSet rs) throws SQLException {
+    private ServicioRegular crearServicioPendiente(ResultSet rs) throws SQLException {
+
+        Direccion direccion =
+                new Direccion(rs.getInt("direccion.idDireccion"), rs.getString("direccion.calle"),rs.getString("direccion.colonia"), rs.getString("direccion.numInt"), rs.getString("direccion.numExt"));
+
+        Persona datos = new Persona(rs.getString("servicio.nombre"),rs.getString("servicio.observaciones"),direccion);
+
+
+
+        LocalDateTime localDateTimeAgregacion = rs.getTimestamp("servicio.fechaAgregacion").toLocalDateTime();
+        LocalDateTime localDateTimeServicio = rs.getTimestamp("servicio.fechaServicio").toLocalDateTime();
+
+
+        LocalDateTime localDateTimeAplicacion =
+                rs.getTimestamp("fechaAplicacion") ==null?
+                        null:rs.getTimestamp("fechaAplicacion").toLocalDateTime();
+
+
+        Cliente cliente = new Cliente(rs.getInt("cliente.idCliente"),rs.getString("cliente.telefono"),rs.getBoolean("Visible"), rs.getString("cliente.nombre"),
+                rs.getString("observaciones"), new DireccionSQL().get(rs.getInt("cliente.idDireccion")));
+
+        Empleado empleado = new Empleado(
+                rs.getString("empleado.nombre"),rs.getString("empleado.observaciones"),
+                new  DireccionSQL().get(rs.getInt("empleado.idDireccion")),
+                rs.getInt("empleado.idEmpleado"), rs.getString("empleado.telefono"), rs.getString("contrasena"),
+                rs.getDate("fechaNac")==null?null:rs.getDate("fechaNac").toLocalDate(), rs.getBoolean("tipoEmpleado"));
+
+        ServicioRegular servicioRegular =
+            new ServicioRegular(
+                    datos,
+                    rs.getInt("servicio.idServicio"),localDateTimeAgregacion, localDateTimeServicio, localDateTimeAplicacion,
+                    rs.getBoolean("servicio.isCancelado"),cliente,empleado);
+
+
+        return servicioRegular;
+
+    }/**
+     * idServicio nombre observaciones fechaAgregacion fechaServicio fechaAplicacion isCancelado idCliente idEmpleado idDireccion (La instancia )
+     * idDireccion calle colonia numInt numExt
+     * cliente.telefono
+     * @param rs
+     * @return
+     */
+    private ServicioRegular crearServicioAplicado(ResultSet rs) throws SQLException {
 
         Direccion direccion =
                 new Direccion(rs.getInt("direccion.idDireccion"), rs.getString("direccion.calle"),rs.getString("direccion.colonia"), rs.getString("direccion.numInt"), rs.getString("direccion.numExt"));
