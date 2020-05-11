@@ -1,7 +1,15 @@
 package models;
 
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Paint;
+import resources.Statics;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class ServiciosProgramado extends Servicio<ServiciosProgramado> {
 
@@ -136,4 +144,57 @@ public class ServiciosProgramado extends Servicio<ServiciosProgramado> {
     public void setTelefonoAux(String telefonoAux) {
         this.telefonoAux = telefonoAux;
     }
+
+    private ArrayList<Label> getDiasSeleccionados(){
+        ArrayList<Label> listaDias = new ArrayList<>();
+
+        listaDias.add(new Label("Lu"));
+        listaDias.add(new Label("Ma"));
+        listaDias.add(new Label("Mi"));
+        listaDias.add(new Label("Ju"));
+        listaDias.add(new Label("Vi"));
+        listaDias.add(new Label("Sa"));
+        listaDias.add(new Label("Do"));
+
+        if(isLunes)
+            listaDias.get(0).setTextFill(Paint.valueOf("5AB444"));
+        if(isMartes)
+            listaDias.get(1).setTextFill(Paint.valueOf("5AB444"));
+        if(isMiercoles)
+            listaDias.get(2).setTextFill(Paint.valueOf("5AB444"));
+        if(isJueves)
+            listaDias.get(3).setTextFill(Paint.valueOf("5AB444"));
+        if(isViernes)
+            listaDias.get(4).setTextFill(Paint.valueOf("5AB444"));
+        if(isSabado)
+            listaDias.get(5).setTextFill(Paint.valueOf("5AB444"));
+        if(isDomingo)
+            listaDias.get(6).setTextFill(Paint.valueOf("5AB444"));
+
+        return listaDias;
+
+    }
+
+
+    public HBox getDiasSeleccion() {
+
+        HBox diasSeleccion = new HBox();
+
+       diasSeleccion.getChildren().addAll(getDiasSeleccionados());
+       diasSeleccion.setAlignment(Pos.CENTER);
+       diasSeleccion.setSpacing(2);
+
+        return diasSeleccion;
+    }
+
+
+    public ServicioRegular generarServicioRegular(){
+        ServicioRegular servicioRegular =
+                new ServicioRegular(this.getNombre(),this.getObservaciones(),this.getDireccion(),0,
+                        LocalDateTime.now(),LocalDateTime.now(),LocalDateTime.now(),
+                        false,this.getCliente(), Statics.empleadoSesionActual);
+
+        return  servicioRegular;
+    }
+
 }

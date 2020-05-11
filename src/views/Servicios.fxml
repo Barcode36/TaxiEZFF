@@ -113,6 +113,7 @@
                            <columns>
                               <TreeTableColumn fx:id="cmServiciosProg_FechaAdicion" prefWidth="75.0" text="Fecha adición" />
                               <TreeTableColumn fx:id="cmServiciosProg_FechaInicio" prefWidth="75.0" text="Fecha inicio" />
+                              <TreeTableColumn fx:id="cmServiciosProg_FechaUltimoDiaAplicacion" prefWidth="75.0" text="Ultimo dia aplicado" />
                               <TreeTableColumn fx:id="cmServiciosProg_FechaFin" prefWidth="75.0" text="Fecha fin" />
                               <TreeTableColumn fx:id="cmServiciosProg_telefono" prefWidth="75.0" text="Teléfono" />
                               <TreeTableColumn fx:id="cmServiciosProg_nombre" prefWidth="75.0" text="Nombre" />

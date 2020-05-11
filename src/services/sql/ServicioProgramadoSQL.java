@@ -184,7 +184,7 @@ public class ServicioProgramadoSQL {
      * True si fue exitosa la inserción.
      * False si lo contrario.
      */
-    public boolean insertarServicioRegular(ServiciosProgramado servicioProgramado) {
+    public boolean insertarServicioProgramado(ServiciosProgramado servicioProgramado) {
 
         query = "INSERT INTO servicioprogramado " +
                // "(nombre, observaciones, fechaAgregacion, fechaServicio, fechaAplicacion, isCancelado, idCliente, idEmpleado, idDireccion) " +
@@ -338,27 +338,36 @@ public class ServicioProgramadoSQL {
     }
 
 
-    public boolean aplicarServicioRegular(ServicioRegular servicioRegularAplicado) throws SQLException {
+    /***
+     * Aplica un servicio programado para la fecha actual del sistema.
+     *
+     * @param serviciosProgramado
+     * El servicio programado a aplicar el dia actual.
+     * Esta instancia ya debe contener un {@link Taxi} Asignado.
+     * @return
+     * Retorna un servicio regular el cual fue creado y aplicado dentro de este metodo.
+     * @throws SQLException
+     */
+    public boolean aplicarServicioProgramado(ServiciosProgramado serviciosProgramado,ServicioRegular servicioRegularGeneradoAplicado) throws SQLException {
 
-        LocalDateTime horaAplicacion = LocalDateTime.now();
+        Timestamp timestampActual = Timestamp.valueOf(servicioRegularGeneradoAplicado.getFechaAplicacion());
 
-        query = "UPDATE servicio SET fechaAplicacion = ? WHERE idServicio = ? ";
+        query = "UPDATE servicioprogramado SET fechaUltimoRegistro = ? WHERE idServicioProgramado = ? ";
         ps = connection.prepareStatement(query);
-        ps.setTimestamp(1,Timestamp.valueOf(horaAplicacion) );
-        ps.setInt(2, servicioRegularAplicado.getIdServicio());
+        ps.setTimestamp(1, timestampActual);
+        ps.setInt(2, serviciosProgramado.getIdServicio());
         ps.executeUpdate();
 
-        servicioRegularAplicado.setFechaAplicacion(horaAplicacion);
 
-        query = "INSERT INTO servicio_has_unidad (idServicio,idUnidad) VALUES (?,?) ";
+        serviciosProgramado.setFechaUltimaAplicacion(timestampActual.toLocalDateTime());
+
+        query = "INSERT INTO servicioprogramado_has_servicio (idServicio,idServicioProgramado) VALUES (?,?) ";
         ps = connection.prepareStatement(query);
-        ps.setInt(1, servicioRegularAplicado.getIdServicio());
-        ps.setInt(2, servicioRegularAplicado.getTaxi().getIdUnidad());
-        ps.executeUpdate();
+        ps.setInt(1, servicioRegularGeneradoAplicado.getIdServicio());
+        ps.setInt(2, serviciosProgramado.getIdServicio());
 
+        return ps.executeUpdate() == 1 ;
 
-
-        return true;
     }
 
 }

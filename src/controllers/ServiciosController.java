@@ -3,7 +3,6 @@ package controllers;
 import com.jfoenix.controls.*;
 import com.sun.javafx.robot.FXRobot;
 import com.sun.javafx.robot.FXRobotFactory;
-import controllers.crudsControllers.ServicioRegularCrudController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,7 +25,6 @@ import models.interfaces.IAccion;
 import models.interfaces.Registro;
 import models.interfaces.SetAddRegistroListener;
 import services.sql.ClienteSQL;
-import services.sql.DireccionSQL;
 import services.sql.ServicioProgramadoSQL;
 import services.sql.ServicioRegularSQL;
 
@@ -137,6 +135,9 @@ public class ServiciosController implements Initializable, IAccion {
 
     @FXML
     private TreeTableColumn<ServiciosProgramado, LocalDateTime> cmServiciosProg_FechaInicio;
+
+    @FXML
+    private TreeTableColumn<ServiciosProgramado, LocalDateTime> cmServiciosProg_FechaUltimoDiaAplicacion;
 
     @FXML
     private TreeTableColumn<ServiciosProgramado, LocalDateTime> cmServiciosProg_FechaFin;
@@ -337,6 +338,7 @@ public class ServiciosController implements Initializable, IAccion {
 
         this.cmServiciosProg_FechaAdicion.setCellValueFactory(new TreeItemPropertyValueFactory("fechaAgregacion"));
         this.cmServiciosProg_FechaInicio.setCellValueFactory(new TreeItemPropertyValueFactory("fechaInicio"));
+        this.cmServiciosProg_FechaUltimoDiaAplicacion.setCellValueFactory(new TreeItemPropertyValueFactory("fechaUltimaAplicacion"));
         this.cmServiciosProg_FechaFin.setCellValueFactory(new TreeItemPropertyValueFactory("fechaFin"));
 
         this.cmServiciosProg_telefono.setCellValueFactory(new TreeItemPropertyValueFactory("cliente"));
@@ -344,10 +346,61 @@ public class ServiciosController implements Initializable, IAccion {
         this.cmServiciosProg_dirección.setCellValueFactory(new TreeItemPropertyValueFactory("direccion"));
         this.cmServiciosProg_notas.setCellValueFactory(new TreeItemPropertyValueFactory("observaciones"));
         this.cmServiciosProg_modulador.setCellValueFactory(new TreeItemPropertyValueFactory("empleado"));
-        this.cmServiciosProg_diasServicio.setCellValueFactory(new TreeItemPropertyValueFactory("diasServicio"));
+        this.cmServiciosProg_diasServicio.setCellValueFactory(new TreeItemPropertyValueFactory("DiasSeleccion"));
 
         this.cmServiciosProg_FechaAdicion.setCellFactory(callbackDateTimeProgramado);
         this.cmServiciosProg_FechaInicio.setCellFactory(callbackDateTimeProgramado);
+        //Fecha es diferente, ya que si la fecha es nula solo debe aparecer en blanco.
+        this.cmServiciosProg_FechaFin.setCellFactory(new Callback<TreeTableColumn<ServiciosProgramado, LocalDateTime>, TreeTableCell<ServiciosProgramado, LocalDateTime>>() {
+            @Override
+            public TreeTableCell<ServiciosProgramado, LocalDateTime> call(TreeTableColumn<ServiciosProgramado, LocalDateTime> param) {
+
+                TreeTableCell<ServiciosProgramado, LocalDateTime> cell = new TreeTableCell<ServiciosProgramado,LocalDateTime>(){
+                    @Override
+                    protected void updateItem(LocalDateTime item, boolean empty) {
+                        super.updateItem(item, empty);//empty hace referencia a row no usado. o sin valo.
+
+                        if(empty)
+                            return;
+                        if(item!= null && !empty){
+                            setText(item.toString().replace('T','\n'));
+                        }/*else{
+                            //cuando no aparece fechar o es nulla siempre será la columna de fecha aplicación
+                            //por lo tanto se mostrará el mensaje:
+                            if(!empty)
+                                setText("Servicio cancelado.");
+                        }*/
+
+                    }
+                };
+                return cell;
+
+            }
+        });
+        this.cmServiciosProg_FechaUltimoDiaAplicacion.setCellFactory(new Callback<TreeTableColumn<ServiciosProgramado, LocalDateTime>, TreeTableCell<ServiciosProgramado, LocalDateTime>>() {
+            @Override
+            public TreeTableCell<ServiciosProgramado, LocalDateTime> call(TreeTableColumn<ServiciosProgramado, LocalDateTime> param) {
+
+                TreeTableCell<ServiciosProgramado, LocalDateTime> cell = new TreeTableCell<ServiciosProgramado,LocalDateTime>(){
+                    @Override
+                    protected void updateItem(LocalDateTime item, boolean empty) {
+                        super.updateItem(item, empty);//empty hace referencia a row no usado. o sin valo.
+
+                        if(empty)
+                            return;
+                        if(item!= null && !empty){
+                            setText(item.toString().replace('T','\n'));
+                        }else if(item == null){
+                            setText("No se ha aplicado ningún servicio.");
+                        }
+
+
+                    }
+                };
+                return cell;
+
+            }
+        });
         this.cmServiciosProg_dirección.setCellFactory(callbackDireccionProgramado);
 
 
@@ -509,6 +562,19 @@ public class ServiciosController implements Initializable, IAccion {
                 FXCollections.sort(children,comparator);
                 return true;
 
+            }
+        });
+
+        tablaServicioProgr.setRowFactory(new Callback<TreeTableView<ServiciosProgramado>, TreeTableRow<ServiciosProgramado>>() {
+            @Override
+            public TreeTableRow<ServiciosProgramado> call(TreeTableView<ServiciosProgramado> param) {
+
+                return new TreeTableRow<ServiciosProgramado>(){
+                    @Override
+                    protected void updateItem(ServiciosProgramado item, boolean empty) {
+                        if(!empty && item!=null)super.updateItem(item, empty);
+                    }
+                };
             }
         });
 
@@ -723,9 +789,13 @@ public class ServiciosController implements Initializable, IAccion {
                     serviciosProgramado.setCliente(cliente);
                 }
 
-                if(new ServicioProgramadoSQL().insertarServicioRegular((ServiciosProgramado) registro)){
+                if(new ServicioProgramadoSQL().insertarServicioProgramado((ServiciosProgramado) registro)){
 
                     listaServicioProgramado.add((ServiciosProgramado) registro);
+                    tablaServicioProgr.refresh();
+                    tablaServicioProgr.sort();
+
+                    //tablaServicioProgr.refresh();
                     return true;
 
                 }
@@ -814,6 +884,88 @@ public class ServiciosController implements Initializable, IAccion {
 
     @FXML
     void btnAplicarServicioProgramado_OnAction(ActionEvent event) {
+        //si no hay selección, a pastar.
+        if(tablaServicioProgr.getSelectionModel().isEmpty()){
+            return;
+        }
+        if(tablaServicioProgr.getSelectionModel().getSelectedItem().getValue().getFechaFin()!=null){
+
+            //acabó la programación de este servicio. No puede generar ningún servicio regular a partir de este servicio programado.
+            return;
+        }
+
+
+        try {
+            FXMLLoader controladorLoader = new FXMLLoader(getClass().getResource("/views/AsignarUnidad.fxml"));
+            AnchorPane contenedorAsignarUnidad = controladorLoader.load();
+            AsignarUnidadController asignarUnidadController = controladorLoader.getController();
+
+            //   listaServicioRegularesPendientes.remove(tablaServicioPend.getSelectionModel().getSelectedItem().getValue());
+            // if(true)
+            //   return;
+            TreeItem<ServiciosProgramado> serviciosProgramadoTreeItem = tablaServicioProgr.getSelectionModel().getSelectedItem();
+            ServiciosProgramado serviciosProgramadoSelected = tablaServicioProgr.getSelectionModel().getSelectedItem().getValue();
+            ServicioRegular servicioRegularGenerado = serviciosProgramadoSelected.generarServicioRegular();
+
+
+            new ServicioRegularSQL().insertarServicioRegular(servicioRegularGenerado);//lo inserta en servicios regulares pendientes.
+            //y se manda para que se apliqué el servicio pidiendo unidad para asignar.
+
+            asignarUnidadController.setAddRegistroListener(new AddRegistro(servicioRegularGenerado) {
+                @Override
+                public boolean addRegistro(Registro registro, Stage stage) {
+
+                    //llega la misma instancia que mandé, pero con un taxi asignado, así que ese lo aplico.
+                    try {
+                        TreeItem<ServiciosProgramado> serviciosProgramadoTreeItem = tablaServicioProgr.getSelectionModel().getSelectedItem();
+                        new ServicioRegularSQL().aplicarServicioRegular((ServicioRegular) registro);
+                        listaServicioRegularesAplicados.add((ServicioRegular) registro);
+                        tablaServicio.sort();
+
+                        //ya que se aplicó el servicio regular, se debe enlazar por medio de "aplicarServicioProgramado.
+                        ServiciosProgramado serviciosProgramadoSelected = tablaServicioProgr.getSelectionModel().getSelectedItem().getValue();
+                        new ServicioProgramadoSQL().aplicarServicioProgramado(serviciosProgramadoSelected, (ServicioRegular) registro);
+
+                        serviciosProgramadoTreeItem.setValue(null);
+                        serviciosProgramadoTreeItem.setValue(serviciosProgramadoSelected);
+
+                       // tablaServicioProgr.refresh();
+
+
+
+                        return true;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    return false;
+                }
+
+            });
+            Stage primaryStage = new Stage();
+            primaryStage.setTitle("Asignar unidad");
+            Scene scene = new Scene(contenedorAsignarUnidad);
+            scene.getAccelerators().put(new KeyCodeCombination(KeyCode.ENTER), new Runnable() {
+                @Override
+                public void run() {
+                    FXRobot robot = FXRobotFactory.createRobot(scene);
+                    robot.keyPress(KeyCode.TAB);
+                }
+            });
+            primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
+            primaryStage.initOwner(this.textField_servicioRapido.getScene().getWindow());
+            primaryStage.initModality(Modality.WINDOW_MODAL);
+            primaryStage.show();
+
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         System.out.println("Aplicar servicio programado.");
     }
 
@@ -835,8 +987,29 @@ public class ServiciosController implements Initializable, IAccion {
         System.out.println("Cancel servicio normal.");
     }
 
+
     @FXML
     void btnFinalizarServicioProgramado_OnAction(ActionEvent event) {
+
+        if(!tablaServicioProgr.getSelectionModel().isEmpty()) {
+
+            ServiciosProgramado serviciosProgramado = tablaServicioProgr.getSelectionModel().getSelectedItem().getValue();
+
+            try {
+                if(serviciosProgramado.getFechaFin()==null)
+                    if(new ServicioProgramadoSQL().terminarProgramacionServicio(serviciosProgramado)){
+
+                        tablaServicioProgr.getSelectionModel().getSelectedItem().setValue(null);
+                        tablaServicioProgr.getSelectionModel().getSelectedItem().setValue(serviciosProgramado);
+                      // if(listaServicioProgramado.size()<30)
+                            //tablaServicioProgr.refresh();
+
+                    }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
         System.out.println("FInalizar servicio programado.");
     }
 
