@@ -89,6 +89,7 @@ public class PrincipalController implements Initializable {
 
     @FXML
     void estadisticasAcelerator_OnAction(ActionEvent event) {
+        cargarPantalla("Estadisticas");
 
     }
 

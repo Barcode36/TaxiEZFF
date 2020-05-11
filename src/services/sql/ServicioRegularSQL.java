@@ -1,5 +1,6 @@
 package services.sql;
 
+import com.sun.istack.internal.NotNull;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -7,7 +8,9 @@ import models.*;
 import resources.Statics;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -317,5 +320,45 @@ public class ServicioRegularSQL {
 
         return true;
     }
+
+
+    /**
+     * Obtiene los servicios marcados como aplicados.
+     * La instancia a cada ServicioRegular se crea dentro de esta funcioón (no hace llamado a otro método de esta clase).
+     * @return
+     * @throws SQLException
+     */
+    public int getServiciosAplicadosSegunFiltro(@NotNull String columnaCondicion, @NotNull int valorCondicion, @NotNull LocalDate diaBusqueda) throws SQLException {
+
+        ObservableList<ServicioRegular> serviciosRegularesAplicados =  FXCollections.observableArrayList();
+
+        query ="SELECT COUNT(*)" +
+                " FROM servicio_has_unidad " +
+                " JOIN servicio ON servicio_has_unidad.idServicio = servicio.idServicio " +
+                " JOIN unidad ON servicio_has_unidad.idUnidad = unidad.idUnidad " + //este join se puede quitar para que se llame al new TaxisSQL.get.
+                " WHERE " + columnaCondicion + " = " + valorCondicion +
+                " AND " + " servicio.fechaAplicacion BETWEEN ? AND ?";
+
+
+
+        LocalDateTime inicioDay =LocalDateTime.of(diaBusqueda, LocalTime.of(0, 0, 0)) ;
+        LocalDateTime finDay = LocalDateTime.of(diaBusqueda, LocalTime.of(23, 59, 59));
+
+
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setTimestamp(1, Timestamp.valueOf(inicioDay));
+        preparedStatement.setTimestamp(2, Timestamp.valueOf(finDay));
+        ResultSet rs = preparedStatement.executeQuery();
+
+        int count = 0;
+
+        if(rs.first()){
+            count = rs.getInt(1);
+        }
+
+        return count;
+
+    }
+
 
 }
