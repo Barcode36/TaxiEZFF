@@ -246,50 +246,6 @@ public class EstadisticasController implements Initializable, IAccion {
 
 
 
-    /*
-    private void inicializarGraficaCero() {
-
-        ObservableList<XYChart.Series<String, Integer>> lineChartData = FXCollections.observableArrayList();
-        // Iniciamos el objeto series
-        series = new LineChart.Series<>();
-        series.setName("Cantidad del por mes");
-        
-        series.getData().add(new XYChart.Data("Jan", 0));  
-        series.getData().add(new XYChart.Data("Feb", 0));
-        series.getData().add(new XYChart.Data("Mar", 0));
-        series.getData().add(new XYChart.Data("Apr", 0));
-        series.getData().add(new XYChart.Data("May", 0));
-        series.getData().add(new XYChart.Data("Jun", 0));
-        series.getData().add(new XYChart.Data("Jul", 0));
-        series.getData().add(new XYChart.Data("Aug", 0));
-        series.getData().add(new XYChart.Data("Sep", 0));
-        series.getData().add(new XYChart.Data("Oct", 0));
-        series.getData().add(new XYChart.Data("Nov", 0));
-        series.getData().add(new XYChart.Data("Dec", 0));
-        
-        
-       
-         // Guardamos todos los puntos de la función que hemos obtenido
-        lineChartData.add(series);
-        
-        // Si No quereis que se pinten los puntos, poner a false
-        linechart.setCreateSymbols(true);
-        linechart.setTitle("Reporte");
-        linechart.setAnimated(true);
-        linechart.setLegendSide(Side.BOTTOM);
-        linechart.setLegendVisible(true);
-        
-        
-        
-        // Ponemos los puntos en la gráfica
-        linechart.setData(lineChartData);
-
-
-    }
-*/
-
-
-    /** a node which displays a value on hover, but is otherwise empty */
   class HoveredThresholdNode extends StackPane {
       
     HoveredThresholdNode(  int value) {

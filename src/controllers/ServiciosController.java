@@ -3,6 +3,8 @@ package controllers;
 import com.jfoenix.controls.*;
 import com.sun.javafx.robot.FXRobot;
 import com.sun.javafx.robot.FXRobotFactory;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,6 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
@@ -34,6 +37,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 public class ServiciosController implements Initializable, IAccion {
 
@@ -580,6 +584,127 @@ public class ServiciosController implements Initializable, IAccion {
 
         /*----------------------------------------------------- FIN SORT POLICIES-------------------------------------------------------------------*/
 
+        /*-----------------------------------------------------   TEXT PROPERTY CHANGE -------------------------------------------------------------------*/
+
+        textField_buscarServicios.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+
+                tablaServicio.setPredicate(new Predicate<TreeItem<ServicioRegular>>() {
+                    @Override
+                    public boolean test(TreeItem<ServicioRegular> servicioRegularTreeItem) {
+
+                        Boolean flag  = servicioRegularTreeItem.getValue().getCliente().getNumero().contains(newValue);
+
+                        return flag;
+                    }
+                });
+
+            }
+        });
+
+
+        textField_buscarPendiente.textProperty().addListener((observable, oldValue, newValue) -> tablaServicioPend.setPredicate(new Predicate<TreeItem<ServicioRegular>>() {
+            @Override
+            public boolean test(TreeItem<ServicioRegular> servicioRegularTreeItem) {
+
+                Boolean flag  = servicioRegularTreeItem.getValue().getCliente().getNumero().contains(newValue);
+
+                return flag;
+            }
+        }));
+        textField_buscarProgramado.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                tablaServicioProgr.setPredicate(new Predicate<TreeItem<ServiciosProgramado>>() {
+                    @Override
+                    public boolean test(TreeItem<ServiciosProgramado> serviciosProgramadoTreeItem) {
+                        Boolean flag  = serviciosProgramadoTreeItem.getValue().getCliente().getNumero().contains(newValue);
+
+                        return flag;
+                    }
+                });
+            }
+        });
+
+        textField_buscarServicios.setOnKeyPressed(event -> {
+
+            if(event.getCode() == KeyCode.ESCAPE){
+                textField_buscarServicios.clear();
+            }
+
+        });
+        textField_buscarPendiente.setOnKeyPressed(event -> {
+
+            if(event.getCode() == KeyCode.ESCAPE){
+                textField_buscarPendiente.clear();
+            }
+
+        });
+        textField_buscarProgramado.setOnKeyPressed(event -> {
+
+            if(event.getCode() == KeyCode.ESCAPE){
+                textField_buscarProgramado.clear();
+            }
+
+        });
+
+        textField_servicioRapido.setOnKeyPressed(event -> {
+
+            if(event.getCode() == KeyCode.ENTER){
+                textField_cantidad.requestFocus();
+            }
+
+        });
+        textField_cantidad.setOnKeyPressed(event -> {
+
+            if(event.getCode() == KeyCode.ENTER){
+
+                int cantidad = 1;
+                if(!textField_cantidad.getText().isEmpty()) {
+                    cantidad = Integer.parseInt(textField_cantidad.getText());
+                }
+
+                    try {
+                        Cliente existe = new ClienteSQL().existe(textField_servicioRapido.getText());
+                        if(existe == null){
+                            btnAddServicio.fire();//si no existe añadir manualmente.
+                        }else{
+
+                            while(cantidad>0){
+                                ServicioRegular servicioRegularRapido = new ServicioRegular(existe);
+
+                                if(new ServicioRegularSQL().insertarServicioRegular(servicioRegularRapido)){
+                                    listaServicioRegularesPendientes.add(servicioRegularRapido);
+                                    tablaServicioPend.sort();
+                                    tablaServicioPend.refresh();
+
+                                }
+                                cantidad--;
+                            }
+
+
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+
+                textField_cantidad.clear();
+                    textField_servicioRapido.clear();
+
+            }
+
+        });
+
+
+
+
+        /*----------------------------------------------------- FIN TEXT PROPERTY CHANGE -------------------------------------------------------------------*/
+
+
+
+
     }
 
 
@@ -1044,4 +1169,9 @@ public class ServiciosController implements Initializable, IAccion {
             e.printStackTrace();
         }
     }
+
+
+
+
+
 }
