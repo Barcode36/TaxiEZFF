@@ -98,8 +98,8 @@ public class ServicioProgramadoSQL {
 
             //puede ser null.
             LocalDateTime localDateTimeFin =
-                    rs.getTimestamp("servicioprogramado.fechaAplicacion") ==null?
-                            null:rs.getTimestamp("servicioprogramado.fechaAplicacion").toLocalDateTime();
+                    rs.getTimestamp("servicioprogramado.fechaFinalizacion") ==null?
+                            null:rs.getTimestamp("servicioprogramado.fechaFinalizacion").toLocalDateTime();
 
             //puede ser null.
             LocalDateTime localDateTimeUltimoRegistro =
@@ -108,7 +108,7 @@ public class ServicioProgramadoSQL {
 
             ServiciosProgramado SRAplicado =
                     new ServiciosProgramado(
-                            datosServicio, rs.getInt("servicioprogramado.idServicio"),
+                            datosServicio, rs.getInt("servicioprogramado.idServicioProgramado"),
                             localDateTimeAdicion, localDateTimeInicio, localDateTimeFin,
                             false/*no hay campo isCancelado en programados, se puede extraer ese miembro a servicio regular, para que no se herede en el programado rs.getBoolean("servicioprogramado.isCancelado")*/
                             ,clienteDelServicio, empleadoRegistroServicio,localDateTimeUltimoRegistro,
@@ -186,7 +186,7 @@ public class ServicioProgramadoSQL {
      */
     public boolean insertarServicioRegular(ServiciosProgramado servicioProgramado) {
 
-        query = "INSERT INTO servicio " +
+        query = "INSERT INTO servicioprogramado " +
                // "(nombre, observaciones, fechaAgregacion, fechaServicio, fechaAplicacion, isCancelado, idCliente, idEmpleado, idDireccion) " +
                 "VALUES" +
                 //idServicioProgramado, fechaFin y fechaUltimoReg = NULL -> columnas 1,6,7

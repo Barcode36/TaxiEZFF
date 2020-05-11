@@ -27,6 +27,7 @@ import models.interfaces.Registro;
 import models.interfaces.SetAddRegistroListener;
 import services.sql.ClienteSQL;
 import services.sql.DireccionSQL;
+import services.sql.ServicioProgramadoSQL;
 import services.sql.ServicioRegularSQL;
 
 import java.io.IOException;
@@ -334,20 +335,75 @@ public class ServiciosController implements Initializable, IAccion {
 
 /*-----------------------------------------------------PROGRAMADOS-------------------------------------------------------------------*/
 
-    this.cmServiciosProg_FechaAdicion.setCellValueFactory(new TreeItemPropertyValueFactory("fechaAgregacion"));
-    this.cmServiciosProg_FechaInicio.setCellValueFactory(new TreeItemPropertyValueFactory("fechaInicio"));
-    this.cmServiciosProg_FechaFin.setCellValueFactory(new TreeItemPropertyValueFactory("fechaFin"));
+        this.cmServiciosProg_FechaAdicion.setCellValueFactory(new TreeItemPropertyValueFactory("fechaAgregacion"));
+        this.cmServiciosProg_FechaInicio.setCellValueFactory(new TreeItemPropertyValueFactory("fechaInicio"));
+        this.cmServiciosProg_FechaFin.setCellValueFactory(new TreeItemPropertyValueFactory("fechaFin"));
 
-    this.cmServiciosProg_telefono.setCellValueFactory(new TreeItemPropertyValueFactory("cliente"));
-    this.cmServiciosProg_nombre.setCellValueFactory(new TreeItemPropertyValueFactory("nombre"));
-    this.cmServiciosProg_dirección.setCellValueFactory(new TreeItemPropertyValueFactory("direccion"));
-    this.cmServiciosProg_notas.setCellValueFactory(new TreeItemPropertyValueFactory("observaciones"));
-    this.cmServiciosProg_modulador.setCellValueFactory(new TreeItemPropertyValueFactory("empleado"));
-    this.cmServiciosProg_diasServicio.setCellValueFactory(new TreeItemPropertyValueFactory("diasServicio"));
+        this.cmServiciosProg_telefono.setCellValueFactory(new TreeItemPropertyValueFactory("cliente"));
+        this.cmServiciosProg_nombre.setCellValueFactory(new TreeItemPropertyValueFactory("nombre"));
+        this.cmServiciosProg_dirección.setCellValueFactory(new TreeItemPropertyValueFactory("direccion"));
+        this.cmServiciosProg_notas.setCellValueFactory(new TreeItemPropertyValueFactory("observaciones"));
+        this.cmServiciosProg_modulador.setCellValueFactory(new TreeItemPropertyValueFactory("empleado"));
+        this.cmServiciosProg_diasServicio.setCellValueFactory(new TreeItemPropertyValueFactory("diasServicio"));
+
+        this.cmServiciosProg_FechaAdicion.setCellFactory(callbackDateTimeProgramado);
+        this.cmServiciosProg_FechaInicio.setCellFactory(callbackDateTimeProgramado);
+        this.cmServiciosProg_dirección.setCellFactory(callbackDireccionProgramado);
 
 
+        this.cmServiciosProg_modulador.setCellFactory(new Callback<TreeTableColumn<ServiciosProgramado, Empleado>, TreeTableCell<ServiciosProgramado, Empleado>>() {
+            @Override
+            public TreeTableCell<ServiciosProgramado, Empleado> call(TreeTableColumn<ServiciosProgramado, Empleado> param) {
+
+                TreeTableCell<ServiciosProgramado, Empleado> cell = new TreeTableCell<ServiciosProgramado, Empleado>(){
+
+                    @Override
+                    protected void updateItem(Empleado item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if(item!=null){
+                            setText(item.getIdEmpleado() + " " + item.getNombre());
+                        }
+                    }
+
+                };
+                return cell;
+
+            }
+        });
+
+        this.cmServiciosProg_telefono.setCellFactory(new Callback<TreeTableColumn<ServiciosProgramado, Cliente>, TreeTableCell<ServiciosProgramado, Cliente>>() {
+            @Override
+            public TreeTableCell<ServiciosProgramado, Cliente> call(TreeTableColumn<ServiciosProgramado, Cliente> param) {
 
 
+                TreeTableCell<ServiciosProgramado,Cliente> cell = new TreeTableCell<ServiciosProgramado,Cliente>(){
+                    @Override
+                    protected void updateItem(Cliente item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if(item!=null){
+                            setText(item.getNumero());
+                        }
+                    }
+                };
+                return cell;
+
+            }
+        });
+
+
+        try {
+            listaServicioProgramado = new ServicioProgramadoSQL().getServiciosProgramados();
+
+
+            TreeItem<ServiciosProgramado> serviciosProgramadoRecursiveTreeItem =
+                    new RecursiveTreeItem<>(listaServicioProgramado, (recursiveTreeObject) -> recursiveTreeObject.getChildren());
+
+            this.tablaServicioProgr.setRoot(serviciosProgramadoRecursiveTreeItem);
+            this.tablaServicioProgr.setShowRoot(false);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
 
 /*-----------------------------------------------------FIN PROGRAMADOS-------------------------------------------------------------------*/
@@ -429,6 +485,50 @@ public class ServiciosController implements Initializable, IAccion {
 
 
 
+    //TODO Refactorizar callbacks a un metodo esttico con generics.
+
+    Callback<TreeTableColumn<ServiciosProgramado, Direccion>, TreeTableCell<ServiciosProgramado, Direccion>> callbackDireccionProgramado = new Callback<TreeTableColumn<ServiciosProgramado, Direccion>, TreeTableCell<ServiciosProgramado, Direccion>>() {
+        @Override
+        public TreeTableCell<ServiciosProgramado, Direccion> call(TreeTableColumn<ServiciosProgramado, Direccion> param) {
+
+            TreeTableCell<ServiciosProgramado, Direccion> cell = new TreeTableCell<ServiciosProgramado, Direccion>() {
+                protected void updateItem(Direccion item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item != null) {
+                        this.setText("Calle: " + item.getCalle() + " Colonia: " + item.getColonia()+ " \nNum ext: " + item.getNumExt() + (item.getNumInt() == null ? "" : " Num int: " + item.getNumInt()) );
+                        //this.setPrefHeight(35);
+                    } else {
+                        this.setText((String)null);
+                    }
+                }
+            };
+            return cell;
+
+        }
+    };
+
+    Callback<TreeTableColumn<ServiciosProgramado, LocalDateTime>, TreeTableCell<ServiciosProgramado, LocalDateTime>> callbackDateTimeProgramado = new Callback<TreeTableColumn<ServiciosProgramado, LocalDateTime>, TreeTableCell<ServiciosProgramado, LocalDateTime>>() {
+        @Override
+        public TreeTableCell<ServiciosProgramado, LocalDateTime> call(TreeTableColumn<ServiciosProgramado, LocalDateTime> param) {
+            TreeTableCell<ServiciosProgramado, LocalDateTime> cell = new TreeTableCell<ServiciosProgramado,LocalDateTime>(){
+                @Override
+                protected void updateItem(LocalDateTime item, boolean empty) {
+                    super.updateItem(item, empty);//empty hace referencia a row no usado. o sin valo.
+
+                    if(item!= null && !empty){
+                        setText(item.toString().replace('T','\n'));
+                    }else{
+                        //cuando no aparece fechar o es nulla siempre será la columna de fecha aplicación
+                        //por lo tanto se mostrará el mensaje:
+                        if(!empty)
+                            setText("Servicio cancelado.");
+                    }
+
+                }
+            };
+            return cell;
+        }
+    };
 
     Callback<TreeTableColumn<ServicioRegular, Direccion>, TreeTableCell<ServicioRegular, Direccion>> callbackDireccion = new Callback<TreeTableColumn<ServicioRegular, Direccion>, TreeTableCell<ServicioRegular, Direccion>>() {
         @Override
@@ -578,10 +678,26 @@ public class ServiciosController implements Initializable, IAccion {
             @Override
             public boolean addRegistro(Registro registro, Stage stage) {
 
+                ServiciosProgramado serviciosProgramado = (ServiciosProgramado) registro;
+                Direccion direccion = serviciosProgramado.getDireccion();
+                Cliente cliente = serviciosProgramado.getCliente();
 
+                if(cliente == null){
+                    cliente =
+                            new Cliente(0,serviciosProgramado.getTelefonoAux(),true,serviciosProgramado.getNombre(),serviciosProgramado.getObservaciones(),direccion);
 
-                listaServicioProgramado.add((ServiciosProgramado) registro);
-                return true;
+                    new ClienteSQL().insertar(cliente, ((Stage)((Node)event.getSource()).getScene().getWindow()));
+                    serviciosProgramado.setCliente(cliente);
+                }
+
+                if(new ServicioProgramadoSQL().insertarServicioRegular((ServiciosProgramado) registro)){
+
+                    listaServicioProgramado.add((ServiciosProgramado) registro);
+                    return true;
+
+                }
+
+                return false;
 
             }
         }, "/views/Cruds/ServicioProgramadoCRUD.fxml");
