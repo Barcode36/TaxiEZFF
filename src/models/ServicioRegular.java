@@ -44,4 +44,7 @@ public class ServicioRegular extends Servicio<ServicioRegular> {
     public void setTaxi(Taxi taxi) {
         this.taxi = taxi;
     }
+
+
+
 }

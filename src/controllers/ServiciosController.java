@@ -24,6 +24,7 @@ import models.*;
 import models.interfaces.AddRegistro;
 import models.interfaces.IAccion;
 import models.interfaces.Registro;
+import models.interfaces.SetAddRegistroListener;
 import services.sql.ClienteSQL;
 import services.sql.DireccionSQL;
 import services.sql.ServicioRegularSQL;
@@ -128,34 +129,34 @@ public class ServiciosController implements Initializable, IAccion {
     private Tab tabServiciosProgramados;
 
     @FXML
-    private JFXTreeTableView<?> tablaServicioProgr;
+    private JFXTreeTableView<ServiciosProgramado> tablaServicioProgr;
 
     @FXML
-    public TreeTableColumn<?, ?> cmServiciosProg_FechaAdicion;
+    public TreeTableColumn<ServiciosProgramado, LocalDateTime> cmServiciosProg_FechaAdicion;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServiciosProg_FechaInicio;
+    private TreeTableColumn<ServiciosProgramado, LocalDateTime> cmServiciosProg_FechaInicio;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServiciosProg_FechaFin;
+    private TreeTableColumn<ServiciosProgramado, LocalDateTime> cmServiciosProg_FechaFin;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServiciosProg_telefono;
+    private TreeTableColumn<ServiciosProgramado, Cliente> cmServiciosProg_telefono;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServiciosProg_nombre;
+    private TreeTableColumn<ServiciosProgramado, String> cmServiciosProg_nombre;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServiciosProg_dirección;
+    private TreeTableColumn<ServiciosProgramado, Direccion> cmServiciosProg_dirección;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServiciosProg_notas;
+    private TreeTableColumn<ServiciosProgramado, String> cmServiciosProg_notas;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServiciosProg_modulador;
+    private TreeTableColumn<ServiciosProgramado, Empleado> cmServiciosProg_modulador;
 
     @FXML
-    private TreeTableColumn<?, ?> cmServiciosProg_diasServicio;
+    private TreeTableColumn<ServiciosProgramado, String> cmServiciosProg_diasServicio;
 
     @FXML
     private JFXTextField textField_buscarProgramado;
@@ -171,6 +172,7 @@ public class ServiciosController implements Initializable, IAccion {
 
     ObservableList<ServicioRegular> listaServicioRegularesPendientes;
     ObservableList<ServicioRegular> listaServicioRegularesAplicados;
+    ObservableList<ServiciosProgramado> listaServicioProgramado;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -329,6 +331,30 @@ public class ServiciosController implements Initializable, IAccion {
         }
 
 /*----------------------------------------------------FIN PENDIENTES ---------------------------------------------------------------*/
+
+/*-----------------------------------------------------PROGRAMADOS-------------------------------------------------------------------*/
+
+    this.cmServiciosProg_FechaAdicion.setCellValueFactory(new TreeItemPropertyValueFactory("fechaAgregacion"));
+    this.cmServiciosProg_FechaInicio.setCellValueFactory(new TreeItemPropertyValueFactory("fechaInicio"));
+    this.cmServiciosProg_FechaFin.setCellValueFactory(new TreeItemPropertyValueFactory("fechaFin"));
+
+    this.cmServiciosProg_telefono.setCellValueFactory(new TreeItemPropertyValueFactory("cliente"));
+    this.cmServiciosProg_nombre.setCellValueFactory(new TreeItemPropertyValueFactory("nombre"));
+    this.cmServiciosProg_dirección.setCellValueFactory(new TreeItemPropertyValueFactory("direccion"));
+    this.cmServiciosProg_notas.setCellValueFactory(new TreeItemPropertyValueFactory("observaciones"));
+    this.cmServiciosProg_modulador.setCellValueFactory(new TreeItemPropertyValueFactory("empleado"));
+    this.cmServiciosProg_diasServicio.setCellValueFactory(new TreeItemPropertyValueFactory("diasServicio"));
+
+
+
+
+
+
+/*-----------------------------------------------------FIN PROGRAMADOS-------------------------------------------------------------------*/
+
+
+
+/*-----------------------------------------------------SORT POLICIES-------------------------------------------------------------------*/
         tablaServicioPend.setSortPolicy(new Callback<TreeTableView<ServicioRegular>, Boolean>()
         {
             @Override
@@ -397,8 +423,12 @@ public class ServiciosController implements Initializable, IAccion {
             }
         });
 
+        /*----------------------------------------------------- FIN SORT POLICIES-------------------------------------------------------------------*/
 
     }
+
+
+
 
     Callback<TreeTableColumn<ServicioRegular, Direccion>, TreeTableCell<ServicioRegular, Direccion>> callbackDireccion = new Callback<TreeTableColumn<ServicioRegular, Direccion>, TreeTableCell<ServicioRegular, Direccion>>() {
         @Override
@@ -537,12 +567,26 @@ public class ServiciosController implements Initializable, IAccion {
                 }
                 return false;
             }
-        });
+        },"/views/Cruds/ServicioRegularCRUD.fxml");
 
     }
 
     @FXML
     void btnAddServicioProgramado_OnAction(ActionEvent event) {
+
+        abrirVentanaCrud(event, new AddRegistro() {
+            @Override
+            public boolean addRegistro(Registro registro, Stage stage) {
+
+
+
+                listaServicioProgramado.add((ServiciosProgramado) registro);
+                return true;
+
+            }
+        }, "/views/Cruds/ServicioProgramadoCRUD.fxml");
+
+
         System.out.println("Add servicio programado .");
     }
 
@@ -648,12 +692,12 @@ public class ServiciosController implements Initializable, IAccion {
     }
 
 
-    private void abrirVentanaCrud(ActionEvent event, AddRegistro addRegistro){
+    private void abrirVentanaCrud(ActionEvent event, AddRegistro addRegistro,String resourceCRUDView){
         try {
 
-            FXMLLoader controladorLoader = new FXMLLoader(getClass().getResource("/views/Cruds/ServicioRegularCRUD.fxml"));
+            FXMLLoader controladorLoader = new FXMLLoader(getClass().getResource(resourceCRUDView));
             AnchorPane contenedorServicioRegularCRUD = controladorLoader.load();
-            ServicioRegularCrudController servicioRegularCrudController = controladorLoader.getController();
+            SetAddRegistroListener servicioRegularCrudController = controladorLoader.getController();
 
             servicioRegularCrudController.setAddRegistroListener(addRegistro);
 

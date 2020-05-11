@@ -14,6 +14,9 @@ public class Servicio<S> extends Persona<S> implements Registro {
     //nombre,observaciones y dirección están heredadas ya.
 
     private LocalDateTime fechaAgregacion;
+    /**
+     * Para un servicio programado, esta seria la fecha de inicio.
+     */
     private LocalDateTime fechaServicio;
     private LocalDateTime fechaAplicacion;
 

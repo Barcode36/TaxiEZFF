@@ -19,9 +19,12 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import models.*;
 import models.interfaces.IValidateCRUD;
 import models.interfaces.Registro;
 import models.interfaces.SetAddRegistroListener;
+import resources.Statics;
 import services.StringLengthValidator;
 import services.sql.ClienteSQL;
 
@@ -190,12 +193,15 @@ public class ServiciosProgramadosCrudController extends SetAddRegistroListener i
 
     @FXML
     void btnAceptar_OnAction(ActionEvent event) {
-
+        if(validarCampos()){
+            if(enviarRegistro(((Stage)btn_aceptar.getScene().getWindow())))
+                    ((Stage)btn_aceptar.getScene().getWindow()).close();
+        }
     }
 
     @FXML
     void btnCancelar_OnAction(ActionEvent event) {
-
+        ((Stage)btn_aceptar.getScene().getWindow()).close();
     }
 
     @FXML
@@ -206,11 +212,47 @@ public class ServiciosProgramadosCrudController extends SetAddRegistroListener i
     @Override
     public void extraerRegistro(Registro registro) {
 
+        //no sé usará para "edidión" no existe, solo para busqueda automatica
+
     }
 
+    private Cliente cliente;
     @Override
     public Registro guardarCambiosRegistros() {
-        return null;
+        Direccion direccion = null;
+
+        if(cliente!=null){
+            //cuando se buscó y encontró el numero de telefono automaticamente.
+            try {
+                direccion = cliente.getDireccion().clone();//una copia para asignarsela a la instancia de servicioRegular.
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+        }else{//cliente == null
+
+            //si la dirección es id=0, se deberá insertar en la DB.
+            direccion =
+                    new Direccion(0, textField_calle.getText(), textField_colonia.getText(), textField_numInt.getText(), textField_num_ext.getText());
+        }
+
+        Persona datos = new Persona(textField_nombre.getText(),textField_notas.getText(),direccion);
+        //si cliente == null, esa propiedad debe ser creada
+     /*   ServicioRegular servicioRegular =
+                new ServicioRegular(datos,0,LocalDateTime.now(),LocalDateTime.of(datePicker_dia.getValue(),timePicker_horaServicio.getValue()),null,false,cliente, Statics.empleadoSesionActual);
+        servicioRegular.setTelefonoAux(textField_telefono.getText());
+        */
+        ServiciosProgramado serviciosProgramado =
+                new ServiciosProgramado(datos, 0, LocalDateTime.now(),
+                        LocalDateTime.of(datePicker_dia.getValue(),timePicker_horaServicio.getValue()),null,
+                        false,cliente, Statics.empleadoSesionActual,null,
+                        cb_lunes.isSelected(), cb_martes.isSelected(),cb_miercoles.isSelected() ,
+                        cb_jueves.isSelected(),cb_viernes.isSelected() ,cb_sabado.isSelected() ,cb_domingo.isSelected() );
+
+        serviciosProgramado.setTelefonoAux(textField_telefono.getText());
+
+
+
+        return serviciosProgramado;
     }
 
 
@@ -298,6 +340,9 @@ public class ServiciosProgramadosCrudController extends SetAddRegistroListener i
         ObservableList<Node> listaHijos = root.getChildren();
         boolean validacioExitosa = true;
 
+        //estos 2 no son hijos directos de root, entonces los valido individualmente.
+        validacioExitosa = datePicker_dia.validate();
+        validacioExitosa &= timePicker_horaServicio.validate();
 
         for(Node node : listaHijos){
             if(node instanceof IFXValidatableControl){
