@@ -479,6 +479,39 @@ public class ServiciosController implements Initializable, IAccion {
             }
         });
 
+        tablaServicioProgr.setSortPolicy(new Callback<TreeTableView<ServiciosProgramado>, Boolean>() {
+            @Override
+            public Boolean call(TreeTableView<ServiciosProgramado> param) {
+                Comparator<TreeItem<ServiciosProgramado>> comparator = new Comparator<TreeItem<ServiciosProgramado>>()
+                {
+                    @Override
+                    public int compare(TreeItem<ServiciosProgramado> o1, TreeItem<ServiciosProgramado> o2)
+                    {
+                        ServiciosProgramado s1 = o1.getValue();
+                        ServiciosProgramado s2 = o2.getValue();
+
+                        if(s1.getFechaAgregacion().isBefore(s2.getFechaAgregacion()))// la fecha 1 es menor que la fecha 2
+                        {
+                            return 1;
+                        }
+                        else if(s1.getFechaAgregacion().isEqual(s2.getFechaAgregacion()))//iguales
+                        {
+                            return 0;
+                        }
+                        else// fecha 1 es mayor que fecha 2
+                        {
+                            return -1;
+                        }
+                    }
+                };
+
+                ObservableList<TreeItem<ServiciosProgramado>> children = tablaServicioProgr.getRoot().getChildren();
+                FXCollections.sort(children,comparator);
+                return true;
+
+            }
+        });
+
         /*----------------------------------------------------- FIN SORT POLICIES-------------------------------------------------------------------*/
 
     }
